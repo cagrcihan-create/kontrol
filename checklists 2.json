@@ -1,0 +1,883 @@
+[
+ {
+  "key": "acilis",
+  "business": "Carlo Burger",
+  "title": "08.30 Sabah Bar Açılış",
+  "stock": true,
+  "sections": [
+   {
+    "title": "Kahve Makinesi",
+    "items": [
+     "Kahve makinesi açıldı, çalışması kontrol edildi.",
+     "Makinenin genel temizliği kontrol edildi.",
+     "Grup başlıkları ve buhar çubukları kontrol edildi.",
+     "Makine çevresi ve tezgâh düzenlendi.",
+     "Bölümün eksik malzemeleri kontrol edildi."
+    ]
+   },
+   {
+    "title": "Kahve Öğütücü",
+    "items": [
+     "Öğütücünün çalışması kontrol edildi.",
+     "Öğütücünün temizliği kontrol edildi.",
+     "Kahve çekirdeği miktarı kontrol edildi.",
+     "Öğütme ayarı kontrol edildi.",
+     "Bölümün çekmeceleri ve malzemeleri kontrol edildi."
+    ]
+   },
+   {
+    "title": "Filtre Kahve Makinesi",
+    "items": [
+     "Makine açıldı ve çalışması kontrol edildi.",
+     "Makinenin temizliği kontrol edildi.",
+     "Filtre kahve hazırlığı yapıldı.",
+     "Filtre kâğıdı ve kahve stokları kontrol edildi.",
+     "Bölümün çekmece ve dolapları kontrol edildi."
+    ]
+   },
+   {
+    "title": "Çay Kazanı",
+    "items": [
+     "Çay kazanı açıldı ve çalışması kontrol edildi.",
+     "Çay demlendi ve servise hazırlandı.",
+     "Kazan ve çevresinin temizliği kontrol edildi.",
+     "Çay bardakları ve servis malzemeleri kontrol edildi.",
+     "Çay stokları ve bölümün çekmeceleri kontrol edildi."
+    ]
+   },
+   {
+    "title": "Şurup Standı",
+    "items": [
+     "Şurup standının temizliği kontrol edildi.",
+     "Şurupların düzeni kontrol edildi.",
+     "Şurup şişelerinin doluluk miktarları kontrol edildi.",
+     "Şurupların son kullanma tarihleri kontrol edildi.",
+     "Standın alt dolapları ve çekmeceleri kontrol edildi."
+    ]
+   },
+   {
+    "title": "Limonata Makinesi",
+    "items": [
+     "Makinenin temizliği kontrol edildi.",
+     "Makinenin çalışması kontrol edildi.",
+     "Limonatanın tazeliği kontrol edildi.",
+     "Limonata miktarı ve eksikleri kontrol edildi.",
+     "Makine çevresi ve bölümün çekmeceleri kontrol edildi."
+    ]
+   },
+   {
+    "title": "Pasta Dolapları",
+    "items": [
+     "Pasta dolaplarının temizliği kontrol edildi.",
+     "Dolap sıcaklıkları kontrol edildi.",
+     "Pastaların tazeliği ve tarihleri kontrol edildi.",
+     "Pastaların düzeni ve sunumu kontrol edildi.",
+     "Eksik ve zayi pasta ürünleri kontrol edildi."
+    ]
+   },
+   {
+    "title": "Türk Kahvesi Makinesi",
+    "items": [
+     "Makinenin çalışması kontrol edildi.",
+     "Makinenin temizliği kontrol edildi.",
+     "Türk kahvesi stokları kontrol edildi.",
+     "Fincan ve servis malzemeleri kontrol edildi.",
+     "Makine çevresinin temizliği kontrol edildi."
+    ]
+   },
+   {
+    "title": "Türk Kahvesi Bölümü",
+    "items": [
+     "Bölümün tezgâh temizliği kontrol edildi.",
+     "Bütün çekmecelerin temizliği kontrol edildi.",
+     "Çekmecelerdeki malzemeler düzenlendi.",
+     "Dolap içlerinin temizliği kontrol edildi.",
+     "Eksik ürün ve ekipmanlar kontrol edildi."
+    ]
+   },
+   {
+    "title": "Bardaklar",
+    "items": [
+     "Bütün bardakların temizliği kontrol edildi.",
+     "Bardak raflarının temizliği kontrol edildi.",
+     "Bardakların düzeni kontrol edildi.",
+     "Eksik bardak çeşitleri kontrol edildi.",
+     "Kırık ve çatlak bardaklar ayrıldı."
+    ]
+   },
+   {
+    "title": "Bar Çekmeceleri ve Dolapları",
+    "items": [
+     "Bütün çekmecelerin temizliği kontrol edildi.",
+     "Dolap içlerinin temizliği kontrol edildi.",
+     "Malzemelerin düzeni kontrol edildi.",
+     "Eksik malzemeler kontrol edildi.",
+     "Kullanılmayan malzemeler kaldırıldı."
+    ]
+   },
+   {
+    "title": "Çöp Kovaları",
+    "items": [
+     "Bütün çöp kovaları boşaltıldı.",
+     "Çöp kovalarının temizliği kontrol edildi.",
+     "Yeni çöp poşetleri takıldı.",
+     "Çöp kovalarının çevresi temizlendi.",
+     "Çöp alanının zemin temizliği kontrol edildi."
+    ]
+   },
+   {
+    "title": "Kasa",
+    "items": [
+     "Kasa bilgisayarı açıldı.",
+     "Kasa programı ve POS cihazları kontrol edildi.",
+     "Kasa tezgâhının temizliği kontrol edildi.",
+     "Kasa çekmecelerinin düzeni kontrol edildi.",
+     "Kasa teslimi ve başlangıç nakdi kontrol edildi."
+    ]
+   },
+   {
+    "title": "Bulaşıkhane Bar Deposu",
+    "items": [
+     "Depo raflarının temizliği kontrol edildi.",
+     "Depodaki ürünlerin düzeni kontrol edildi.",
+     "Ürünlerin son kullanma tarihleri kontrol edildi.",
+     "Eksik ürün ve malzemeler kontrol edildi.",
+     "Depo zemini ve genel temizliği kontrol edildi."
+    ]
+   },
+   {
+    "title": "Bar Genel Açılış Kontrolü",
+    "items": [
+     "Barın genel temizliği tamamlandı.",
+     "Bütün makinelerin çalışması kontrol edildi.",
+     "Bütün çekmece ve dolaplar kontrol edildi.",
+     "Eksik ürünler stok listesine yazıldı.",
+     "Bar müşteri servisine hazırlandı."
+    ]
+   }
+  ]
+ },
+ {
+  "key": "taha",
+  "business": "Carlo Burger",
+  "title": "Taha Sabah Denetimi",
+  "sections": [
+   {
+    "title": "Taha Sabah Hızlı Denetim",
+    "items": [
+     "Kahve makinesi ve temizliği",
+     "Kahve öğütücü ve kahve stokları",
+     "Filtre kahve makinesi ve hazırlığı",
+     "Çay kazanı ve çay hazırlığı",
+     "Şurup standı ve stokları",
+     "Limonata makinesi ve hazırlığı",
+     "Pasta dolapları ve ürün tazeliği",
+     "Türk kahvesi makinesi",
+     "Türk kahvesi bölümü ve çekmeceleri",
+     "Bardakların temizliği ve düzeni",
+     "Bar çekmeceleri ve dolapları",
+     "Çöp kovaları ve genel temizlik",
+     "Kasa ve POS cihazları",
+     "Bulaşıkhane bar deposu",
+     "Günlük stok ve eksik ürün listesi",
+     "Günlük zayi ürün kayıtları",
+     "Barın servise hazır olması"
+    ]
+   }
+  ]
+ },
+ {
+  "key": "oglen_mutfak",
+  "business": "Carlo Burger",
+  "title": "12.00 Öğlen Mutfak Hazırlık",
+  "sections": [
+   {
+    "title": "Görev Sıralaması",
+    "items": [
+     "Öğlen servisi öncesinde tüm istasyonlar kontrol edildi, eksiklikler giderildi ve servise hazırlandı.",
+     "Barbekü, Mush, CARLO, Acılı CARLO, Köri, Ketçap, Pesto, Beşamel, Sezar ve Acı Bal soslarının hazırlıkları tamamlandı.",
+     "Pizza hamuru hazırlandı.",
+     "Mantar, trüflü mantar ve karamelize soğan hazırlıkları tamamlandı.",
+     "Salata malzemeleri hazırlandı, eksiklikler kontrol edildi ve tamamlandı.",
+     "Günlük mutfak iş akışı düzenlendi, hazırlıkların planlı şekilde ilerlemesi sağlandı.",
+     "Bulaşıkhane ve depo raflarının temizliği ve düzeni kontrol edildi, eksiklikler giderildi.",
+     "Tedarikçilerden gelen ürünlerin miktar, kalite ve tarih kontrolleri yapıldı, ürünler depoya yerleştirildi."
+    ]
+   },
+   {
+    "title": "Sos Hazırlık Kaydı",
+    "items": [
+     {
+      "label": "Barbekü sos",
+      "fields": [
+       {
+        "key": "miktar",
+        "label": "Hazırlanan",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "yedek",
+        "label": "Yedek",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "tarih",
+        "label": "Hazırlanış tarihi",
+        "type": "date"
+       }
+      ]
+     },
+     {
+      "label": "Mush sos",
+      "fields": [
+       {
+        "key": "miktar",
+        "label": "Hazırlanan",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "yedek",
+        "label": "Yedek",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "tarih",
+        "label": "Hazırlanış tarihi",
+        "type": "date"
+       }
+      ]
+     },
+     {
+      "label": "CARLO sos",
+      "fields": [
+       {
+        "key": "miktar",
+        "label": "Hazırlanan",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "yedek",
+        "label": "Yedek",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "tarih",
+        "label": "Hazırlanış tarihi",
+        "type": "date"
+       }
+      ]
+     },
+     {
+      "label": "Acılı CARLO sos",
+      "fields": [
+       {
+        "key": "miktar",
+        "label": "Hazırlanan",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "yedek",
+        "label": "Yedek",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "tarih",
+        "label": "Hazırlanış tarihi",
+        "type": "date"
+       }
+      ]
+     },
+     {
+      "label": "Köri sos",
+      "fields": [
+       {
+        "key": "miktar",
+        "label": "Hazırlanan",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "yedek",
+        "label": "Yedek",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "tarih",
+        "label": "Hazırlanış tarihi",
+        "type": "date"
+       }
+      ]
+     },
+     {
+      "label": "Ketçap",
+      "fields": [
+       {
+        "key": "miktar",
+        "label": "Hazırlanan",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "yedek",
+        "label": "Yedek",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "tarih",
+        "label": "Hazırlanış tarihi",
+        "type": "date"
+       }
+      ]
+     },
+     {
+      "label": "Pesto sos",
+      "fields": [
+       {
+        "key": "miktar",
+        "label": "Hazırlanan",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "yedek",
+        "label": "Yedek",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "tarih",
+        "label": "Hazırlanış tarihi",
+        "type": "date"
+       }
+      ]
+     },
+     {
+      "label": "Beşamel sos",
+      "fields": [
+       {
+        "key": "miktar",
+        "label": "Hazırlanan",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "yedek",
+        "label": "Yedek",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "tarih",
+        "label": "Hazırlanış tarihi",
+        "type": "date"
+       }
+      ]
+     },
+     {
+      "label": "Sezar sos",
+      "fields": [
+       {
+        "key": "miktar",
+        "label": "Hazırlanan",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "yedek",
+        "label": "Yedek",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "tarih",
+        "label": "Hazırlanış tarihi",
+        "type": "date"
+       }
+      ]
+     },
+     {
+      "label": "Acı Bal",
+      "fields": [
+       {
+        "key": "miktar",
+        "label": "Hazırlanan",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "yedek",
+        "label": "Yedek",
+        "type": "number",
+        "unit": "adet"
+       },
+       {
+        "key": "tarih",
+        "label": "Hazırlanış tarihi",
+        "type": "date"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "title": "Pizza Hamuru",
+    "items": [
+     {
+      "label": "Pizza hamuru",
+      "fields": [
+       {
+        "key": "miktar",
+        "label": "Hazırlanan",
+        "type": "number",
+        "unit": "kasa"
+       },
+       {
+        "key": "tarih",
+        "label": "Hazırlanış tarihi",
+        "type": "date"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "title": "Mantar ve Karamelize Soğan",
+    "items": [
+     {
+      "label": "Mantar",
+      "fields": [
+       {
+        "key": "miktar",
+        "label": "Hazırlanan",
+        "type": "number",
+        "unitKey": "birim"
+       },
+       {
+        "key": "birim",
+        "label": "Birim",
+        "type": "select",
+        "options": [
+         "kg",
+         "gr",
+         "adet",
+         "küvet"
+        ]
+       },
+       {
+        "key": "tarih",
+        "label": "Hazırlanış tarihi",
+        "type": "date"
+       }
+      ]
+     },
+     {
+      "label": "Trüflü mantar",
+      "fields": [
+       {
+        "key": "miktar",
+        "label": "Hazırlanan",
+        "type": "number",
+        "unitKey": "birim"
+       },
+       {
+        "key": "birim",
+        "label": "Birim",
+        "type": "select",
+        "options": [
+         "kg",
+         "gr",
+         "adet",
+         "küvet"
+        ]
+       },
+       {
+        "key": "tarih",
+        "label": "Hazırlanış tarihi",
+        "type": "date"
+       }
+      ]
+     },
+     {
+      "label": "Karamelize soğan",
+      "fields": [
+       {
+        "key": "miktar",
+        "label": "Hazırlanan",
+        "type": "number",
+        "unitKey": "birim"
+       },
+       {
+        "key": "birim",
+        "label": "Birim",
+        "type": "select",
+        "options": [
+         "kg",
+         "gr",
+         "adet",
+         "küvet"
+        ]
+       },
+       {
+        "key": "tarih",
+        "label": "Hazırlanış tarihi",
+        "type": "date"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "title": "Gelen Ürün ve Fatura",
+    "items": [
+     "Gelen ürünler uygun depolama alanlarına yerleştirildi.",
+     "Fatura/irsaliye fotoğrafı çekildi."
+    ]
+   }
+  ]
+ },
+ {
+  "key": "bi_kapanis",
+  "business": "Bi Hatıra",
+  "title": "02.00 Akşam Kapanış",
+  "sections": [
+   {
+    "title": "Kasa ve Sistemler",
+    "items": [
+     "Kasa çevresi ve tezgâhı temizlendi, çekmeceler düzenlendi.",
+     "POS cihazları ve kasa çevresindeki ekipmanlar temizlendi ve düzenli bırakıldı.",
+     "Servant bilgisayarı ve çevresi temizlendi, düzenli bırakıldı."
+    ]
+   },
+   {
+    "title": "Kahve ve İçecek Makineleri",
+    "items": [
+     "Espresso makinesinin başlıkları, dış yüzeyi ve çevresi temizlendi.",
+     "Espresso tezgâhı temizlendi, ekipmanlar düzenlendi ve eksik malzemeler tamamlandı.",
+     "Kahve öğütücüsü temizlendi, çevresi düzenlendi ve çekirdek stoğu tamamlandı.",
+     "Filtre kahve makinesi ve kullanılan ekipmanlar temizlendi, düzenli bırakıldı.",
+     "Filtre kahve, filtre kâğıdı ve servis malzemelerinin eksikleri tamamlandı.",
+     "Çay kazanı boşaltıldı, iç ve dış temizliği yapıldı, çevresi düzenlendi.",
+     "Çay bardakları temizlendi, çekmeceler düzenlendi, çay ve diğer malzemelerin eksikleri tamamlandı.",
+     "Türk kahvesi makinesinin iç ve dış temizliği yapıldı.",
+     "Türk kahvesi fincanları temizlendi, düzenlendi ve Türk kahvesi stoğu tamamlandı.",
+     "Limonata makinesinin haznesi ve dış yüzeyi temizlendi, çevresi düzenlendi.",
+     "Limonata miktarı ve muhafaza koşulları kontrol edildi, tespit edilen eksikler kaydedildi."
+    ]
+   },
+   {
+    "title": "Pasta ve Dondurma",
+    "items": [
+     "Pasta dolaplarının iç ve dış yüzeyleri, camları, rafları ve çevresi temizlendi.",
+     "Pastalar dolap içerisinde düzgün yerleştirildi ve sunum düzeni sağlandı.",
+     "Dondurma dolabının çalışması ve sıcaklığı kontrol edildi, tespit edilen arızalar bildirildi.",
+     "Dondurma çeşitleri sayıldı, eksik çeşitler tespit edilerek kaydedildi."
+    ]
+   },
+   {
+    "title": "Bar Alanı",
+    "items": [
+     "Şurup standı temizlendi, şişeler düzenlendi, şurup miktarları ve son tüketim tarihleri kontrol edildi.",
+     "Türk kahvesi hazırlama alanı temizlendi, ekipmanlar düzenlendi ve eksik malzemeler tamamlandı.",
+     "Bardaklar temizlendi, raflara düzenli yerleştirildi, kırık veya çatlak bardaklar ayrıldı.",
+     "Bar çekmecelerinin ve dolaplarının iç temizliği yapıldı, malzemeler düzenli yerleştirildi.",
+     "Pipet, peçete, karıştırıcı, bardak ve diğer servis malzemelerinin eksikleri tamamlandı.",
+     "Buz ekipmanları temizlendi, buz stoğu kontrol edildi ve soğuk içecek ekipmanları düzenlendi.",
+     "Sütlerin ve soğuk içeceklerin stok miktarları, saklama koşulları ve son tüketim tarihleri kontrol edildi.",
+     "Bulaşıkhane bölümündeki bar deposu temizlendi, raflar düzenlendi ve yedek malzeme stokları tamamlandı.",
+     "Bar bölümündeki çöp kovaları boşaltıldı, temizlendi ve yeni çöp poşetleri takıldı."
+    ]
+   },
+   {
+    "title": "Masa ve Sandalyeler",
+    "items": [
+     "Masa ve sandalyeler temizlendi, düzgün yerleştirildi, eksik veya hasarlı olanlar tespit edilerek bildirildi.",
+     "Minderler temizlendi, kuru ve düzgün yerleştirildi, yırtık veya hasarlı minderler bildirildi.",
+     "Teras ve camlı oturma alanlarındaki masalar temizlendi, oturma düzeni sağlandı.",
+     "Servantların üstleri ve içleri temizlendi, çekmeceler düzenlendi ve eksik servis malzemeleri tamamlandı.",
+     "Isıtıcı ve tente kumandaları kontrol edildi, yerlerine konuldu, eksik veya arızalı olanlar bildirildi.",
+     "Beyaz alanın zeminleri temizlendi, çim alanları düzenlendi ve müşteri geçiş yolları temiz bırakıldı.",
+     "Siyah alanın zeminleri, kasa önü ve müşteri geçiş yolları temizlendi.",
+     "Okey masalarının üst yüzeyleri, kumaş kaplamaları, kenarları ve ayakları temizlendi; leke, yanık, yırtık veya deformasyonlar bildirildi.",
+     "Okey ıstakaları temizlendi, eksik olanlar tamamlandı ve kırık veya hasarlı olanlar bildirildi.",
+     "Okey taşları temizlendi, takımların eksikleri tamamlandı ve kırık veya hasarlı taşlar ayrıldı."
+    ]
+   },
+   {
+    "title": "Tuvaletler",
+    "items": [
+     "Beyaz alan tuvaletlerinin zeminleri, duvarları, kapıları ve köşeleri temizlendi.",
+     "Siyah alan tuvaletlerinin zeminleri, duvarları, kapıları ve köşeleri temizlendi.",
+     "Klozetler, pisuvarlar ve çevreleri temizlendi, kötü kokular giderildi.",
+     "Lavabolar, musluklar, aynalar ve tezgâhlar temizlendi, lekeler giderildi.",
+     "Tuvalet kâğıdı, el sabunu, kâğıt havlu ve diğer hijyen malzemelerinin eksikleri tamamlandı.",
+     "Tuvalet çöp kovaları boşaltıldı, temizlendi ve yeni çöp poşetleri takıldı.",
+     "Tuvalet kapıları, kilitler, sifonlar, musluklar ve aydınlatmalar kontrol edildi, arızalar bildirildi.",
+     "Beyaz ve siyah alan tuvaletlerinin genel temizliği tamamlandı, alanlar düzenli ve kullanıma hazır bırakıldı."
+    ]
+   },
+   {
+    "title": "Camlar, Isıtıcılar ve Dekoratif Alanlar",
+    "items": [
+     "Beyaz alan camlarının iç ve dış yüzeyleri temizlendi, lekeler ve parmak izleri giderildi.",
+     "Siyah alan camlarının iç ve dış yüzeyleri temizlendi, lekeler ve parmak izleri giderildi.",
+     "Teras ve camlı oturma alanlarının camları, alt kısımları ve köşeleri temizlendi.",
+     "Cam kapılar, kapı kolları ve cam kenarları temizlendi.",
+     "Isıtıcıların üst kısımlarının, dış yüzeylerinin ve gövdelerinin tozları alındı, temizlendi.",
+     "Isıtıcıların ayakları, alt bölümleri ve çevreleri temizlendi.",
+     "Isıtıcılar düzgün yerleştirildi, çevrelerindeki çöpler ve yabancı maddeler temizlendi.",
+     "Duvarlardaki dekoratif oyukların içleri, kenarları ve köşeleri temizlendi, toz ve örümcek ağları giderildi.",
+     "İç mekândaki yapay çiçeklerin yaprakları, dalları ve saksıları temizlendi, tozları alındı ve düzenlendi."
+    ]
+   }
+  ]
+ },
+ {
+  "key": "bi_denetim",
+  "business": "Bi Hatıra",
+  "title": "08.30 Sabah Denetimi",
+  "sections": [
+   {
+    "title": "Kasa ve Sistemler",
+    "items": [
+     "Kasa çevresinin, tezgâhının ve çekmecelerin temiz ve düzenli bırakıldığı kontrol edildi.",
+     "POS cihazlarının ve kasa ekipmanlarının temizliği ve düzeni kontrol edildi.",
+     "Servant bilgisayarının ve çevresinin temiz ve düzenli bırakıldığı kontrol edildi."
+    ]
+   },
+   {
+    "title": "Kahve ve İçecek Makineleri",
+    "items": [
+     "Espresso makinesinin başlıklarının, dış yüzeyinin ve çevresinin temiz bırakıldığı kontrol edildi.",
+     "Espresso tezgâhının temizliği, ekipmanların düzeni ve malzemelerin eksiksiz olduğu kontrol edildi.",
+     "Kahve öğütücüsünün temizliği, çevresinin düzeni ve çekirdek stoğunun yeterliliği kontrol edildi.",
+     "Filtre kahve makinesinin ve kullanılan ekipmanların temiz ve düzenli bırakıldığı kontrol edildi.",
+     "Filtre kahve, filtre kâğıdı ve servis malzemelerinin yeterliliği kontrol edildi.",
+     "Çay kazanının iç ve dış temizliğinin yapıldığı ve çevresinin düzenli bırakıldığı kontrol edildi.",
+     "Çay bardaklarının temizliği, çekmecelerin düzeni ve malzemelerin eksiksiz olduğu kontrol edildi.",
+     "Türk kahvesi makinesinin iç ve dış temizliğinin yapıldığı kontrol edildi.",
+     "Fincanların temizliği, düzeni ve Türk kahvesi stoğunun yeterliliği kontrol edildi.",
+     "Limonata makinesinin haznesinin, dış yüzeyinin ve çevresinin temizliği kontrol edildi.",
+     "Limonatanın miktarı, muhafaza koşulları ve eksiklik kayıtları kontrol edildi."
+    ]
+   },
+   {
+    "title": "Pasta ve Dondurma",
+    "items": [
+     "Pasta dolaplarının iç ve dış yüzeylerinin, camlarının, raflarının ve çevresinin temizliği kontrol edildi.",
+     "Pastaların dolap içerisindeki yerleşiminin ve sunum düzeninin uygun olduğu kontrol edildi.",
+     "Dondurma dolabının çalışması, sıcaklığı ve varsa arıza kayıtları kontrol edildi.",
+     "Dondurma çeşitlerinin eksiksizliği ve eksiklik kayıtları kontrol edildi."
+    ]
+   },
+   {
+    "title": "Bar Alanı",
+    "items": [
+     "Şurup standının temizliği, şişelerin düzeni, şurup miktarları ve son tüketim tarihleri kontrol edildi.",
+     "Türk kahvesi hazırlama alanının temizliği, ekipmanların düzeni ve malzemelerin eksiksizliği kontrol edildi.",
+     "Bardakların temizliği, rafların düzeni ve kırık veya çatlak bardak bulunup bulunmadığı kontrol edildi.",
+     "Bar çekmecelerinin ve dolaplarının iç temizliği ile malzemelerin düzeni kontrol edildi.",
+     "Pipet, peçete, karıştırıcı, bardak ve diğer servis malzemelerinin yeterliliği kontrol edildi.",
+     "Buz ekipmanlarının temizliği, buz stoğu ve soğuk içecek ekipmanlarının düzeni kontrol edildi.",
+     "Sütlerin ve soğuk içeceklerin stokları, saklama koşulları ve son tüketim tarihleri kontrol edildi.",
+     "Bar deposunun temizliği, rafların düzeni ve yedek malzeme stoklarının yeterliliği kontrol edildi.",
+     "Bar bölümündeki çöp kovalarının boş, temiz ve yeni poşetlerinin takılı olduğu kontrol edildi."
+    ]
+   },
+   {
+    "title": "Masa ve Sandalyeler",
+    "items": [
+     "Masa ve sandalyelerin temizliği, yerleşimi, eksik ve hasar durumları kontrol edildi.",
+     "Minderlerin temizliği, kuruluğu, yerleşimi ve hasar durumları kontrol edildi.",
+     "Teras ve camlı oturma alanlarındaki masaların temizliği ve oturma düzeni kontrol edildi.",
+     "Servantların üst ve iç temizliği, çekmece düzeni ve servis malzemelerinin eksiksizliği kontrol edildi.",
+     "Isıtıcı ve tente kumandalarının yerlerinde olduğu, eksiksizliği ve çalışma durumları kontrol edildi.",
+     "Beyaz alanın zemin temizliği, çim alanların düzeni ve müşteri geçiş yollarının temizliği kontrol edildi.",
+     "Siyah alanın zeminlerinin, kasa önünün ve müşteri geçiş yollarının temizliği kontrol edildi.",
+     "Okey masalarının yüzeylerinin, kumaş kaplamalarının, kenarlarının ve ayaklarının temizliği ile hasar durumları kontrol edildi.",
+     "Okey ıstakalarının temizliği, eksiksizliği ve hasar durumları kontrol edildi.",
+     "Okey taşlarının temizliği, takımların eksiksizliği ve hasar durumları kontrol edildi."
+    ]
+   },
+   {
+    "title": "Tuvaletler",
+    "items": [
+     "Beyaz alan tuvaletlerinin zeminlerinin, duvarlarının, kapılarının ve köşelerinin temizliği kontrol edildi.",
+     "Siyah alan tuvaletlerinin zeminlerinin, duvarlarının, kapılarının ve köşelerinin temizliği kontrol edildi.",
+     "Klozetlerin, pisuvarların ve çevrelerinin temizliği ile kötü koku bulunup bulunmadığı kontrol edildi.",
+     "Lavaboların, muslukların, aynaların ve tezgâhların temiz ve lekesiz olduğu kontrol edildi.",
+     "Tuvalet kâğıdı, el sabunu, kâğıt havlu ve diğer hijyen malzemelerinin eksiksiz olduğu kontrol edildi.",
+     "Tuvalet çöp kovalarının boş, temiz ve yeni poşetlerinin takılı olduğu kontrol edildi.",
+     "Tuvalet kapılarının, kilitlerin, sifonların, muslukların ve aydınlatmaların çalışma durumları kontrol edildi.",
+     "Beyaz ve siyah alan tuvaletlerinin genel temizliği, düzeni ve kullanıma hazır olduğu kontrol edildi."
+    ]
+   },
+   {
+    "title": "Camlar, Isıtıcılar ve Dekoratif Alanlar",
+    "items": [
+     "Beyaz alan camlarının iç ve dış yüzeylerinin temiz ve lekesiz bırakıldığı kontrol edildi.",
+     "Siyah alan camlarının iç ve dış yüzeylerinin temiz ve lekesiz bırakıldığı kontrol edildi.",
+     "Teras ve camlı oturma alanlarının camlarının, alt kısımlarının ve köşelerinin temizliği kontrol edildi.",
+     "Cam kapıların, kapı kollarının ve cam kenarlarının temizliği kontrol edildi.",
+     "Isıtıcıların üst kısımlarının, dış yüzeylerinin ve gövdelerinin toz ve kir bakımından temizliği kontrol edildi.",
+     "Isıtıcıların ayaklarının, alt bölümlerinin ve çevrelerinin temizliği kontrol edildi.",
+     "Isıtıcıların yerleşimi, çevrelerinin temizliği ve düzeni kontrol edildi.",
+     "Duvarlardaki dekoratif oyukların içlerinin, kenarlarının ve köşelerinin temizliği kontrol edildi.",
+     "Yapay çiçeklerin yapraklarının, dallarının ve saksılarının temizliği ve düzeni kontrol edildi."
+    ]
+   }
+  ]
+ },
+ {
+  "key": "bi_acilis",
+  "business": "Bi Hatıra",
+  "title": "Sabah Açılış Kontrol Listesi",
+  "sections": [
+   {
+    "title": "İŞLETME AÇILIŞI",
+    "items": [
+     "İşletmenin tüm giriş ve geçiş kapıları açıldı.",
+     "Beyaz ve siyah alan kasa bilgisayarları, kasa programları ve servant bilgisayarları açılarak çalışmaları kontrol edildi.",
+     "Müzik sistemi açıldı ve ses seviyesi ayarlandı.",
+     "Beyaz ve siyah alan televizyonları açıldı, çalışmaları kontrol edildi."
+    ]
+   },
+   {
+    "title": "MAKİNE VE EKİPMAN AÇILIŞI",
+    "items": [
+     "Çay kazanı açıldı, çay demlendi ve servise hazırlandı.",
+     "Espresso kahve makinesi, kahve öğütücüsü, filtre kahve ve Türk kahvesi makineleri açıldı; temizlikleri ve çalışma durumları kontrol edilerek servise hazırlandı.",
+     "Limonata makinesi açıldı; temizliği, çalışma durumu ve servis hazırlığı kontrol edildi.",
+     "Pasta dolaplarının temizliği, sıcaklıkları ve çalışma durumları kontrol edildi.",
+     "Buz ve soğuk içecek hazırlıkları tamamlandı; buz miktarı ve ekipmanların çalışması kontrol edildi."
+    ]
+   },
+   {
+    "title": "MASA, MİNDER VE OTURMA ALANLARI",
+    "items": [
+     "Beyaz alan, siyah alan, teras ve camlı oturma alanlarındaki masa, sandalye ve minderlerin temizliği, düzeni ve yerleşimi kontrol edilerek servise hazırlandı.",
+     "İç ve dış alan servantlarının üst yüzeyleri ve çekmeceleri temizlendi, düzenlendi ve eksik malzemeleri kontrol edildi.",
+     "Isıtıcı ve tente kumandalarının servantlarda eksiksiz ve çalışır durumda olduğu kontrol edildi.",
+     "Tüm oturma alanlarının genel düzeni ve müşteri kullanımına hazır olduğu kontrol edildi."
+    ]
+   },
+   {
+    "title": "TUVALET VE TEMİZLİK ODASI KONTROLÜ",
+    "items": [
+     "Beyaz Alan Tuvaletleri: Beyaz alan tuvaletlerinin klozet, pisuvar, lavabo, ayna, zemin ve genel temizliği; çöp kovaları, kötü koku, sabun, tuvalet kâğıdı ve diğer sarf malzemeleri kontrol edildi, eksiklikler tamamlandı.",
+     "Siyah Alan Tuvaletleri: Siyah alan tuvaletlerinin klozet, pisuvar, lavabo, ayna, zemin ve genel temizliği; çöp kovaları, kötü koku, sabun, tuvalet kâğıdı ve diğer sarf malzemeleri kontrol edildi, eksiklikler tamamlandı.",
+     "Beyaz Alan Temizlik Odası: Beyaz alan temizlik odasının genel temizliği, zemin ve raf düzeni, temizlik malzemelerinin yerleşimi ve eksikleri kontrol edildi.",
+     "Siyah Alan Personel Tuvaleti: Siyah alan personel tuvaletinin klozet, lavabo, ayna, zemin ve genel temizliği; çöp kovası, kötü koku, sabun, tuvalet kâğıdı ve diğer sarf malzemeleri kontrol edildi, eksiklikler tamamlandı."
+    ]
+   },
+   {
+    "title": "ZEMİN VE CAM TEMİZLİĞİ",
+    "items": [
+     "Zemin ve Genel Alan Temizliği: Beyaz alan, siyah alan, kasa önleri, çim alanlar ve müşteri yürüyüş ve geçiş yollarının temizliği kontrol edildi.",
+     "Cam ve Camlı Alan Temizliği: Camlı oturma alanları, teras camları, cam kapılar ve cam yüzeylerinin temizliği kontrol edildi."
+    ]
+   },
+   {
+    "title": "BULAŞIKHANE BAR DEPOSU KONTROLÜ",
+    "items": [
+     "Bulaşıkhane deposunda bulunan karton bardak, bardak kapağı, çay, kahve, çöp torbası, şurup ve diğer bar malzemelerinin stok miktarları ve eksiklikleri kontrol edildi."
+    ]
+   }
+  ]
+ },
+ {
+  "key": "bi_genel_mudur",
+  "business": "Bi Hatıra",
+  "title": "Genel Müdür Günlük Denetim (16.00–02.00)",
+  "sections": [
+   {
+    "title": "PERSONEL KONTROLÜ",
+    "items": [
+     "Kılık kıyafet kontrolü: Tüm personelin kılık kıyafeti ve genel görünümü kontrol edildi.",
+     "Görev yeri kontrolü: Tüm personelin görev yerlerinde olup olmadığı kontrol edildi."
+    ]
+   },
+   {
+    "title": "BEYAZ VE SIYAH ALAN TUVALET KONTROLÜ",
+    "items": [
+     "Beyaz alan tuvaletleri: Klozet, pisuvar, lavabo, ayna, musluk, zemin ve genel temizlik; kötü koku, çöp kovaları, sabun, tuvalet kâğıdı, kâğıt havlu eksikleri ve ekipmanların çalışması kontrol edildi.",
+     "Siyah alan tuvaletleri: Klozet, pisuvar, lavabo, ayna, musluk, zemin ve genel temizlik; kötü koku, çöp kovaları, sabun, tuvalet kâğıdı, kâğıt havlu eksikleri ve ekipmanların çalışması kontrol edildi."
+    ]
+   },
+   {
+    "title": "İÇ VE DIŞ ALAN GENEL KONTROLÜ",
+    "items": [
+     "Masa, sandalye, minder ve mama sandalyeleri: Temizlik, düzen, yerleşim, kuruluk ve hasar durumları kontrol edildi.",
+     "Genel alan temizliği: Beyaz alan, siyah alan, iç salon, teras, camlı oturma alanları, zeminler, çim bölümleri ve müşteri geçiş yollarının temizliği ve düzeni kontrol edildi.",
+     "Servantlar: İç ve dış alan servantlarının üst yüzeyleri, çekmeceleri, temizliği, düzeni ve eksik malzemeleri kontrol edildi.",
+     "Oyun ekipmanları: Okey masaları, kumaşları, taşları, ıstakaları, tavla pulları ve iskambil kâğıtlarının temizliği, eksikleri ve hasarları kontrol edildi.",
+     "Isıtıcılar, tenteler ve aydınlatmalar: Temizlik, düzen, çalışma durumları ve kumandaları kontrol edildi.",
+     "İç ortam: Müzik seviyesi, sıcaklık ve genel ortam düzeni kontrol edildi."
+    ]
+   },
+   {
+    "title": "CAMLAR VE DEKORATIF ALANLAR KONTROLÜ",
+    "items": [
+     "Camlar: Beyaz alan, siyah alan, iç salon ve teras camlarının iç-dış yüzeyleri, cam kapılar, kapı kolları ve köşelerinin temizliği kontrol edildi.",
+     "Dekoratif alanlar: Duvarlardaki dekoratif oyuklar, yapay çiçekler, saksılar ve diğer dekoratif ürünlerin temizliği ve düzeni kontrol edildi."
+    ]
+   },
+   {
+    "title": "KASA VE SISTEMLER KONTROLÜ",
+    "items": [
+     "Kasa alanları: Beyaz ve siyah alan kasalarının, tezgâhlarının, çekmecelerinin ve çevresinin temizliği ve düzeni kontrol edildi.",
+     "Kasa, POS ve bilgisayar sistemleri: Kasa bilgisayarları, POS cihazları, ödeme sistemleri ve servant bilgisayarlarının temizliği, düzeni ve düzgün çalıştığı doğrulandı."
+    ]
+   },
+   {
+    "title": "KAHVE VE İÇECEK MAKINELERI KONTROLÜ",
+    "items": [
+     "Kahve makineleri: Espresso makineleri, kahve öğütücüleri, filtre kahve ve Türk kahvesi makinelerinin temizliği, bakımı, çalışma durumları ve çevre düzeni kontrol edildi.",
+     "İçecek ekipmanları: Blender, mikser, çay kazanı ve diğer içecek hazırlama ekipmanlarının temizliği, çalışma durumları ve çevre düzeni kontrol edildi.",
+     "Buz makineleri: Buz makinelerinin iç ve dış temizliği, buz hazneleri, filtreleri, buz üretimi ve çevre temizliği kontrol edildi.",
+     "Soğutucular ve dolaplar: İçecek dolapları, süt dolapları ve diğer soğutucuların temizliği, iç düzeni, sıcaklıkları ve çevresi kontrol edildi."
+    ]
+   },
+   {
+    "title": "GÜNLÜK BAR HAZIRLIK KONTROLÜ",
+    "items": [
+     "Günlük ürün hazırlıkları: Salep, sıcak çikolata, dondurma ve diğer içecek malzemelerinin günlük hazırlıkları (limon kesimi ve sıkımı, nane hazırlanması, cool lime, limonata, meyve ve sos hazırlıkları vb.), tazeliği, tarih etiketleri, saklama koşulları ve akşam yoğunluğu için yeterliliği kontrol edildi."
+    ]
+   },
+   {
+    "title": "PASTA VE TATLI KONTROLÜ",
+    "items": [
+     "Pasta ve tatlılar: Pasta, cheesecake, brownie ve diğer tatlıların tazeliği, görünümü, son kullanma tarihleri, satışa uygunluğu; teşhir dolaplarının temizliği, ürün dizilişi, etiketleri ve dolap sıcaklıkları kontrol edildi.",
+     "Günlük tatlı hazırlıkları: Waffle, churros ve diğer tatlıların hazırlık malzemelerinin akşam yoğunluğu için yeterliliği ve kullanıma hazır olma durumları kontrol edildi."
+    ]
+   },
+   {
+    "title": "MUTFAK KONTROLÜ",
+    "items": [
+     "Mutfak genel temizliği ve ekipmanlar: Şeften yapılan kontroller hakkında bilgi alındı; tezgâhlar, ocaklar, fırınlar, fritözler, ızgaralar, davlumbazlar ve genel mutfak düzeni müdür tarafından kontrol edildi.",
+     "Günlük ürün hazırlıkları ve gıda güvenliği: Şeften günlük hazırlıklar hakkında bilgi alındı; ürünlerin tazeliği, tarih etiketleri, saklama koşulları, hijyen ve akşam yoğunluğu için yeterliliği müdür tarafından kontrol edildi.",
+     "Soğuk hava dolapları: Şeften dolapların durumu hakkında bilgi alındı; buzdolapları ve derin dondurucuların sıcaklıkları, temizliği, ürün yerleşimi ve saklama koşulları müdür tarafından kontrol edildi."
+    ]
+   },
+   {
+    "title": "DEPO VE STOK KONTROLÜ",
+    "items": [
+     "Siyah alan depo: Genel temizlik, raf düzeni, ürün yerleşimi, stok yeterliliği ve son kullanma tarihleri kontrol edildi.",
+     "Beyaz alan depo: Genel temizlik, raf düzeni, ürün yerleşimi, stok yeterliliği ve son kullanma tarihleri kontrol edildi.",
+     "Teras depo: Genel temizlik, raf düzeni, malzeme yerleşimi, eksik ürün ve ekipmanlar kontrol edildi.",
+     "Ofis depo: Genel temizlik, raf düzeni, malzeme yerleşimi, eksik ürün ve ekipmanlar kontrol edildi.",
+     "Bulaşıkhane deposu: Genel temizlik, raf düzeni, malzeme yerleşimi, temizlik ürünleri ve ekipman eksiklikleri kontrol edildi."
+    ]
+   }
+  ]
+ }
+]

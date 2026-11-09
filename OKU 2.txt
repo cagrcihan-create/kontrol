@@ -1,0 +1,27 @@
+CARLO & BI HATIRA KONTROL - YENI UYGULAMA (v3)
+
+Bu paket sifirdan yazilmis yeni arayuzdur. Eski uygulamanin kodu kullanilmadi;
+ayni Supabase projesine ve ayni tablolara baglanir. Kullanicilar, gecmis
+kayitlar ve eksik isler oldugu gibi gorunur.
+
+SQL: Bu surum icin SQL calistirmak GEREKMEZ. Veritabaninda hicbir sey
+degismez, hicbir kayit silinmez.
+
+YAYIN (onerilen):
+1. Netlify'da YENI bir site acip bu ZIP'i oraya yukleyin (eski site calismaya
+   devam eder).
+2. Bir personel, bir mudur ve bir yonetici hesabiyla deneyin.
+3. Memnun kalirsaniz ayni ZIP'i canli siteye yukleyin. Sorun olursa Netlify
+   Deploys bolumunden eski surume donun.
+
+ILK DENEMEDE BAKILACAKLAR:
+- 12.00 Oglen Mutfak Hazirlik formu yenidir (type: oglen_mutfak). Bir kez
+  gonderip kaydin olustugunu, eksiklerin Eksik Isler'e dustugunu ve e-postanin
+  geldigini kontrol edin.
+- Personel "Tamamladim" dediginde hata cikarsa bu, veritabanindaki
+  complete_missing_task fonksiyonunun isletme kisitindan gelir; uygulama
+  hatayi ekranda gosterir.
+
+DOSYALAR: index.html, style.css, app.js, checklists.json, manifest.webmanifest,
+sw.js, icon.svg. Checklist maddelerini degistirmek icin yalnizca
+checklists.json duzenlenir.

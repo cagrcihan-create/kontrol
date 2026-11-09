@@ -1,0 +1,667 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#16202b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Kontrol">
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzE2MjAyYiIvPjxyZWN0IHg9IjExNiIgeT0iOTYiIHdpZHRoPSIyODAiIGhlaWdodD0iMzIwIiByeD0iMjgiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTc2IDI2Mmw1NiA1NiAxMDgtMTI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMxZjlkNjIiIHN0cm9rZS13aWR0aD0iNDQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxyZWN0IHg9IjE5NiIgeT0iNzIiIHdpZHRoPSIxMjAiIGhlaWdodD0iNTIiIHJ4PSIxNiIgZmlsbD0iI2Y0YjQxYSIvPjwvc3ZnPgo=" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* Carlo & Bi Hatıra Kontrol — stil */
+:root{
+  --zemin:#eceff1; --yuzey:#ffffff; --yuzey2:#f4f6f7; --cizgi:#d5dbe0;
+  --murekkep:#16202b; --soluk:#5b6875;
+  --tamam:#1f9d62; --tamam-zemin:#e3f5ec;
+  --eksik:#cf3429; --eksik-zemin:#fdeceb;
+  --bekle:#8a5a00; --bekle-zemin:#fff1cc;
+  --carlo:#f4b41a; --hatira:#2f7f84;
+  --ana:#16202b; --ana-yazi:#ffffff;
+  --baslik:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --govde:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --zemin:#0f161d; --yuzey:#18222c; --yuzey2:#1f2b37; --cizgi:#2e3c4a;
+    --murekkep:#eef2f5; --soluk:#9aa7b4;
+    --tamam:#3fc487; --tamam-zemin:#123526;
+    --eksik:#ff7468; --eksik-zemin:#3d1a17;
+    --bekle:#ffd166; --bekle-zemin:#3a2f10;
+    --ana:#eef2f5; --ana-yazi:#16202b;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--zemin);color:var(--murekkep);font-family:var(--govde);font-size:16px;line-height:1.45}
+h1,h2,h3{font-family:var(--baslik);font-weight:700;line-height:1.1;margin:0;letter-spacing:.01em}
+h1{font-size:26px} h2{font-size:24px} h3{font-size:19px;font-weight:600}
+p{margin:0}
+.boot{padding:40px 20px;color:var(--soluk)}
+.soluk{color:var(--soluk);font-size:14px}
+
+/* Üst bar */
+.ust{position:sticky;top:0;z-index:5;background:#16202b;color:#fff;padding:calc(10px + env(safe-area-inset-top,0px)) 16px 10px;display:flex;align-items:center;gap:10px}
+.ust .kim{flex:1;min-width:0}
+.ust .kim b{display:block;font-family:var(--baslik);font-size:21px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ust .kim span{font-size:13px;color:#b8c3cd}
+.ust button{background:#263444;color:#fff;border:0;border-radius:8px;padding:9px 12px;font:inherit;font-size:14px;font-weight:500}
+main{max-width:720px;margin:0 auto;padding:16px 14px calc(96px + env(safe-area-inset-bottom,0px))}
+main.formda{padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))}
+
+/* Alt sekmeler */
+.sekmeler{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--yuzey);border-top:1px solid var(--cizgi);display:flex;padding-bottom:env(safe-area-inset-bottom,0px)}
+.sekmeler button{flex:1;background:none;border:0;border-top:3px solid transparent;padding:11px 4px 12px;font:inherit;font-size:14px;font-weight:500;color:var(--soluk);position:relative}
+.sekmeler button.acik{color:var(--murekkep);border-top-color:var(--murekkep);font-weight:600}
+.rozet{display:inline-block;min-width:20px;padding:1px 6px;margin-left:4px;border-radius:10px;background:var(--eksik);color:#fff;font-size:12px;font-weight:600;line-height:18px;text-align:center}
+
+/* Kutular */
+.kutu{background:var(--yuzey);border:1px solid var(--cizgi);border-radius:12px;padding:16px;margin-bottom:12px}
+.bolum-basligi{display:flex;align-items:center;gap:8px;margin:20px 2px 10px}
+.bolum-basligi:first-child{margin-top:4px}
+.nokta{width:12px;height:12px;border-radius:3px;flex:none}
+.carlo .nokta,.nokta.carlo{background:var(--carlo)} .hatira .nokta,.nokta.hatira{background:var(--hatira)}
+
+/* Günün özeti */
+.ozet{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px}
+.ozet button{background:var(--yuzey);border:1px solid var(--cizgi);border-radius:12px;padding:12px 10px;text-align:left;font:inherit;color:inherit}
+.ozet b{display:block;font-family:var(--baslik);font-size:30px;line-height:1}
+.ozet span{font-size:13px;color:var(--soluk)}
+
+/* Liste satırı */
+.satir{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--yuzey);border:1px solid var(--cizgi);border-left:5px solid var(--cizgi);border-radius:10px;padding:14px;margin-bottom:8px;font:inherit;color:inherit}
+.satir.carlo{border-left-color:var(--carlo)} .satir.hatira{border-left-color:var(--hatira)}
+.satir .ad{flex:1;min-width:0}
+.satir .ad b{display:block;font-weight:600}
+.satir .ad span{font-size:14px;color:var(--soluk)}
+.etiket{display:inline-block;padding:3px 9px;border-radius:6px;font-size:13px;font-weight:600;white-space:nowrap;background:var(--yuzey2);color:var(--soluk)}
+.etiket.tamam{background:var(--tamam-zemin);color:var(--tamam)}
+.etiket.eksik{background:var(--eksik-zemin);color:var(--eksik)}
+.etiket.bekle{background:var(--bekle-zemin);color:var(--bekle)}
+
+/* Düğmeler */
+.dugme{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:10px;background:var(--ana);color:var(--ana-yazi);padding:13px 18px;font:inherit;font-weight:600;min-height:48px;cursor:pointer}
+.dugme.ikincil{background:var(--yuzey2);color:var(--murekkep);border:1px solid var(--cizgi)}
+.dugme.kirmizi{background:var(--eksik);color:#fff}
+.dugme.yesil{background:var(--tamam);color:#fff}
+.dugme.kucuk{padding:8px 12px;min-height:40px;font-size:14px}
+.dugme.tam{width:100%}
+.dugme:disabled{opacity:.45}
+.dugmeler{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.dugmeler .dugme{flex:1}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #4c9ffe;outline-offset:2px}
+
+/* Form alanları */
+label{display:block;font-size:14px;font-weight:600;margin:12px 0 5px}
+input,select,textarea{width:100%;border:1px solid var(--cizgi);border-radius:9px;padding:12px;font:inherit;background:var(--yuzey);color:var(--murekkep)}
+textarea{min-height:76px;resize:vertical}
+
+/* Filtre çipleri */
+.cipler{display:flex;gap:6px;overflow-x:auto;margin:0 -14px 12px;padding:2px 14px}
+.cipler button{flex:none;border:1px solid var(--cizgi);background:var(--yuzey);color:var(--murekkep);border-radius:20px;padding:8px 14px;font:inherit;font-size:14px;font-weight:500}
+.cipler button.acik{background:var(--ana);color:var(--ana-yazi);border-color:var(--ana)}
+
+/* Checklist doldurma */
+.adimlar{display:flex;gap:4px;margin:12px 0 4px}
+.adimlar button{flex:1;height:12px;border:0;border-radius:3px;background:var(--cizgi);padding:0}
+.adimlar button.bitti{background:var(--tamam)}
+.adimlar button.eksikli{background:var(--eksik)}
+.adimlar button.simdi{box-shadow:0 0 0 2px var(--yuzey),0 0 0 4px var(--murekkep)}
+.adimlar button:disabled{opacity:1}
+.soru{background:var(--yuzey);border:1px solid var(--cizgi);border-radius:12px;padding:14px;margin-bottom:10px}
+.soru.eksik{border-color:var(--eksik);background:var(--eksik-zemin)}
+.soru.hata{border-color:var(--eksik);box-shadow:0 0 0 2px var(--eksik)}
+.soru-metin{display:flex;gap:10px;margin-bottom:12px;font-weight:500}
+.soru-no{font-family:var(--baslik);font-size:20px;font-weight:700;color:var(--soluk);min-width:22px;line-height:1.15}
+.sec{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sec button{min-height:52px;border-radius:10px;border:2px solid var(--cizgi);background:var(--yuzey);color:var(--murekkep);font:inherit;font-size:17px;font-weight:600}
+.sec button.t.acik{background:var(--tamam);border-color:var(--tamam);color:#fff}
+.sec button.e.acik{background:var(--eksik);border-color:var(--eksik);color:#fff}
+.alanlar{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:12px}
+.alanlar label{margin:0 0 4px;font-size:13px;color:var(--soluk)}
+.alt-bar{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--yuzey);border-top:1px solid var(--cizgi);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px))}
+.alt-bar>div{max-width:720px;margin:0 auto;display:flex;gap:8px}
+.alt-bar .dugme{flex:1}
+.alt-bar .dugme.ikincil{flex:0 0 96px}
+
+/* Kayıt ve iş kartları */
+.is{background:var(--yuzey);border:1px solid var(--cizgi);border-left:5px solid var(--cizgi);border-radius:10px;padding:14px;margin-bottom:10px}
+.is.carlo{border-left-color:var(--carlo)} .is.hatira{border-left-color:var(--hatira)}
+.is.olmadi{border-color:var(--eksik);background:var(--eksik-zemin)}
+.is h3{margin-bottom:4px}
+.is .not{margin:8px 0;padding:9px 11px;background:var(--yuzey2);border-radius:8px;font-size:15px}
+.is.olmadi .not{background:var(--yuzey)}
+.ust-satir{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:6px}
+.madde{padding:10px 0;border-top:1px solid var(--cizgi)}
+.madde:first-of-type{border-top:0}
+details{margin-top:12px}
+summary{font-weight:600;padding:8px 0;cursor:pointer}
+.bos{text-align:center;color:var(--soluk);padding:34px 16px}
+
+/* Alt pencere (onay) */
+#sheet{position:fixed;inset:0;z-index:20;background:rgba(10,16,22,.55);display:flex;align-items:flex-end;justify-content:center}
+#sheet[hidden]{display:none}
+#sheet .pencere{background:var(--yuzey);width:100%;max-width:720px;border-radius:16px 16px 0 0;padding:20px 16px calc(18px + env(safe-area-inset-bottom,0px))}
+#sheet h2{margin-bottom:8px}
+
+/* Bildirim */
+#toast{position:fixed;left:14px;right:14px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:30;max-width:692px;margin:0 auto;background:#16202b;color:#fff;border-radius:10px;padding:13px 16px;font-weight:500;opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .18s,transform .18s;white-space:pre-line}
+#toast.acik{opacity:1;transform:none}
+#toast.hata{background:var(--eksik);color:#fff}
+@media (prefers-reduced-motion:reduce){#toast{transition:none}}
+
+/* Giriş */
+.giris{max-width:420px;margin:0 auto;padding:calc(48px + env(safe-area-inset-top,0px)) 18px 40px}
+.giris h1{font-size:40px;margin-bottom:4px}
+.giris .kutu{margin-top:22px}
+.giris .dugme{margin-top:16px}
+.baglanti{background:none;border:0;color:var(--murekkep);font:inherit;font-weight:600;text-decoration:underline;padding:14px 0;width:100%}
+</style>
+<title>Carlo & Bi Hatıra Kontrol</title>
+</head>
+<body>
+<div id="app"><p class="boot">Yükleniyor…</p></div>
+<div id="sheet" hidden></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script type="application/json" id="checklist-data">[{"key":"acilis","business":"Carlo Burger","title":"08.30 Sabah Bar Açılış","stock":true,"sections":[{"title":"Kahve Makinesi","items":["Kahve makinesi açıldı, çalışması kontrol edildi.","Makinenin genel temizliği kontrol edildi.","Grup başlıkları ve buhar çubukları kontrol edildi.","Makine çevresi ve tezgâh düzenlendi.","Bölümün eksik malzemeleri kontrol edildi."]},{"title":"Kahve Öğütücü","items":["Öğütücünün çalışması kontrol edildi.","Öğütücünün temizliği kontrol edildi.","Kahve çekirdeği miktarı kontrol edildi.","Öğütme ayarı kontrol edildi.","Bölümün çekmeceleri ve malzemeleri kontrol edildi."]},{"title":"Filtre Kahve Makinesi","items":["Makine açıldı ve çalışması kontrol edildi.","Makinenin temizliği kontrol edildi.","Filtre kahve hazırlığı yapıldı.","Filtre kâğıdı ve kahve stokları kontrol edildi.","Bölümün çekmece ve dolapları kontrol edildi."]},{"title":"Çay Kazanı","items":["Çay kazanı açıldı ve çalışması kontrol edildi.","Çay demlendi ve servise hazırlandı.","Kazan ve çevresinin temizliği kontrol edildi.","Çay bardakları ve servis malzemeleri kontrol edildi.","Çay stokları ve bölümün çekmeceleri kontrol edildi."]},{"title":"Şurup Standı","items":["Şurup standının temizliği kontrol edildi.","Şurupların düzeni kontrol edildi.","Şurup şişelerinin doluluk miktarları kontrol edildi.","Şurupların son kullanma tarihleri kontrol edildi.","Standın alt dolapları ve çekmeceleri kontrol edildi."]},{"title":"Limonata Makinesi","items":["Makinenin temizliği kontrol edildi.","Makinenin çalışması kontrol edildi.","Limonatanın tazeliği kontrol edildi.","Limonata miktarı ve eksikleri kontrol edildi.","Makine çevresi ve bölümün çekmeceleri kontrol edildi."]},{"title":"Pasta Dolapları","items":["Pasta dolaplarının temizliği kontrol edildi.","Dolap sıcaklıkları kontrol edildi.","Pastaların tazeliği ve tarihleri kontrol edildi.","Pastaların düzeni ve sunumu kontrol edildi.","Eksik ve zayi pasta ürünleri kontrol edildi."]},{"title":"Türk Kahvesi Makinesi","items":["Makinenin çalışması kontrol edildi.","Makinenin temizliği kontrol edildi.","Türk kahvesi stokları kontrol edildi.","Fincan ve servis malzemeleri kontrol edildi.","Makine çevresinin temizliği kontrol edildi."]},{"title":"Türk Kahvesi Bölümü","items":["Bölümün tezgâh temizliği kontrol edildi.","Bütün çekmecelerin temizliği kontrol edildi.","Çekmecelerdeki malzemeler düzenlendi.","Dolap içlerinin temizliği kontrol edildi.","Eksik ürün ve ekipmanlar kontrol edildi."]},{"title":"Bardaklar","items":["Bütün bardakların temizliği kontrol edildi.","Bardak raflarının temizliği kontrol edildi.","Bardakların düzeni kontrol edildi.","Eksik bardak çeşitleri kontrol edildi.","Kırık ve çatlak bardaklar ayrıldı."]},{"title":"Bar Çekmeceleri ve Dolapları","items":["Bütün çekmecelerin temizliği kontrol edildi.","Dolap içlerinin temizliği kontrol edildi.","Malzemelerin düzeni kontrol edildi.","Eksik malzemeler kontrol edildi.","Kullanılmayan malzemeler kaldırıldı."]},{"title":"Çöp Kovaları","items":["Bütün çöp kovaları boşaltıldı.","Çöp kovalarının temizliği kontrol edildi.","Yeni çöp poşetleri takıldı.","Çöp kovalarının çevresi temizlendi.","Çöp alanının zemin temizliği kontrol edildi."]},{"title":"Kasa","items":["Kasa bilgisayarı açıldı.","Kasa programı ve POS cihazları kontrol edildi.","Kasa tezgâhının temizliği kontrol edildi.","Kasa çekmecelerinin düzeni kontrol edildi.","Kasa teslimi ve başlangıç nakdi kontrol edildi."]},{"title":"Bulaşıkhane Bar Deposu","items":["Depo raflarının temizliği kontrol edildi.","Depodaki ürünlerin düzeni kontrol edildi.","Ürünlerin son kullanma tarihleri kontrol edildi.","Eksik ürün ve malzemeler kontrol edildi.","Depo zemini ve genel temizliği kontrol edildi."]},{"title":"Bar Genel Açılış Kontrolü","items":["Barın genel temizliği tamamlandı.","Bütün makinelerin çalışması kontrol edildi.","Bütün çekmece ve dolaplar kontrol edildi.","Eksik ürünler stok listesine yazıldı.","Bar müşteri servisine hazırlandı."]}]},{"key":"taha","business":"Carlo Burger","title":"Taha Sabah Denetimi","sections":[{"title":"Taha Sabah Hızlı Denetim","items":["Kahve makinesi ve temizliği","Kahve öğütücü ve kahve stokları","Filtre kahve makinesi ve hazırlığı","Çay kazanı ve çay hazırlığı","Şurup standı ve stokları","Limonata makinesi ve hazırlığı","Pasta dolapları ve ürün tazeliği","Türk kahvesi makinesi","Türk kahvesi bölümü ve çekmeceleri","Bardakların temizliği ve düzeni","Bar çekmeceleri ve dolapları","Çöp kovaları ve genel temizlik","Kasa ve POS cihazları","Bulaşıkhane bar deposu","Günlük stok ve eksik ürün listesi","Günlük zayi ürün kayıtları","Barın servise hazır olması"]}]},{"key":"oglen_mutfak","business":"Carlo Burger","title":"12.00 Öğlen Mutfak Hazırlık","sections":[{"title":"Görev Sıralaması","items":["Öğlen servisi öncesinde tüm istasyonlar kontrol edildi, eksiklikler giderildi ve servise hazırlandı.","Barbekü, Mush, CARLO, Acılı CARLO, Köri, Ketçap, Pesto, Beşamel, Sezar ve Acı Bal soslarının hazırlıkları tamamlandı.","Pizza hamuru hazırlandı.","Mantar, trüflü mantar ve karamelize soğan hazırlıkları tamamlandı.","Salata malzemeleri hazırlandı, eksiklikler kontrol edildi ve tamamlandı.","Günlük mutfak iş akışı düzenlendi, hazırlıkların planlı şekilde ilerlemesi sağlandı.","Bulaşıkhane ve depo raflarının temizliği ve düzeni kontrol edildi, eksiklikler giderildi.","Tedarikçilerden gelen ürünlerin miktar, kalite ve tarih kontrolleri yapıldı, ürünler depoya yerleştirildi."]},{"title":"Sos Hazırlık Kaydı","items":[{"label":"Barbekü sos","fields":[{"key":"miktar","label":"Hazırlanan","type":"number","unit":"adet"},{"key":"yedek","label":"Yedek","type":"number","unit":"adet"},{"key":"tarih","label":"Hazırlanış tarihi","type":"date"}]},{"label":"Mush sos","fields":[{"key":"miktar","label":"Hazırlanan","type":"number","unit":"adet"},{"key":"yedek","label":"Yedek","type":"number","unit":"adet"},{"key":"tarih","label":"Hazırlanış tarihi","type":"date"}]},{"label":"CARLO sos","fields":[{"key":"miktar","label":"Hazırlanan","type":"number","unit":"adet"},{"key":"yedek","label":"Yedek","type":"number","unit":"adet"},{"key":"tarih","label":"Hazırlanış tarihi","type":"date"}]},{"label":"Acılı CARLO sos","fields":[{"key":"miktar","label":"Hazırlanan","type":"number","unit":"adet"},{"key":"yedek","label":"Yedek","type":"number","unit":"adet"},{"key":"tarih","label":"Hazırlanış tarihi","type":"date"}]},{"label":"Köri sos","fields":[{"key":"miktar","label":"Hazırlanan","type":"number","unit":"adet"},{"key":"yedek","label":"Yedek","type":"number","unit":"adet"},{"key":"tarih","label":"Hazırlanış tarihi","type":"date"}]},{"label":"Ketçap","fields":[{"key":"miktar","label":"Hazırlanan","type":"number","unit":"adet"},{"key":"yedek","label":"Yedek","type":"number","unit":"adet"},{"key":"tarih","label":"Hazırlanış tarihi","type":"date"}]},{"label":"Pesto sos","fields":[{"key":"miktar","label":"Hazırlanan","type":"number","unit":"adet"},{"key":"yedek","label":"Yedek","type":"number","unit":"adet"},{"key":"tarih","label":"Hazırlanış tarihi","type":"date"}]},{"label":"Beşamel sos","fields":[{"key":"miktar","label":"Hazırlanan","type":"number","unit":"adet"},{"key":"yedek","label":"Yedek","type":"number","unit":"adet"},{"key":"tarih","label":"Hazırlanış tarihi","type":"date"}]},{"label":"Sezar sos","fields":[{"key":"miktar","label":"Hazırlanan","type":"number","unit":"adet"},{"key":"yedek","label":"Yedek","type":"number","unit":"adet"},{"key":"tarih","label":"Hazırlanış tarihi","type":"date"}]},{"label":"Acı Bal","fields":[{"key":"miktar","label":"Hazırlanan","type":"number","unit":"adet"},{"key":"yedek","label":"Yedek","type":"number","unit":"adet"},{"key":"tarih","label":"Hazırlanış tarihi","type":"date"}]}]},{"title":"Pizza Hamuru","items":[{"label":"Pizza hamuru","fields":[{"key":"miktar","label":"Hazırlanan","type":"number","unit":"kasa"},{"key":"tarih","label":"Hazırlanış tarihi","type":"date"}]}]},{"title":"Mantar ve Karamelize Soğan","items":[{"label":"Mantar","fields":[{"key":"miktar","label":"Hazırlanan","type":"number","unitKey":"birim"},{"key":"birim","label":"Birim","type":"select","options":["kg","gr","adet","küvet"]},{"key":"tarih","label":"Hazırlanış tarihi","type":"date"}]},{"label":"Trüflü mantar","fields":[{"key":"miktar","label":"Hazırlanan","type":"number","unitKey":"birim"},{"key":"birim","label":"Birim","type":"select","options":["kg","gr","adet","küvet"]},{"key":"tarih","label":"Hazırlanış tarihi","type":"date"}]},{"label":"Karamelize soğan","fields":[{"key":"miktar","label":"Hazırlanan","type":"number","unitKey":"birim"},{"key":"birim","label":"Birim","type":"select","options":["kg","gr","adet","küvet"]},{"key":"tarih","label":"Hazırlanış tarihi","type":"date"}]}]},{"title":"Gelen Ürün ve Fatura","items":["Gelen ürünler uygun depolama alanlarına yerleştirildi.","Fatura/irsaliye fotoğrafı çekildi."]}]},{"key":"bi_kapanis","business":"Bi Hatıra","title":"02.00 Akşam Kapanış","sections":[{"title":"Kasa ve Sistemler","items":["Kasa çevresi ve tezgâhı temizlendi, çekmeceler düzenlendi.","POS cihazları ve kasa çevresindeki ekipmanlar temizlendi ve düzenli bırakıldı.","Servant bilgisayarı ve çevresi temizlendi, düzenli bırakıldı."]},{"title":"Kahve ve İçecek Makineleri","items":["Espresso makinesinin başlıkları, dış yüzeyi ve çevresi temizlendi.","Espresso tezgâhı temizlendi, ekipmanlar düzenlendi ve eksik malzemeler tamamlandı.","Kahve öğütücüsü temizlendi, çevresi düzenlendi ve çekirdek stoğu tamamlandı.","Filtre kahve makinesi ve kullanılan ekipmanlar temizlendi, düzenli bırakıldı.","Filtre kahve, filtre kâğıdı ve servis malzemelerinin eksikleri tamamlandı.","Çay kazanı boşaltıldı, iç ve dış temizliği yapıldı, çevresi düzenlendi.","Çay bardakları temizlendi, çekmeceler düzenlendi, çay ve diğer malzemelerin eksikleri tamamlandı.","Türk kahvesi makinesinin iç ve dış temizliği yapıldı.","Türk kahvesi fincanları temizlendi, düzenlendi ve Türk kahvesi stoğu tamamlandı.","Limonata makinesinin haznesi ve dış yüzeyi temizlendi, çevresi düzenlendi.","Limonata miktarı ve muhafaza koşulları kontrol edildi, tespit edilen eksikler kaydedildi."]},{"title":"Pasta ve Dondurma","items":["Pasta dolaplarının iç ve dış yüzeyleri, camları, rafları ve çevresi temizlendi.","Pastalar dolap içerisinde düzgün yerleştirildi ve sunum düzeni sağlandı.","Dondurma dolabının çalışması ve sıcaklığı kontrol edildi, tespit edilen arızalar bildirildi.","Dondurma çeşitleri sayıldı, eksik çeşitler tespit edilerek kaydedildi."]},{"title":"Bar Alanı","items":["Şurup standı temizlendi, şişeler düzenlendi, şurup miktarları ve son tüketim tarihleri kontrol edildi.","Türk kahvesi hazırlama alanı temizlendi, ekipmanlar düzenlendi ve eksik malzemeler tamamlandı.","Bardaklar temizlendi, raflara düzenli yerleştirildi, kırık veya çatlak bardaklar ayrıldı.","Bar çekmecelerinin ve dolaplarının iç temizliği yapıldı, malzemeler düzenli yerleştirildi.","Pipet, peçete, karıştırıcı, bardak ve diğer servis malzemelerinin eksikleri tamamlandı.","Buz ekipmanları temizlendi, buz stoğu kontrol edildi ve soğuk içecek ekipmanları düzenlendi.","Sütlerin ve soğuk içeceklerin stok miktarları, saklama koşulları ve son tüketim tarihleri kontrol edildi.","Bulaşıkhane bölümündeki bar deposu temizlendi, raflar düzenlendi ve yedek malzeme stokları tamamlandı.","Bar bölümündeki çöp kovaları boşaltıldı, temizlendi ve yeni çöp poşetleri takıldı."]},{"title":"Masa ve Sandalyeler","items":["Masa ve sandalyeler temizlendi, düzgün yerleştirildi, eksik veya hasarlı olanlar tespit edilerek bildirildi.","Minderler temizlendi, kuru ve düzgün yerleştirildi, yırtık veya hasarlı minderler bildirildi.","Teras ve camlı oturma alanlarındaki masalar temizlendi, oturma düzeni sağlandı.","Servantların üstleri ve içleri temizlendi, çekmeceler düzenlendi ve eksik servis malzemeleri tamamlandı.","Isıtıcı ve tente kumandaları kontrol edildi, yerlerine konuldu, eksik veya arızalı olanlar bildirildi.","Beyaz alanın zeminleri temizlendi, çim alanları düzenlendi ve müşteri geçiş yolları temiz bırakıldı.","Siyah alanın zeminleri, kasa önü ve müşteri geçiş yolları temizlendi.","Okey masalarının üst yüzeyleri, kumaş kaplamaları, kenarları ve ayakları temizlendi; leke, yanık, yırtık veya deformasyonlar bildirildi.","Okey ıstakaları temizlendi, eksik olanlar tamamlandı ve kırık veya hasarlı olanlar bildirildi.","Okey taşları temizlendi, takımların eksikleri tamamlandı ve kırık veya hasarlı taşlar ayrıldı."]},{"title":"Tuvaletler","items":["Beyaz alan tuvaletlerinin zeminleri, duvarları, kapıları ve köşeleri temizlendi.","Siyah alan tuvaletlerinin zeminleri, duvarları, kapıları ve köşeleri temizlendi.","Klozetler, pisuvarlar ve çevreleri temizlendi, kötü kokular giderildi.","Lavabolar, musluklar, aynalar ve tezgâhlar temizlendi, lekeler giderildi.","Tuvalet kâğıdı, el sabunu, kâğıt havlu ve diğer hijyen malzemelerinin eksikleri tamamlandı.","Tuvalet çöp kovaları boşaltıldı, temizlendi ve yeni çöp poşetleri takıldı.","Tuvalet kapıları, kilitler, sifonlar, musluklar ve aydınlatmalar kontrol edildi, arızalar bildirildi.","Beyaz ve siyah alan tuvaletlerinin genel temizliği tamamlandı, alanlar düzenli ve kullanıma hazır bırakıldı."]},{"title":"Camlar, Isıtıcılar ve Dekoratif Alanlar","items":["Beyaz alan camlarının iç ve dış yüzeyleri temizlendi, lekeler ve parmak izleri giderildi.","Siyah alan camlarının iç ve dış yüzeyleri temizlendi, lekeler ve parmak izleri giderildi.","Teras ve camlı oturma alanlarının camları, alt kısımları ve köşeleri temizlendi.","Cam kapılar, kapı kolları ve cam kenarları temizlendi.","Isıtıcıların üst kısımlarının, dış yüzeylerinin ve gövdelerinin tozları alındı, temizlendi.","Isıtıcıların ayakları, alt bölümleri ve çevreleri temizlendi.","Isıtıcılar düzgün yerleştirildi, çevrelerindeki çöpler ve yabancı maddeler temizlendi.","Duvarlardaki dekoratif oyukların içleri, kenarları ve köşeleri temizlendi, toz ve örümcek ağları giderildi.","İç mekândaki yapay çiçeklerin yaprakları, dalları ve saksıları temizlendi, tozları alındı ve düzenlendi."]}]},{"key":"bi_denetim","business":"Bi Hatıra","title":"08.30 Sabah Denetimi","sections":[{"title":"Kasa ve Sistemler","items":["Kasa çevresinin, tezgâhının ve çekmecelerin temiz ve düzenli bırakıldığı kontrol edildi.","POS cihazlarının ve kasa ekipmanlarının temizliği ve düzeni kontrol edildi.","Servant bilgisayarının ve çevresinin temiz ve düzenli bırakıldığı kontrol edildi."]},{"title":"Kahve ve İçecek Makineleri","items":["Espresso makinesinin başlıklarının, dış yüzeyinin ve çevresinin temiz bırakıldığı kontrol edildi.","Espresso tezgâhının temizliği, ekipmanların düzeni ve malzemelerin eksiksiz olduğu kontrol edildi.","Kahve öğütücüsünün temizliği, çevresinin düzeni ve çekirdek stoğunun yeterliliği kontrol edildi.","Filtre kahve makinesinin ve kullanılan ekipmanların temiz ve düzenli bırakıldığı kontrol edildi.","Filtre kahve, filtre kâğıdı ve servis malzemelerinin yeterliliği kontrol edildi.","Çay kazanının iç ve dış temizliğinin yapıldığı ve çevresinin düzenli bırakıldığı kontrol edildi.","Çay bardaklarının temizliği, çekmecelerin düzeni ve malzemelerin eksiksiz olduğu kontrol edildi.","Türk kahvesi makinesinin iç ve dış temizliğinin yapıldığı kontrol edildi.","Fincanların temizliği, düzeni ve Türk kahvesi stoğunun yeterliliği kontrol edildi.","Limonata makinesinin haznesinin, dış yüzeyinin ve çevresinin temizliği kontrol edildi.","Limonatanın miktarı, muhafaza koşulları ve eksiklik kayıtları kontrol edildi."]},{"title":"Pasta ve Dondurma","items":["Pasta dolaplarının iç ve dış yüzeylerinin, camlarının, raflarının ve çevresinin temizliği kontrol edildi.","Pastaların dolap içerisindeki yerleşiminin ve sunum düzeninin uygun olduğu kontrol edildi.","Dondurma dolabının çalışması, sıcaklığı ve varsa arıza kayıtları kontrol edildi.","Dondurma çeşitlerinin eksiksizliği ve eksiklik kayıtları kontrol edildi."]},{"title":"Bar Alanı","items":["Şurup standının temizliği, şişelerin düzeni, şurup miktarları ve son tüketim tarihleri kontrol edildi.","Türk kahvesi hazırlama alanının temizliği, ekipmanların düzeni ve malzemelerin eksiksizliği kontrol edildi.","Bardakların temizliği, rafların düzeni ve kırık veya çatlak bardak bulunup bulunmadığı kontrol edildi.","Bar çekmecelerinin ve dolaplarının iç temizliği ile malzemelerin düzeni kontrol edildi.","Pipet, peçete, karıştırıcı, bardak ve diğer servis malzemelerinin yeterliliği kontrol edildi.","Buz ekipmanlarının temizliği, buz stoğu ve soğuk içecek ekipmanlarının düzeni kontrol edildi.","Sütlerin ve soğuk içeceklerin stokları, saklama koşulları ve son tüketim tarihleri kontrol edildi.","Bar deposunun temizliği, rafların düzeni ve yedek malzeme stoklarının yeterliliği kontrol edildi.","Bar bölümündeki çöp kovalarının boş, temiz ve yeni poşetlerinin takılı olduğu kontrol edildi."]},{"title":"Masa ve Sandalyeler","items":["Masa ve sandalyelerin temizliği, yerleşimi, eksik ve hasar durumları kontrol edildi.","Minderlerin temizliği, kuruluğu, yerleşimi ve hasar durumları kontrol edildi.","Teras ve camlı oturma alanlarındaki masaların temizliği ve oturma düzeni kontrol edildi.","Servantların üst ve iç temizliği, çekmece düzeni ve servis malzemelerinin eksiksizliği kontrol edildi.","Isıtıcı ve tente kumandalarının yerlerinde olduğu, eksiksizliği ve çalışma durumları kontrol edildi.","Beyaz alanın zemin temizliği, çim alanların düzeni ve müşteri geçiş yollarının temizliği kontrol edildi.","Siyah alanın zeminlerinin, kasa önünün ve müşteri geçiş yollarının temizliği kontrol edildi.","Okey masalarının yüzeylerinin, kumaş kaplamalarının, kenarlarının ve ayaklarının temizliği ile hasar durumları kontrol edildi.","Okey ıstakalarının temizliği, eksiksizliği ve hasar durumları kontrol edildi.","Okey taşlarının temizliği, takımların eksiksizliği ve hasar durumları kontrol edildi."]},{"title":"Tuvaletler","items":["Beyaz alan tuvaletlerinin zeminlerinin, duvarlarının, kapılarının ve köşelerinin temizliği kontrol edildi.","Siyah alan tuvaletlerinin zeminlerinin, duvarlarının, kapılarının ve köşelerinin temizliği kontrol edildi.","Klozetlerin, pisuvarların ve çevrelerinin temizliği ile kötü koku bulunup bulunmadığı kontrol edildi.","Lavaboların, muslukların, aynaların ve tezgâhların temiz ve lekesiz olduğu kontrol edildi.","Tuvalet kâğıdı, el sabunu, kâğıt havlu ve diğer hijyen malzemelerinin eksiksiz olduğu kontrol edildi.","Tuvalet çöp kovalarının boş, temiz ve yeni poşetlerinin takılı olduğu kontrol edildi.","Tuvalet kapılarının, kilitlerin, sifonların, muslukların ve aydınlatmaların çalışma durumları kontrol edildi.","Beyaz ve siyah alan tuvaletlerinin genel temizliği, düzeni ve kullanıma hazır olduğu kontrol edildi."]},{"title":"Camlar, Isıtıcılar ve Dekoratif Alanlar","items":["Beyaz alan camlarının iç ve dış yüzeylerinin temiz ve lekesiz bırakıldığı kontrol edildi.","Siyah alan camlarının iç ve dış yüzeylerinin temiz ve lekesiz bırakıldığı kontrol edildi.","Teras ve camlı oturma alanlarının camlarının, alt kısımlarının ve köşelerinin temizliği kontrol edildi.","Cam kapıların, kapı kollarının ve cam kenarlarının temizliği kontrol edildi.","Isıtıcıların üst kısımlarının, dış yüzeylerinin ve gövdelerinin toz ve kir bakımından temizliği kontrol edildi.","Isıtıcıların ayaklarının, alt bölümlerinin ve çevrelerinin temizliği kontrol edildi.","Isıtıcıların yerleşimi, çevrelerinin temizliği ve düzeni kontrol edildi.","Duvarlardaki dekoratif oyukların içlerinin, kenarlarının ve köşelerinin temizliği kontrol edildi.","Yapay çiçeklerin yapraklarının, dallarının ve saksılarının temizliği ve düzeni kontrol edildi."]}]},{"key":"bi_acilis","business":"Bi Hatıra","title":"Sabah Açılış Kontrol Listesi","sections":[{"title":"İŞLETME AÇILIŞI","items":["İşletmenin tüm giriş ve geçiş kapıları açıldı.","Beyaz ve siyah alan kasa bilgisayarları, kasa programları ve servant bilgisayarları açılarak çalışmaları kontrol edildi.","Müzik sistemi açıldı ve ses seviyesi ayarlandı.","Beyaz ve siyah alan televizyonları açıldı, çalışmaları kontrol edildi."]},{"title":"MAKİNE VE EKİPMAN AÇILIŞI","items":["Çay kazanı açıldı, çay demlendi ve servise hazırlandı.","Espresso kahve makinesi, kahve öğütücüsü, filtre kahve ve Türk kahvesi makineleri açıldı; temizlikleri ve çalışma durumları kontrol edilerek servise hazırlandı.","Limonata makinesi açıldı; temizliği, çalışma durumu ve servis hazırlığı kontrol edildi.","Pasta dolaplarının temizliği, sıcaklıkları ve çalışma durumları kontrol edildi.","Buz ve soğuk içecek hazırlıkları tamamlandı; buz miktarı ve ekipmanların çalışması kontrol edildi."]},{"title":"MASA, MİNDER VE OTURMA ALANLARI","items":["Beyaz alan, siyah alan, teras ve camlı oturma alanlarındaki masa, sandalye ve minderlerin temizliği, düzeni ve yerleşimi kontrol edilerek servise hazırlandı.","İç ve dış alan servantlarının üst yüzeyleri ve çekmeceleri temizlendi, düzenlendi ve eksik malzemeleri kontrol edildi.","Isıtıcı ve tente kumandalarının servantlarda eksiksiz ve çalışır durumda olduğu kontrol edildi.","Tüm oturma alanlarının genel düzeni ve müşteri kullanımına hazır olduğu kontrol edildi."]},{"title":"TUVALET VE TEMİZLİK ODASI KONTROLÜ","items":["Beyaz Alan Tuvaletleri: Beyaz alan tuvaletlerinin klozet, pisuvar, lavabo, ayna, zemin ve genel temizliği; çöp kovaları, kötü koku, sabun, tuvalet kâğıdı ve diğer sarf malzemeleri kontrol edildi, eksiklikler tamamlandı.","Siyah Alan Tuvaletleri: Siyah alan tuvaletlerinin klozet, pisuvar, lavabo, ayna, zemin ve genel temizliği; çöp kovaları, kötü koku, sabun, tuvalet kâğıdı ve diğer sarf malzemeleri kontrol edildi, eksiklikler tamamlandı.","Beyaz Alan Temizlik Odası: Beyaz alan temizlik odasının genel temizliği, zemin ve raf düzeni, temizlik malzemelerinin yerleşimi ve eksikleri kontrol edildi.","Siyah Alan Personel Tuvaleti: Siyah alan personel tuvaletinin klozet, lavabo, ayna, zemin ve genel temizliği; çöp kovası, kötü koku, sabun, tuvalet kâğıdı ve diğer sarf malzemeleri kontrol edildi, eksiklikler tamamlandı."]},{"title":"ZEMİN VE CAM TEMİZLİĞİ","items":["Zemin ve Genel Alan Temizliği: Beyaz alan, siyah alan, kasa önleri, çim alanlar ve müşteri yürüyüş ve geçiş yollarının temizliği kontrol edildi.","Cam ve Camlı Alan Temizliği: Camlı oturma alanları, teras camları, cam kapılar ve cam yüzeylerinin temizliği kontrol edildi."]},{"title":"BULAŞIKHANE BAR DEPOSU KONTROLÜ","items":["Bulaşıkhane deposunda bulunan karton bardak, bardak kapağı, çay, kahve, çöp torbası, şurup ve diğer bar malzemelerinin stok miktarları ve eksiklikleri kontrol edildi."]}]},{"key":"bi_genel_mudur","business":"Bi Hatıra","title":"Genel Müdür Günlük Denetim (16.00–02.00)","sections":[{"title":"PERSONEL KONTROLÜ","items":["Kılık kıyafet kontrolü: Tüm personelin kılık kıyafeti ve genel görünümü kontrol edildi.","Görev yeri kontrolü: Tüm personelin görev yerlerinde olup olmadığı kontrol edildi."]},{"title":"BEYAZ VE SIYAH ALAN TUVALET KONTROLÜ","items":["Beyaz alan tuvaletleri: Klozet, pisuvar, lavabo, ayna, musluk, zemin ve genel temizlik; kötü koku, çöp kovaları, sabun, tuvalet kâğıdı, kâğıt havlu eksikleri ve ekipmanların çalışması kontrol edildi.","Siyah alan tuvaletleri: Klozet, pisuvar, lavabo, ayna, musluk, zemin ve genel temizlik; kötü koku, çöp kovaları, sabun, tuvalet kâğıdı, kâğıt havlu eksikleri ve ekipmanların çalışması kontrol edildi."]},{"title":"İÇ VE DIŞ ALAN GENEL KONTROLÜ","items":["Masa, sandalye, minder ve mama sandalyeleri: Temizlik, düzen, yerleşim, kuruluk ve hasar durumları kontrol edildi.","Genel alan temizliği: Beyaz alan, siyah alan, iç salon, teras, camlı oturma alanları, zeminler, çim bölümleri ve müşteri geçiş yollarının temizliği ve düzeni kontrol edildi.","Servantlar: İç ve dış alan servantlarının üst yüzeyleri, çekmeceleri, temizliği, düzeni ve eksik malzemeleri kontrol edildi.","Oyun ekipmanları: Okey masaları, kumaşları, taşları, ıstakaları, tavla pulları ve iskambil kâğıtlarının temizliği, eksikleri ve hasarları kontrol edildi.","Isıtıcılar, tenteler ve aydınlatmalar: Temizlik, düzen, çalışma durumları ve kumandaları kontrol edildi.","İç ortam: Müzik seviyesi, sıcaklık ve genel ortam düzeni kontrol edildi."]},{"title":"CAMLAR VE DEKORATIF ALANLAR KONTROLÜ","items":["Camlar: Beyaz alan, siyah alan, iç salon ve teras camlarının iç-dış yüzeyleri, cam kapılar, kapı kolları ve köşelerinin temizliği kontrol edildi.","Dekoratif alanlar: Duvarlardaki dekoratif oyuklar, yapay çiçekler, saksılar ve diğer dekoratif ürünlerin temizliği ve düzeni kontrol edildi."]},{"title":"KASA VE SISTEMLER KONTROLÜ","items":["Kasa alanları: Beyaz ve siyah alan kasalarının, tezgâhlarının, çekmecelerinin ve çevresinin temizliği ve düzeni kontrol edildi.","Kasa, POS ve bilgisayar sistemleri: Kasa bilgisayarları, POS cihazları, ödeme sistemleri ve servant bilgisayarlarının temizliği, düzeni ve düzgün çalıştığı doğrulandı."]},{"title":"KAHVE VE İÇECEK MAKINELERI KONTROLÜ","items":["Kahve makineleri: Espresso makineleri, kahve öğütücüleri, filtre kahve ve Türk kahvesi makinelerinin temizliği, bakımı, çalışma durumları ve çevre düzeni kontrol edildi.","İçecek ekipmanları: Blender, mikser, çay kazanı ve diğer içecek hazırlama ekipmanlarının temizliği, çalışma durumları ve çevre düzeni kontrol edildi.","Buz makineleri: Buz makinelerinin iç ve dış temizliği, buz hazneleri, filtreleri, buz üretimi ve çevre temizliği kontrol edildi.","Soğutucular ve dolaplar: İçecek dolapları, süt dolapları ve diğer soğutucuların temizliği, iç düzeni, sıcaklıkları ve çevresi kontrol edildi."]},{"title":"GÜNLÜK BAR HAZIRLIK KONTROLÜ","items":["Günlük ürün hazırlıkları: Salep, sıcak çikolata, dondurma ve diğer içecek malzemelerinin günlük hazırlıkları (limon kesimi ve sıkımı, nane hazırlanması, cool lime, limonata, meyve ve sos hazırlıkları vb.), tazeliği, tarih etiketleri, saklama koşulları ve akşam yoğunluğu için yeterliliği kontrol edildi."]},{"title":"PASTA VE TATLI KONTROLÜ","items":["Pasta ve tatlılar: Pasta, cheesecake, brownie ve diğer tatlıların tazeliği, görünümü, son kullanma tarihleri, satışa uygunluğu; teşhir dolaplarının temizliği, ürün dizilişi, etiketleri ve dolap sıcaklıkları kontrol edildi.","Günlük tatlı hazırlıkları: Waffle, churros ve diğer tatlıların hazırlık malzemelerinin akşam yoğunluğu için yeterliliği ve kullanıma hazır olma durumları kontrol edildi."]},{"title":"MUTFAK KONTROLÜ","items":["Mutfak genel temizliği ve ekipmanlar: Şeften yapılan kontroller hakkında bilgi alındı; tezgâhlar, ocaklar, fırınlar, fritözler, ızgaralar, davlumbazlar ve genel mutfak düzeni müdür tarafından kontrol edildi.","Günlük ürün hazırlıkları ve gıda güvenliği: Şeften günlük hazırlıklar hakkında bilgi alındı; ürünlerin tazeliği, tarih etiketleri, saklama koşulları, hijyen ve akşam yoğunluğu için yeterliliği müdür tarafından kontrol edildi.","Soğuk hava dolapları: Şeften dolapların durumu hakkında bilgi alındı; buzdolapları ve derin dondurucuların sıcaklıkları, temizliği, ürün yerleşimi ve saklama koşulları müdür tarafından kontrol edildi."]},{"title":"DEPO VE STOK KONTROLÜ","items":["Siyah alan depo: Genel temizlik, raf düzeni, ürün yerleşimi, stok yeterliliği ve son kullanma tarihleri kontrol edildi.","Beyaz alan depo: Genel temizlik, raf düzeni, ürün yerleşimi, stok yeterliliği ve son kullanma tarihleri kontrol edildi.","Teras depo: Genel temizlik, raf düzeni, malzeme yerleşimi, eksik ürün ve ekipmanlar kontrol edildi.","Ofis depo: Genel temizlik, raf düzeni, malzeme yerleşimi, eksik ürün ve ekipmanlar kontrol edildi.","Bulaşıkhane deposu: Genel temizlik, raf düzeni, malzeme yerleşimi, temizlik ürünleri ve ekipman eksiklikleri kontrol edildi."]}]}]</script>
+<script>
+'use strict';
+/* Carlo & Bi Hatıra Kontrol — yeni sürüm (v3)
+   Aynı Supabase projesini ve aynı tabloları kullanır:
+   profiles, checklist_records, checklist_missing_tasks
+   RPC: complete_missing_task, review_missing_task, review_record
+   Fonksiyon: send-checklist-email */
+
+const SUPABASE_URL = 'https://sxgwvubmdbworuyknipa.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_MCTKfLa2yoNJYgXwz_hsEg_UoHwz5Vv';
+const BUSINESSES = ['Carlo Burger', 'Bi Hatıra'];
+const HIDE_AFTER_MS = 48 * 60 * 60 * 1000; // onaylananlar 48 saat sonra listeden gizlenir (silinmez)
+const SESSION_KEY = 'kontrol_oturum';
+
+const S = {
+  session: null, refresh: null, user: null, pending: null,
+  defs: [], records: [], tasks: [], tasksError: '', staff: null,
+  authView: 'login', tab: 'lists', view: 'tabs', form: null, detailId: null,
+  taskFilter: 'active', taskBiz: 'all', showOld: false, lastLoad: 0,
+};
+
+/* ---------- yardımcılar ---------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const isAdmin = () => !!S.user && ['admin', 'yonetici'].includes(S.user.role);
+const isManager = () => !!S.user && S.user.role === 'mudur';
+const isStaff = () => !!S.user && S.user.role === 'personel';
+const canReview = () => isAdmin() || isManager();
+const roleName = r => ({ personel: 'Personel', mudur: 'Müdür', yonetici: 'Yönetici', admin: 'Yönetici' }[r] || r || '');
+const bizClass = b => (b === 'Carlo Burger' ? 'carlo' : b === 'Bi Hatıra' ? 'hatira' : '');
+const fmt = t => (t ? new Date(t).toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '');
+const todayISO = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+const isToday = t => !!t && new Date(t).toDateString() === new Date().toDateString();
+const trDate = iso => (/^\d{4}-\d{2}-\d{2}$/.test(iso || '') ? iso.split('-').reverse().join('.') : iso || '');
+const isOldApproved = t => !!t && Date.now() - new Date(t).getTime() >= HIDE_AFTER_MS;
+const itemOf = it => (typeof it === 'string' ? { label: it } : it);
+const itemCount = def => def.sections.reduce((a, s) => a + s.items.length, 0);
+
+let toastTimer;
+function toast(msg, bad) {
+  const el = $('toast'); el.textContent = msg; el.className = 'acik' + (bad ? ' hata' : '');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.className = ''; }, bad ? 6000 : 3500);
+}
+
+/* Onay penceresi: {title,text,ok,danger,note} -> false | true | not metni */
+function ask(o) {
+  return new Promise(resolve => {
+    const sh = $('sheet');
+    sh.innerHTML = `<div class="pencere" role="dialog" aria-modal="true"><h2>${esc(o.title)}</h2>${o.text ? `<p class="soluk">${esc(o.text)}</p>` : ''}${o.note ? `<label for="sheet-note">${esc(o.note)}</label><textarea id="sheet-note"></textarea>` : ''}<div class="dugmeler"><button class="dugme ikincil" data-s="no">Vazgeç</button><button class="dugme ${o.danger ? 'kirmizi' : ''}" data-s="yes">${esc(o.ok || 'Onayla')}</button></div></div>`;
+    sh.hidden = false;
+    const done = v => { sh.hidden = true; sh.innerHTML = ''; sh.onclick = null; resolve(v); };
+    sh.onclick = e => {
+      if (e.target === sh) return done(false);
+      const b = e.target.closest('[data-s]'); if (!b) return;
+      if (b.dataset.s === 'no') return done(false);
+      if (o.note) { const v = $('sheet-note').value.trim(); if (!v) { $('sheet-note').focus(); return toast('Açıklama yazmadan gönderilemez.', true); } return done(v); }
+      done(true);
+    };
+    if (o.note) $('sheet-note').focus();
+  });
+}
+
+/* ---------- Supabase ---------- */
+let refreshing = null;
+function saveSession() { try { if (S.session) localStorage.setItem(SESSION_KEY, JSON.stringify({ session: S.session, refresh: S.refresh })); else localStorage.removeItem(SESSION_KEY); } catch (e) { /* depolama kapalı olabilir */ } }
+function clearSession() { S.session = null; S.refresh = null; S.user = null; S.pending = null; S.records = []; S.tasks = []; S.staff = null; saveSession(); }
+
+async function refreshSession() {
+  if (!S.refresh) return false;
+  if (!refreshing) {
+    refreshing = (async () => {
+      try {
+        const a = await api('/auth/v1/token?grant_type=refresh_token', { method: 'POST', body: JSON.stringify({ refresh_token: S.refresh }) }, false);
+        S.session = a.access_token; S.refresh = a.refresh_token; saveSession(); return true;
+      } catch (e) { return false; } finally { refreshing = null; }
+    })();
+  }
+  return refreshing;
+}
+
+async function api(path, opts = {}, auth = true, retried = false) {
+  const headers = { apikey: SUPABASE_KEY, 'Content-Type': 'application/json', ...(auth && S.session ? { Authorization: 'Bearer ' + S.session } : {}), ...(opts.headers || {}) };
+  let res;
+  try { res = await fetch(SUPABASE_URL + path, { ...opts, headers }); }
+  catch (e) { throw Error('Sunucuya ulaşılamadı. İnternet bağlantısını kontrol edin.'); }
+  // Oturum süresi dolduysa sessizce yenile ve isteği bir kez tekrarla.
+  if (res.status === 401 && auth && !retried && S.refresh && await refreshSession()) return api(path, opts, auth, true);
+  const text = await res.text();
+  if (!res.ok) {
+    let m = text;
+    try { const j = JSON.parse(text); m = j.message || j.msg || j.error_description || j.error || text; } catch (e) { /* düz metin */ }
+    const err = Error(m || 'Hata ' + res.status); err.status = res.status; throw err;
+  }
+  return text ? JSON.parse(text) : null;
+}
+
+async function loadProfile() {
+  const a = await api('/auth/v1/user');
+  const p = await api('/rest/v1/profiles?id=eq.' + a.id + '&select=*');
+  if (!p.length) throw Error('Personel profili henüz oluşturulmamış.');
+  if (p[0].approved !== true) { S.pending = p[0]; S.user = null; return; }
+  S.pending = null;
+  S.user = { id: a.id, name: p[0].full_name, role: p[0].role, business: p[0].business };
+  await loadData();
+}
+async function loadRecords() {
+  const rows = await api('/rest/v1/checklist_records?select=*&order=created_at.desc&limit=200');
+  S.records = rows.map(r => ({ ...r, time: r.created_at, answers: r.answers || {}, labels: r.labels || {} }));
+}
+async function loadTasks() {
+  try { S.tasks = await api('/rest/v1/checklist_missing_tasks?select=*&order=created_at.desc&limit=500'); S.tasksError = ''; }
+  catch (e) { S.tasks = []; S.tasksError = e.message; }
+}
+async function loadStaff() {
+  if (!isAdmin()) { S.staff = null; return; }
+  try { S.staff = await api('/rest/v1/profiles?select=id,full_name,business,role,approved&approved=eq.false&order=full_name.asc'); }
+  catch (e) { S.staff = null; }
+}
+async function loadData() { await Promise.all([loadRecords(), loadTasks(), loadStaff()]); S.lastLoad = Date.now(); }
+
+/* ---------- giriş / kayıt ---------- */
+async function login() {
+  const email = $('email').value.trim(), password = $('password').value;
+  if (!email || !password) return toast('E-posta ve şifre girin.', true);
+  try {
+    const a = await api('/auth/v1/token?grant_type=password', { method: 'POST', body: JSON.stringify({ email, password }) }, false);
+    S.session = a.access_token; S.refresh = a.refresh_token; saveSession();
+    await loadProfile(); S.tab = 'lists'; S.view = 'tabs'; render();
+  } catch (e) { toast('Giriş yapılamadı: ' + e.message, true); }
+}
+async function signup() {
+  const full_name = $('fullname').value.trim(), email = $('email').value.trim(), password = $('password').value, business = $('business').value;
+  if (full_name.length < 3 || !email.includes('@') || password.length < 8) return toast('Ad soyad, geçerli e-posta ve en az 8 karakterli şifre girin.', true);
+  try {
+    await api('/auth/v1/signup', { method: 'POST', body: JSON.stringify({ email, password, data: { full_name, business } }) }, false);
+    S.authView = 'login'; render();
+    toast('Kayıt alındı. E-postana doğrulama bağlantısı geldiyse tıkla, sonra giriş yap. Yönetici onayı gerekir.');
+  } catch (e) { toast('Kayıt oluşturulamadı: ' + e.message, true); }
+}
+async function logout() {
+  try { if (S.session) await api('/auth/v1/logout', { method: 'POST' }, true, true); } catch (e) { /* önemli değil */ }
+  clearSession(); S.authView = 'login'; S.view = 'tabs'; render();
+}
+async function checkApproval() {
+  try { await loadProfile(); render(); if (!S.user) toast('Hesabın hâlâ onay bekliyor.'); }
+  catch (e) { toast('Durum kontrol edilemedi: ' + e.message, true); }
+}
+async function refreshAll(quiet) {
+  if (!S.user) return;
+  try { await loadData(); if (S.view !== 'form') render(); if (!quiet) toast('Güncellendi.'); }
+  catch (e) { if (!quiet) toast('Yenilenemedi: ' + e.message, true); }
+}
+
+/* ---------- checklist doldurma ---------- */
+const draftKey = key => 'kontrol_taslak_' + S.user.id + '_' + key;
+function readDraft(key) {
+  try { const d = JSON.parse(localStorage.getItem(draftKey(key)) || 'null'); return d && d.day === todayISO() ? d : null; } catch (e) { return null; }
+}
+function saveDraft() {
+  const f = S.form; if (!f) return;
+  try { localStorage.setItem(draftKey(f.def.key), JSON.stringify({ day: todayISO(), answers: f.answers, stock: f.stock, waste: f.waste, step: f.step, max: f.max })); } catch (e) { /* yok say */ }
+}
+function dropDraft(key) { try { localStorage.removeItem(draftKey(key)); } catch (e) { /* yok say */ } }
+
+function startForm(key, fresh) {
+  const def = S.defs.find(d => d.key === key); if (!def) return;
+  const draft = fresh ? null : readDraft(key);
+  const f = { def, answers: {}, stock: '', waste: '', step: 0, max: 0, errors: {} };
+  if (draft) { Object.assign(f, { answers: draft.answers || {}, stock: draft.stock || '', waste: draft.waste || '', step: draft.step || 0, max: draft.max || 0 }); }
+  // Tarih alanları bugünün tarihiyle hazır gelir.
+  def.sections.forEach((s, i) => s.items.forEach((it, j) => {
+    const item = itemOf(it); if (!item.fields) return;
+    const k = i + '-' + j, a = f.answers[k] || (f.answers[k] = {}); a.fields = a.fields || {};
+    item.fields.forEach(fd => { if (a.fields[fd.key] == null || a.fields[fd.key] === '') { if (fd.type === 'date') a.fields[fd.key] = todayISO(); else if (fd.type === 'select') a.fields[fd.key] = fd.options[0]; } });
+  }));
+  const last = def.sections.length + (def.stock ? 1 : 0);
+  f.step = Math.min(f.step, last); f.max = Math.min(Math.max(f.max, f.step), last);
+  S.form = f; S.view = 'form'; render(); window.scrollTo(0, 0);
+  if (draft) toast('Bugünkü taslağın açıldı. Kaldığın yerden devam edebilirsin.');
+}
+const stepCount = f => f.def.sections.length + (f.def.stock ? 1 : 0) + 1; // bölümler + (stok) + özet
+const fieldsFilled = (item, a) => item.fields.every(fd => String(a?.fields?.[fd.key] ?? '').trim() !== '');
+
+// Bölümü doğrular: boş normal maddeler Tamam olur; sayı/tarih isteyen maddeler doldurulmalı ya da Eksik işaretlenmeli.
+function settleSection(i) {
+  const f = S.form, sec = f.def.sections[i]; let ok = true;
+  sec.items.forEach((it, j) => {
+    const item = itemOf(it), k = i + '-' + j, a = f.answers[k] || (f.answers[k] = {});
+    delete f.errors[k];
+    if (item.fields) {
+      if (a.value === 'Eksik') return;
+      if (fieldsFilled(item, a)) a.value = 'Tamam'; else { f.errors[k] = true; ok = false; }
+    } else if (!a.value) a.value = 'Tamam';
+  });
+  return ok;
+}
+function fieldSummary(item, a) {
+  if (!item.fields) return '';
+  return item.fields.filter(fd => fd.type !== 'select').map(fd => {
+    const v = String(a?.fields?.[fd.key] ?? '').trim(); if (!v) return '';
+    if (fd.type === 'date') return fd.label + ': ' + trDate(v);
+    const unit = fd.unitKey ? (a.fields[fd.unitKey] || '') : (fd.unit || '');
+    return fd.label + ': ' + v + (unit ? ' ' + unit : '');
+  }).filter(Boolean).join(', ');
+}
+
+function setAnswer(k, v) {
+  const f = S.form, a = f.answers[k] || (f.answers[k] = {});
+  a.value = v; delete f.errors[k]; saveDraft(); redrawItem(k); redrawProgress();
+  if (v === 'Eksik') { const t = document.querySelector(`[data-item="${k}"] textarea`); if (t) t.focus(); }
+}
+function formNext() {
+  const f = S.form, n = f.def.sections.length;
+  if (f.step < n) {
+    if (!settleSection(f.step)) { saveDraft(); render(); return toast('Miktar ve tarih alanlarını doldurun ya da maddeyi Eksik işaretleyin.', true); }
+  } else if (f.def.stock && f.step === n) {
+    if (!f.stock.trim() || !f.waste.trim()) return toast('Stok ve zayi alanlarına bilgi ya da “Yok” yazın.', true);
+  }
+  f.step++; f.max = Math.max(f.max, f.step); saveDraft(); render(); window.scrollTo(0, 0);
+}
+function formBack() { const f = S.form; if (f.step === 0) return leaveForm(); f.step--; render(); window.scrollTo(0, 0); }
+function formGo(i) { const f = S.form; if (i > f.max) return; f.step = i; render(); window.scrollTo(0, 0); }
+function approveSection() {
+  const f = S.form, i = f.step;
+  f.def.sections[i].items.forEach((it, j) => { const item = itemOf(it), k = i + '-' + j, a = f.answers[k] || (f.answers[k] = {}); if (!a.value && (!item.fields || fieldsFilled(item, a))) a.value = 'Tamam'; });
+  saveDraft(); render();
+}
+function leaveForm() { saveDraft(); S.form = null; S.view = 'tabs'; S.tab = 'lists'; render(); }
+
+async function submitForm() {
+  const f = S.form, def = f.def;
+  for (let i = 0; i < def.sections.length; i++) if (!settleSection(i)) { f.step = i; render(); return toast('Bu bölümde doldurulmamış alan var.', true); }
+  if (def.stock && (!f.stock.trim() || !f.waste.trim())) { f.step = def.sections.length; render(); return toast('Stok ve zayi alanlarına bilgi ya da “Yok” yazın.', true); }
+  const answers = {}, labels = {};
+  def.sections.forEach((s, i) => s.items.forEach((it, j) => {
+    const item = itemOf(it), k = i + '-' + j, a = f.answers[k], out = { value: a.value };
+    const note = (a.note || '').trim(); if (note) out.note = note;
+    if (item.fields && a.value !== 'Eksik') { out.fields = a.fields; const d = fieldSummary(item, a); if (d) out.detail = d; }
+    answers[k] = out; labels[k] = item.label;
+  }));
+  const rec = { business: def.business, type: def.key, title: def.title, answers, labels, stock: f.stock.trim(), waste: f.waste.trim(), person: S.user.name, person_id: S.user.id, status: 'Onay bekliyor' };
+  const btn = document.querySelector('[data-a="submit"]'); if (btn) { btn.disabled = true; btn.textContent = 'Gönderiliyor…'; }
+  try {
+    await api('/rest/v1/checklist_records', { method: 'POST', headers: { Prefer: 'return=minimal' }, body: JSON.stringify(rec) });
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Kontrolü gönder'; }
+    return toast('Kayıt gönderilemedi: ' + e.message + '\nYazdıkların silinmedi, tekrar deneyebilirsin.', true);
+  }
+  dropDraft(def.key); S.form = null; S.view = 'tabs'; S.tab = 'records';
+  try { await loadData(); } catch (e) { /* liste sonra yenilenir */ }
+  render();
+  let mail = 'E-posta bildirimi gönderildi.';
+  try {
+    const saved = S.records.find(x => x.person_id === rec.person_id && x.title === rec.title);
+    const result = await api('/functions/v1/send-checklist-email', { method: 'POST', body: JSON.stringify({
+      personnel_name: rec.person, business_name: rec.business, checklist_name: rec.title,
+      submitted_at: new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' }),
+      answers: Object.entries(answers).map(([k, v]) => ({ madde: labels[k] || k, durum: v.value, aciklama: [v.detail, v.note].filter(Boolean).join(' — ') })),
+      record_id: saved ? saved.id : null,
+    }) });
+    if (!result || !result.id) throw Error('e-posta işlem numarası dönmedi');
+  } catch (e) { mail = 'E-posta bildirimi gönderilemedi (' + e.message + '). Kayıt veritabanında duruyor.'; }
+  toast('Kontrol kaydedildi, müdür onayı bekliyor.\n' + mail);
+}
+
+/* ---------- onay işlemleri ---------- */
+const canApproveRecord = r => canReview() && r.status === 'Onay bekliyor';
+async function reviewRecord(id, status) {
+  const r = S.records.find(x => x.id === id); if (!r || !canApproveRecord(r)) return toast('Bu kaydı onaylama yetkiniz yok.', true);
+  const ok = status === 'Onaylandı';
+  if (!await ask({ title: ok ? 'Checklist onaylansın mı?' : 'Checklist tekrar yapılsın mı?', text: r.title + ' — ' + r.person, ok: ok ? 'Onayla' : 'Tekrar yap', danger: !ok })) return;
+  try { await api('/rest/v1/rpc/review_record', { method: 'POST', body: JSON.stringify({ rec_id: id, new_status: status }) }); await loadRecords(); render(); toast(ok ? 'Checklist onaylandı.' : 'Checklist düzeltmeye gönderildi.'); }
+  catch (e) { toast('Onay kaydedilemedi: ' + e.message, true); }
+}
+async function completeTask(id) {
+  const t = S.tasks.find(x => x.id === id); if (!t) return;
+  if (!await ask({ title: 'İş tamamlandı mı?', text: t.item_label + ' müdür onayına gönderilecek.', ok: 'Tamamladım' })) return;
+  try { await api('/rest/v1/rpc/complete_missing_task', { method: 'POST', body: JSON.stringify({ task_id: id }) }); await loadTasks(); render(); toast('Müdür onayına gönderildi.'); }
+  catch (e) { toast('Tamamlama kaydedilemedi: ' + e.message, true); }
+}
+async function reviewTask(id, accept) {
+  const t = S.tasks.find(x => x.id === id); if (!t) return;
+  const r = accept ? await ask({ title: 'İş onaylansın mı?', text: t.item_label, ok: 'Onayla' })
+    : await ask({ title: 'Olmadı, tekrar yapılsın', text: t.item_label, note: 'Neden olmadı? Personel bu notu görecek.', ok: 'Tekrar yap', danger: true });
+  if (!r) return;
+  try { await api('/rest/v1/rpc/review_missing_task', { method: 'POST', body: JSON.stringify({ task_id: id, accept, note: accept ? null : r }) }); await loadTasks(); render(); toast(accept ? 'İş onaylandı.' : 'İş personele geri gönderildi.'); }
+  catch (e) { toast('İşlem kaydedilemedi: ' + e.message, true); }
+}
+async function approveStaff(id) {
+  const p = (S.staff || []).find(x => x.id === id); if (!p) return;
+  if (!await ask({ title: 'Hesap onaylansın mı?', text: p.full_name + ' — ' + p.business, ok: 'Onayla' })) return;
+  try { await api('/rest/v1/profiles?id=eq.' + encodeURIComponent(id), { method: 'PATCH', headers: { Prefer: 'return=representation' }, body: JSON.stringify({ approved: true }) }); await loadStaff(); render(); toast('Hesap onaylandı.'); }
+  catch (e) { toast('İşlem başarısız: ' + e.message, true); }
+}
+function copyReport(id) {
+  const r = S.records.find(x => x.id === id); if (!r) return;
+  const text = `${r.business} | ${r.title}\n${r.person} | ${fmt(r.time)}\nDurum: ${r.status}\n` +
+    Object.entries(r.answers).map(([k, v]) => `${r.labels[k] || k}: ${v.value}${v.detail ? ' (' + v.detail + ')' : ''}${v.note ? ' — ' + v.note : ''}`).join('\n') +
+    (r.stock ? `\nStok: ${r.stock}` : '') + (r.waste ? `\nZayi: ${r.waste}` : '');
+  if (!navigator.clipboard) return toast('Bu cihazda kopyalama desteklenmiyor.', true);
+  navigator.clipboard.writeText(text).then(() => toast('Rapor kopyalandı.')).catch(() => toast('Rapor kopyalanamadı.', true));
+}
+
+/* ---------- görünümler ---------- */
+const visibleTasks = () => S.tasks.filter(t => !(t.status === 'approved' && isOldApproved(t.approved_at)));
+const myRecords = () => S.records.filter(r => !isStaff() || r.person_id === S.user.id);
+const pendingRecords = () => S.records.filter(r => r.status === 'Onay bekliyor');
+function taskBadge() { const v = visibleTasks(); return isManager() ? v.filter(t => t.status === 'pending_approval').length : v.filter(t => ['open', 'rejected'].includes(t.status)).length; }
+function statusTag(status) {
+  const cls = status === 'Onaylandı' ? 'tamam' : status === 'Onay bekliyor' ? 'bekle' : 'eksik';
+  return `<span class="etiket ${cls}">${esc(status)}</span>`;
+}
+
+function viewAuth() {
+  if (S.pending) return `<div class="giris"><h1>Onay bekleniyor</h1><p class="soluk">Carlo Burger ve Bi Hatıra kontrol sistemi</p><div class="kutu"><p><b>${esc(S.pending.full_name)}</b>, kaydın alındı. Yönetici hesabını onayladığında checklistlere erişebilirsin.</p><button class="dugme tam" data-a="check-approval">Durumu kontrol et</button><button class="baglanti" data-a="logout">Çıkış yap</button></div></div>`;
+  if (S.authView === 'signup') return `<div class="giris"><h1>Yeni hesap</h1><p class="soluk">Hesabın yönetici onayından sonra açılır.</p><div class="kutu"><label for="fullname">Ad soyad</label><input id="fullname" autocomplete="name" maxlength="100"><label for="email">E-posta</label><input id="email" type="email" autocomplete="email"><label for="business">İşletme</label><select id="business">${BUSINESSES.map(n => `<option>${esc(n)}</option>`).join('')}</select><label for="password">Şifre (en az 8 karakter)</label><input id="password" type="password" autocomplete="new-password" minlength="8"><button class="dugme tam" data-a="signup">Hesap oluştur</button><button class="baglanti" data-a="auth-login">Giriş ekranına dön</button></div></div>`;
+  return `<div class="giris"><h1>Kontrol</h1><p class="soluk">Carlo Burger ve Bi Hatıra kontrol sistemi</p><div class="kutu"><label for="email">E-posta</label><input id="email" type="email" autocomplete="email"><label for="password">Şifre</label><input id="password" type="password" autocomplete="current-password"><button class="dugme tam" data-a="login">Giriş yap</button><button class="baglanti" data-a="auth-signup">İlk kez geliyorum, hesap oluştur</button></div></div>`;
+}
+
+function viewLists() {
+  const order = BUSINESSES.slice().sort((a, b) => (a === S.user.business ? -1 : b === S.user.business ? 1 : 0));
+  let h = '';
+  if (canReview()) {
+    const today = S.records.filter(r => isToday(r.time)).length, open = visibleTasks().filter(t => t.status !== 'approved').length;
+    h += `<div class="ozet"><button data-a="tab" data-t="records"><b>${today}</b><span>bugün gönderilen</span></button><button data-a="tab" data-t="tasks"><b>${open}</b><span>açık eksik iş</span></button><button data-a="tab" data-t="approvals"><b>${pendingRecords().length}</b><span>onay bekleyen</span></button></div>`;
+  }
+  order.forEach(biz => {
+    h += `<div class="bolum-basligi ${bizClass(biz)}"><span class="nokta"></span><h2>${esc(biz)}</h2></div>`;
+    S.defs.filter(d => d.business === biz).forEach(d => {
+      const sent = myRecords().some(r => r.type === d.key && r.business === biz && isToday(r.time)), draft = readDraft(d.key);
+      h += `<button class="satir ${bizClass(biz)}" data-a="start" data-k="${esc(d.key)}"><span class="ad"><b>${esc(d.title)}</b><span>${itemCount(d)} madde, ${d.sections.length} bölüm</span></span>${draft ? '<span class="etiket bekle">Devam et</span>' : sent ? '<span class="etiket tamam">Bugün gönderildi</span>' : ''}</button>`;
+    });
+  });
+  return h;
+}
+
+function taskCard(t) {
+  const rejected = t.status === 'rejected';
+  const label = { open: ['Eksik', 'eksik'], rejected: ['Olmadı, tekrar yapılacak', 'eksik'], pending_approval: ['Müdür onayı bekliyor', 'bekle'], approved: ['Onaylandı', 'tamam'] }[t.status] || [t.status, ''];
+  let b = '';
+  if (isStaff() && ['open', 'rejected'].includes(t.status)) b += `<button class="dugme yesil" data-a="task-done" data-id="${esc(t.id)}">Tamamladım</button>`;
+  if (isManager() && t.status === 'pending_approval') b += `<button class="dugme yesil" data-a="task-ok" data-id="${esc(t.id)}">Onayla</button><button class="dugme kirmizi" data-a="task-no" data-id="${esc(t.id)}">Tekrar yap</button>`;
+  return `<div class="is ${bizClass(t.business)} ${rejected ? 'olmadi' : ''}"><div class="ust-satir"><h3>${esc(t.item_label)}</h3><span class="etiket ${label[1]}">${esc(label[0])}</span></div><p class="soluk">${esc(t.business || '')}${t.checklist_title ? ', ' + esc(t.checklist_title) : ''}${t.reporter_name ? '. Bildiren: ' + esc(t.reporter_name) : ''}</p>${t.initial_note ? `<p class="not">${esc(t.initial_note)}</p>` : ''}${t.manager_note ? `<p class="not"><b>Müdür notu:</b> ${esc(t.manager_note)}</p>` : ''}${t.completed_at ? `<p class="soluk">Tamamlayan: ${esc(t.completed_by_name || '')}, ${fmt(t.completed_at)}</p>` : ''}${t.approved_at ? `<p class="soluk">Onaylayan: ${esc(t.approved_by_name || '')}, ${fmt(t.approved_at)}</p>` : ''}${t.reviewed_at && !t.approved_at ? `<p class="soluk">Son müdür kontrolü: ${fmt(t.reviewed_at)}</p>` : ''}${b ? `<div class="dugmeler">${b}</div>` : ''}</div>`;
+}
+function viewTasks() {
+  if (S.tasksError) return `<div class="kutu"><p>Eksik işler yüklenemedi: ${esc(S.tasksError)}</p><div class="dugmeler"><button class="dugme" data-a="refresh">Tekrar dene</button></div></div>`;
+  const base = (S.taskFilter === 'approved' ? S.tasks : visibleTasks()).filter(t => S.taskBiz === 'all' || t.business === S.taskBiz);
+  const list = base.filter(t => (S.taskFilter === 'active' ? t.status !== 'approved' : t.status === S.taskFilter));
+  const order = { rejected: 0, open: 1, pending_approval: 2, approved: 3 };
+  list.sort((a, b) => (order[a.status] ?? 9) - (order[b.status] ?? 9));
+  const chip = (k, v, cur, a) => `<button class="${cur === k ? 'acik' : ''}" data-a="${a}" data-v="${esc(k)}">${esc(v)}</button>`;
+  return `<div class="cipler">${[['active', 'Yapılacaklar'], ['pending_approval', 'Onay bekleyen'], ['approved', 'Onaylanan']].map(([k, v]) => chip(k, v, S.taskFilter, 'task-filter')).join('')}</div><div class="cipler">${[['all', 'İki işletme'], ...BUSINESSES.map(b => [b, b])].map(([k, v]) => chip(k, v, S.taskBiz, 'task-biz')).join('')}</div>` +
+    (list.length ? list.map(taskCard).join('') : `<p class="bos">${S.taskFilter === 'active' ? 'Yapılacak eksik iş yok.' : 'Bu filtrede iş yok.'}</p>`);
+}
+
+function recordRow(r, withActions) {
+  const missing = Object.values(r.answers).filter(v => v.value === 'Eksik').length;
+  return `<div class="is ${bizClass(r.business)}"><div class="ust-satir"><h3>${esc(r.title)}</h3>${statusTag(r.status)}</div><p class="soluk">${esc(r.person)}, ${esc(r.business)}, ${fmt(r.time)}</p><p class="soluk">${missing ? `<b style="color:var(--eksik)">${missing} eksik</b>` : 'Eksik yok'}</p><div class="dugmeler"><button class="dugme ikincil" data-a="detail" data-id="${esc(r.id)}">Detay</button>${withActions && canApproveRecord(r) ? `<button class="dugme yesil" data-a="rec-ok" data-id="${esc(r.id)}">Onayla</button><button class="dugme kirmizi" data-a="rec-no" data-id="${esc(r.id)}">Tekrar yap</button>` : ''}</div></div>`;
+}
+function viewApprovals() {
+  const pend = pendingRecords();
+  let h = `<div class="bolum-basligi"><h2>Onay bekleyen checklistler</h2></div>` + (pend.length ? pend.map(r => recordRow(r, true)).join('') : '<p class="bos">Onay bekleyen checklist yok.</p>');
+  if (isAdmin()) {
+    h += `<div class="bolum-basligi"><h2>Onay bekleyen personel</h2></div>`;
+    h += S.staff === null ? '<p class="bos">Personel listesi yüklenemedi.</p>' : S.staff.length ? S.staff.map(p => `<div class="is ${bizClass(p.business)}"><h3>${esc(p.full_name)}</h3><p class="soluk">${esc(p.business)}, ${esc(roleName(p.role))}</p><div class="dugmeler"><button class="dugme yesil" data-a="staff-ok" data-id="${esc(p.id)}">Hesabı onayla</button></div></div>`).join('') : '<p class="bos">Onay bekleyen personel yok.</p>';
+  }
+  return h;
+}
+function viewRecords() {
+  const all = myRecords(), hidden = all.filter(r => r.status === 'Onaylandı' && isOldApproved(r.approved_at)).length;
+  const list = S.showOld ? all : all.filter(r => !(r.status === 'Onaylandı' && isOldApproved(r.approved_at)));
+  return `<div class="bolum-basligi"><h2>${isStaff() ? 'Gönderdiğim kayıtlar' : 'Gönderilen kayıtlar'}</h2></div>` +
+    (list.length ? list.map(r => recordRow(r, false)).join('') : '<p class="bos">Henüz kayıt yok. Listeler sekmesinden bir checklist doldurabilirsin.</p>') +
+    (hidden ? `<button class="dugme ikincil tam" data-a="toggle-old">${S.showOld ? '48 saatten eski onaylıları gizle' : `48 saatten eski ${hidden} onaylı kaydı göster`}</button>` : '');
+}
+function viewDetail() {
+  const r = S.records.find(x => x.id === S.detailId); if (!r) { S.view = 'tabs'; return viewRecords(); }
+  const entries = Object.entries(r.answers), missing = entries.filter(([, v]) => v.value === 'Eksik'), measured = entries.filter(([, v]) => v.detail && v.value !== 'Eksik');
+  const line = ([k, v]) => `<div class="madde"><b>${esc(r.labels[k] || k)}</b>${v.detail ? `<p class="soluk">${esc(v.detail)}</p>` : ''}${v.note ? `<p>${esc(v.note)}</p>` : ''}</div>`;
+  return `<button class="dugme ikincil kucuk" data-a="back">‹ Geri</button><div class="kutu ${bizClass(r.business)}" style="margin-top:12px"><div class="ust-satir"><h2>${esc(r.title)}</h2>${statusTag(r.status)}</div><p class="soluk">${esc(r.person)}, ${esc(r.business)}, ${fmt(r.time)}</p>${r.approver ? `<p class="soluk">Kontrol eden: ${esc(r.approver)}${r.approved_at ? ', ' + fmt(r.approved_at) : ''}</p>` : ''}<p style="margin-top:8px"><b>${entries.length - missing.length} tamam</b>, <b style="${missing.length ? 'color:var(--eksik)' : ''}">${missing.length} eksik</b></p>${canApproveRecord(r) ? `<div class="dugmeler"><button class="dugme yesil" data-a="rec-ok" data-id="${esc(r.id)}">Onayla</button><button class="dugme kirmizi" data-a="rec-no" data-id="${esc(r.id)}">Tekrar yap</button></div>` : ''}</div>` +
+    `<div class="kutu"><h3>Eksikler</h3>${missing.length ? missing.map(line).join('') : '<p class="soluk" style="margin-top:6px">Eksik bildirilmedi.</p>'}</div>` +
+    (measured.length ? `<div class="kutu"><h3>Hazırlık kayıtları</h3>${measured.map(line).join('')}</div>` : '') +
+    (r.stock || r.waste ? `<div class="kutu"><h3>Stok ve zayi</h3><p style="margin-top:6px"><b>Stok:</b> ${esc(r.stock || 'Belirtilmedi')}</p><p><b>Zayi:</b> ${esc(r.waste || 'Belirtilmedi')}</p></div>` : '') +
+    `<div class="kutu"><details><summary>Tüm maddeler (${entries.length})</summary>${entries.map(([k, v]) => `<div class="madde"><span class="etiket ${v.value === 'Eksik' ? 'eksik' : 'tamam'}">${esc(v.value)}</span> ${esc(r.labels[k] || k)}</div>`).join('')}</details><div class="dugmeler"><button class="dugme ikincil" data-a="copy" data-id="${esc(r.id)}">Raporu kopyala</button></div></div>`;
+}
+
+/* --- form görünümü --- */
+function itemHtml(i, j) {
+  const f = S.form, item = itemOf(f.def.sections[i].items[j]), k = i + '-' + j, a = f.answers[k] || {};
+  const fields = item.fields ? `<div class="alanlar">${item.fields.map(fd => {
+    const id = 'f-' + k + '-' + fd.key, v = a.fields?.[fd.key] ?? '', common = `id="${id}" data-i="field" data-k="${k}" data-f="${esc(fd.key)}"`;
+    const input = fd.type === 'select' ? `<select ${common}>${fd.options.map(o => `<option${o === v ? ' selected' : ''}>${esc(o)}</option>`).join('')}</select>`
+      : fd.type === 'date' ? `<input ${common} type="date" value="${esc(v)}">`
+      : `<input ${common} type="number" inputmode="decimal" min="0" step="any" value="${esc(v)}" placeholder="0">`;
+    return `<div><label for="${id}">${esc(fd.label)}${fd.unit ? ' (' + esc(fd.unit) + ')' : ''}</label>${input}</div>`;
+  }).join('')}</div>` : '';
+  const labels = item.fields ? ['Hazırlandı', 'Hazırlanamadı'] : ['Tamam', 'Eksik'];
+  return `<div class="soru ${a.value === 'Eksik' ? 'eksik' : ''} ${f.errors[k] ? 'hata' : ''}" data-item="${k}"><p class="soru-metin"><span class="soru-no">${j + 1}</span><span>${esc(item.label)}</span></p>${fields}<div class="sec"><button class="t ${a.value === 'Tamam' ? 'acik' : ''}" data-a="ans" data-k="${k}" data-v="Tamam" aria-pressed="${a.value === 'Tamam'}">${labels[0]}</button><button class="e ${a.value === 'Eksik' ? 'acik' : ''}" data-a="ans" data-k="${k}" data-v="Eksik" aria-pressed="${a.value === 'Eksik'}">${labels[1]}</button></div>${a.value === 'Eksik' ? `<label for="n-${k}">Eksiklik açıklaması</label><textarea id="n-${k}" data-i="note" data-k="${k}" placeholder="Ne eksik, neden?">${esc(a.note || '')}</textarea>` : ''}</div>`;
+}
+function progressHtml() {
+  const f = S.form, n = f.def.sections.length, total = itemCount(f.def), done = Object.values(f.answers).filter(a => a.value).length, last = stepCount(f) - 1;
+  const where = f.step < n ? `Bölüm ${f.step + 1} / ${n}` : f.def.stock && f.step === n ? 'Stok ve zayi' : 'Gönderim öncesi özet';
+  const steps = Array.from({ length: stepCount(f) }, (_, i) => {
+    let cls = '';
+    if (i < n) { const ans = f.def.sections[i].items.map((_, j) => f.answers[i + '-' + j]?.value); if (ans.includes('Eksik')) cls = 'eksikli'; else if (ans.every(Boolean)) cls = 'bitti'; }
+    else if (i < f.max || (i === last && f.step === last)) cls = 'bitti';
+    const name = i < n ? f.def.sections[i].title : i === last ? 'Özet' : 'Stok ve zayi';
+    return `<button class="${cls} ${i === f.step ? 'simdi' : ''}" data-a="go" data-n="${i}" ${i > f.max ? 'disabled' : ''} aria-label="${esc(name)}"></button>`;
+  }).join('');
+  return `<div class="ust-satir"><h2>${esc(f.def.title)}</h2><span class="etiket">${done}/${total}</span></div><p class="soluk">${esc(f.def.business)}, ${where}</p><div class="adimlar">${steps}</div>`;
+}
+function redrawItem(k) { const el = document.querySelector(`[data-item="${k}"]`); if (el) { const [i, j] = k.split('-').map(Number); el.outerHTML = itemHtml(i, j); } }
+function redrawProgress() { const el = $('ilerleme'); if (el) el.innerHTML = progressHtml(); }
+
+function viewForm() {
+  const f = S.form, def = f.def, n = def.sections.length;
+  let body, next = 'İleri';
+  if (f.step < n) {
+    const sec = def.sections[f.step];
+    body = `<div class="ust-satir" style="margin:16px 2px 10px;align-items:center"><h2>${esc(sec.title)}</h2><button class="dugme ikincil kucuk" data-a="approve-section">Tümü tamam</button></div><p class="soluk" style="margin:0 2px 12px">Yalnızca eksikleri işaretlemen yeterli. İleri dediğinde boş kalan maddeler Tamam sayılır.</p>${sec.items.map((_, j) => itemHtml(f.step, j)).join('')}`;
+  } else if (def.stock && f.step === n) {
+    body = `<div class="kutu" style="margin-top:14px"><h2>Stok ve zayi</h2><label for="stock">Eksik stoklar (ürün, mevcut, eksik miktar)</label><textarea id="stock" data-i="stock" placeholder="Eksik yoksa Yok yazın">${esc(f.stock)}</textarea><label for="waste">Zayi ürünler (ürün, miktar, neden)</label><textarea id="waste" data-i="waste" placeholder="Zayi yoksa Yok yazın">${esc(f.waste)}</textarea></div>`;
+    next = 'Özete geç';
+  } else {
+    const total = itemCount(def), miss = [], meas = [];
+    def.sections.forEach((s, i) => s.items.forEach((it, j) => { const item = itemOf(it), a = f.answers[i + '-' + j] || {}; if (a.value === 'Eksik') miss.push([i, item, a]); else if (item.fields) meas.push([i, item, a]); }));
+    body = `<div class="kutu" style="margin-top:14px"><h2>Kontrol özeti</h2><p style="margin-top:6px"><b>${total - miss.length} tamam</b>, <b style="${miss.length ? 'color:var(--eksik)' : ''}">${miss.length} eksik</b></p>${miss.length ? miss.map(([i, item, a]) => `<div class="madde"><b>${esc(item.label)}</b><p>${esc(a.note || 'Açıklama yazılmadı')}</p><button class="dugme ikincil kucuk" data-a="go" data-n="${i}" style="margin-top:6px">Düzenle</button></div>`).join('') : '<p class="soluk">Eksik madde yok.</p>'}</div>` +
+      (meas.length ? `<div class="kutu"><h3>Hazırlık kayıtları</h3>${meas.map(([, item, a]) => `<div class="madde"><b>${esc(item.label)}</b><p class="soluk">${esc(fieldSummary(item, a))}</p></div>`).join('')}</div>` : '') +
+      (def.stock ? `<div class="kutu"><h3>Stok ve zayi</h3><p style="margin-top:6px"><b>Stok:</b> ${esc(f.stock)}</p><p><b>Zayi:</b> ${esc(f.waste)}</p></div>` : '') +
+      `<p class="soluk" style="margin:0 2px">Gönderdiğinde kayıt müdür onayına düşer, eksikler Eksik İşler listesine eklenir.</p>`;
+    next = null;
+  }
+  return `<div class="ust"><div class="kim"><b>${esc(S.user.name)}</b><span>Taslak bu telefonda otomatik saklanır</span></div><button data-a="leave">Çık</button></div><main class="formda"><div class="kutu" id="ilerleme" style="margin-bottom:0">${progressHtml()}</div>${body}</main><div class="alt-bar"><div><button class="dugme ikincil" data-a="form-back">Geri</button>${next ? `<button class="dugme" data-a="form-next">${next}</button>` : '<button class="dugme yesil" data-a="submit">Kontrolü gönder</button>'}</div></div>`;
+}
+
+function render() {
+  const app = $('app');
+  if (!S.user) { app.innerHTML = viewAuth(); return; }
+  if (S.view === 'form' && S.form) { app.innerHTML = viewForm(); return; }
+  const tabs = [['lists', 'Listeler', 0], ['tasks', 'Eksik işler', taskBadge()]];
+  if (canReview()) tabs.push(['approvals', 'Onaylar', pendingRecords().length + (S.staff ? S.staff.length : 0)]);
+  tabs.push(['records', 'Kayıtlar', 0]);
+  if (!tabs.some(t => t[0] === S.tab)) S.tab = 'lists';
+  const body = S.view === 'detail' ? viewDetail() : { lists: viewLists, tasks: viewTasks, approvals: viewApprovals, records: viewRecords }[S.tab]();
+  app.innerHTML = `<div class="ust"><div class="kim"><b>${esc(S.user.name)}</b><span>${esc(S.user.business)}, ${esc(roleName(S.user.role))}</span></div><button data-a="refresh">Yenile</button><button data-a="logout">Çıkış</button></div><main>${body}</main><nav class="sekmeler">${tabs.map(([k, v, n]) => `<button class="${S.tab === k ? 'acik' : ''}" data-a="tab" data-t="${k}">${v}${n ? `<span class="rozet">${n}</span>` : ''}</button>`).join('')}</nav>`;
+}
+
+/* ---------- olaylar ---------- */
+const ACTIONS = {
+  login, signup, logout, 'check-approval': checkApproval, refresh: () => refreshAll(false),
+  'auth-login': () => { S.authView = 'login'; render(); }, 'auth-signup': () => { S.authView = 'signup'; render(); },
+  tab: d => { S.tab = d.t; S.view = 'tabs'; render(); window.scrollTo(0, 0); },
+  start: d => startForm(d.k), ans: d => setAnswer(d.k, d.v), go: d => formGo(+d.n),
+  'form-next': formNext, 'form-back': formBack, 'approve-section': approveSection, leave: leaveForm, submit: submitForm,
+  'task-filter': d => { S.taskFilter = d.v; render(); }, 'task-biz': d => { S.taskBiz = d.v; render(); },
+  'task-done': d => completeTask(d.id), 'task-ok': d => reviewTask(d.id, true), 'task-no': d => reviewTask(d.id, false),
+  'rec-ok': d => reviewRecord(d.id, 'Onaylandı'), 'rec-no': d => reviewRecord(d.id, 'Düzeltme istendi'),
+  'staff-ok': d => approveStaff(d.id), detail: d => { S.detailId = d.id; S.view = 'detail'; render(); window.scrollTo(0, 0); },
+  back: () => { S.view = 'tabs'; render(); }, copy: d => copyReport(d.id), 'toggle-old': () => { S.showOld = !S.showOld; render(); },
+};
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-a]'); if (!b || b.disabled) return;
+  const fn = ACTIONS[b.dataset.a]; if (fn) fn(b.dataset);
+});
+document.addEventListener('input', e => {
+  const el = e.target, f = S.form; if (!f || !el.dataset || !el.dataset.i) return;
+  const k = el.dataset.k;
+  if (el.dataset.i === 'note') (f.answers[k] || (f.answers[k] = {})).note = el.value;
+  else if (el.dataset.i === 'field') { const a = f.answers[k] || (f.answers[k] = {}); (a.fields || (a.fields = {}))[el.dataset.f] = el.value; }
+  else if (el.dataset.i === 'stock') f.stock = el.value;
+  else if (el.dataset.i === 'waste') f.waste = el.value;
+  saveDraft();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !S.user && e.target.tagName === 'INPUT') { e.preventDefault(); (S.authView === 'signup' ? signup : login)(); }
+});
+// Uygulamaya geri dönüldüğünde veriler bir dakikadan eskiyse sessizce yenilenir.
+document.addEventListener('visibilitychange', () => { if (!document.hidden && S.user && S.view !== 'form' && Date.now() - S.lastLoad > 60000) refreshAll(true); });
+
+async function init() {
+  try {
+    S.defs = JSON.parse(document.getElementById('checklist-data').textContent);
+    let stored = null; try { stored = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch (e) { /* yok say */ }
+    if (stored && stored.session) {
+      S.session = stored.session; S.refresh = stored.refresh;
+      try { await loadProfile(); }
+      catch (e) { if (e.status === 401 || e.status === 400 || e.status === 403) clearSession(); else throw e; }
+    }
+    render();
+  } catch (e) {
+    $('app').innerHTML = `<div class="giris"><h1>Açılamadı</h1><div class="kutu"><p>${esc(e.message)}</p><button class="dugme tam" onclick="location.reload()">Tekrar dene</button></div></div>`;
+  }
+}
+init();
+</script>
+</body>
+</html>

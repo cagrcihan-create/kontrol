@@ -5,11 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#16202b">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Kontrol">
-<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzE2MjAyYiIvPjxyZWN0IHg9IjExNiIgeT0iOTYiIHdpZHRoPSIyODAiIGhlaWdodD0iMzIwIiByeD0iMjgiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTc2IDI2Mmw1NiA1NiAxMDgtMTI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMxZjlkNjIiIHN0cm9rZS13aWR0aD0iNDQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxyZWN0IHg9IjE5NiIgeT0iNzIiIHdpZHRoPSIxMjAiIGhlaWdodD0iNTIiIHJ4PSIxNiIgZmlsbD0iI2Y0YjQxYSIvPjwvc3ZnPgo=" type="image/svg+xml">
+<link rel="apple-touch-icon" id="icon-192" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAMAAABlApw1AAAAYFBMVEX////+///+//7//vz9/f37/f38/Pz7+/v646r3uST0tBv0tBr0tBj0sxbk8uzEx8nssB51vp0noGchnmQfnWJxk4cRl1hNUVIaJC8ZIy4YIiwXICsWICsOGCUJFCAEDxuyMMIXAAAEW0lEQVR42u3c7XaiMBAG4BiTom4LgnxJBe//LjdgawVCSNElk7Pv/PXgmacJA0nssIvnwQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwDXg0xjkAZ+V+fOqog2oLnVVmqKuK8qAqi6LoznKFwvYi/M/7v8YY/+neK3glQB1hx73RzNAffzaMWAvHYBiLn8l2B8JA2bT7wjl5ROA1wCq8lw9xNka8HjZuawcAVTC16ZufqK+ztWgG+Czd1VzbZ55ui0HnC9NkUX92H8c5tI/vO8HF2VFXZfrA85NGQVsEDaAj/12eFlUXM9rA85NETL21ovgzQ4QDC4TLMiacl2AeuaGbDgAW8sRCBjvX/jGWHEt1wSomy4a5b8cwIQIl75hLAOU12ycvwLs7O6B0U2gvixaeBssHIE64m+jLDgL3w8zgsPhY8fGAC6Cha9IbOEdMJ4GX0OgCMbQDoCaRKxozqsBVAkSQpMF2253+w9jvO8CrqGrOZQtu42XApgWoIYl2BkjZLqhowNgWzYTW23+dACMb80xcRkdwMIAAAAAAAAAAAAAAMAbwEZKIaTwFvB9reB+AgSTUazicXXmE0CyMMm7iIP713gE6PI/dZEn9xW+PwCh8k9PaRdJHnPpGUCIQP3906845SGTXgG4YPFP/goQewaQvfw7gPAJIFn0mL93gGH+vk0h+VCAvgGRRwDRPQD6+SeB2PgC6BfQLv80Cb+/hz6ADwpQG/cJ5ANgnP/pIX/6gFEBeqhAPgAm8vdmPaAroKoAcUIrso2Qkv+ugDJCS8rNbTJPELi+gEo6i3qVtwij9rcfwq6A9gqQewBnMk7SPE/iUCewyd8pgG+CLE/VCjHNhxPDpoA6B3AhszxpUzwlGkGbf2oqoM4B7QxJporLVAEVhHbmNvIhw6FAsGBcQHV3ijuA+hNPF3ibAuoeMFwl/gisCiiBEZh8yNrn7xDA1SwfVpkvgV0BJVWFeoJxAU10BdT9c4AP39RuAtsC6v5JPH7XvAlCwxKY1gmNXhDGw/xP4cQN4PxtVI4eV60gTe0KEIX1gE7wq/ydr8jGrwxpallAiSwpZwTdLi4nfcxqFJgKKJldCYPAWEDpbKtMCswFlNC+0JRgpgAR2tjSC2zyp7IzpxPMFVBaW4u6JWS2MRZQYnujQ8F8AaW2udsXTC2BKf9eqBMk9xciu/xJba93v+Zod7ravbrILn9a5wO339O0Z2An2/yJHXCot+s4S5J2s9cyf2onNO2HQSCZ/TkOtSMm3m0+SPtzKIJnZJxv8LtRAAAAAAAAAAAAAAD+CUB4DZhqy/DUv9Ws2ZZhojHGE7FyY4yJ1iRPzaCVW5Nom8M8MYHWbg6jb8+zONZvz6NvkLQwnDRImmhRtTBctKjSNwlbFI6ahGnatC0MV23aLqNGecvCXaM8GgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMD/BfgLOt+XR4bohdsAAAAASUVORK5CYII=">
+<link rel="icon" type="image/png" sizes="512x512" id="icon-512" href="data:image/png;base64,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">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<title>Carlo & Bi Hatıra Kontrol</title>
 <style>
 /* Carlo & Bi Hatıra Kontrol — stil */
 :root{
@@ -160,8 +164,14 @@ summary{font-weight:600;padding:8px 0;cursor:pointer}
 .giris .kutu{margin-top:22px}
 .giris .dugme{margin-top:16px}
 .baglanti{background:none;border:0;color:var(--murekkep);font:inherit;font-weight:600;text-decoration:underline;padding:14px 0;width:100%}
+
+/* Düzenleme ve ana ekran kartı */
+textarea.uzun{min-height:190px}
+.uyari{border-color:var(--bekle);background:var(--bekle-zemin)}
+.uyari p{margin-top:6px;font-size:15px}
+.adim-listesi{margin:0;padding-left:20px}
+.adim-listesi li{margin:4px 0}
 </style>
-<title>Carlo & Bi Hatıra Kontrol</title>
 </head>
 <body>
 <div id="app"><p class="boot">Yükleniyor…</p></div>
@@ -184,7 +194,7 @@ const SESSION_KEY = 'kontrol_oturum';
 
 const S = {
   session: null, refresh: null, user: null, pending: null,
-  defs: [], records: [], tasks: [], tasksError: '', staff: null,
+  builtin: [], templates: null, templatesError: '', allDefs: [], defs: [], edit: null, records: [], tasks: [], tasksError: '', staff: null,
   authView: 'login', tab: 'lists', view: 'tabs', form: null, detailId: null,
   taskFilter: 'active', taskBiz: 'all', showOld: false, lastLoad: 0,
 };
@@ -286,7 +296,25 @@ async function loadStaff() {
   try { S.staff = await api('/rest/v1/profiles?select=id,full_name,business,role,approved&approved=eq.false&order=full_name.asc'); }
   catch (e) { S.staff = null; }
 }
-async function loadData() { await Promise.all([loadRecords(), loadTasks(), loadStaff()]); S.lastLoad = Date.now(); }
+// Yerleşik listeler + veritabanındaki düzenlemeler. Tablo yoksa yalnızca yerleşik listeler kullanılır.
+function buildDefs() {
+  const map = new Map(S.builtin.map((d, i) => [d.key, { ...d, sort: i, active: true, builtin: true, custom: false }]));
+  (S.templates || []).forEach(t => {
+    const b = map.get(t.key);
+    map.set(t.key, { key: t.key, business: t.business, title: t.title, stock: !!t.stock, sections: t.sections, sort: t.sort ?? (b ? b.sort : 1000), active: t.active !== false, builtin: !!b, custom: true });
+  });
+  S.allDefs = [...map.values()].sort((a, b) => a.sort - b.sort);
+  S.defs = S.allDefs.filter(d => d.active);
+}
+async function loadTemplates() {
+  try {
+    const rows = await api('/rest/v1/checklist_templates?select=*');
+    S.templates = rows.filter(t => t && t.key && t.title && Array.isArray(t.sections) && t.sections.every(x => x && Array.isArray(x.items)));
+    S.templatesError = '';
+  } catch (e) { S.templates = null; S.templatesError = e.message; }
+  buildDefs();
+}
+async function loadData() { await Promise.all([loadRecords(), loadTasks(), loadStaff(), loadTemplates()]); S.lastLoad = Date.now(); }
 
 /* ---------- giriş / kayıt ---------- */
 async function login() {
@@ -323,18 +351,19 @@ async function refreshAll(quiet) {
 
 /* ---------- checklist doldurma ---------- */
 const draftKey = key => 'kontrol_taslak_' + S.user.id + '_' + key;
-function readDraft(key) {
-  try { const d = JSON.parse(localStorage.getItem(draftKey(key)) || 'null'); return d && d.day === todayISO() ? d : null; } catch (e) { return null; }
+const defSig = def => itemCount(def) + ':' + JSON.stringify(def.sections).length;
+function readDraft(def) {
+  try { const d = JSON.parse(localStorage.getItem(draftKey(def.key)) || 'null'); return d && d.day === todayISO() && d.sig === defSig(def) ? d : null; } catch (e) { return null; }
 }
 function saveDraft() {
   const f = S.form; if (!f) return;
-  try { localStorage.setItem(draftKey(f.def.key), JSON.stringify({ day: todayISO(), answers: f.answers, stock: f.stock, waste: f.waste, step: f.step, max: f.max })); } catch (e) { /* yok say */ }
+  try { localStorage.setItem(draftKey(f.def.key), JSON.stringify({ day: todayISO(), sig: defSig(f.def), answers: f.answers, stock: f.stock, waste: f.waste, step: f.step, max: f.max })); } catch (e) { /* yok say */ }
 }
 function dropDraft(key) { try { localStorage.removeItem(draftKey(key)); } catch (e) { /* yok say */ } }
 
 function startForm(key, fresh) {
   const def = S.defs.find(d => d.key === key); if (!def) return;
-  const draft = fresh ? null : readDraft(key);
+  const draft = fresh ? null : readDraft(def);
   const f = { def, answers: {}, stock: '', waste: '', step: 0, max: 0, errors: {} };
   if (draft) { Object.assign(f, { answers: draft.answers || {}, stock: draft.stock || '', waste: draft.waste || '', step: draft.step || 0, max: draft.max || 0 }); }
   // Tarih alanları bugünün tarihiyle hazır gelir.
@@ -497,11 +526,142 @@ function viewLists() {
   order.forEach(biz => {
     h += `<div class="bolum-basligi ${bizClass(biz)}"><span class="nokta"></span><h2>${esc(biz)}</h2></div>`;
     S.defs.filter(d => d.business === biz).forEach(d => {
-      const sent = myRecords().some(r => r.type === d.key && r.business === biz && isToday(r.time)), draft = readDraft(d.key);
+      const sent = myRecords().some(r => r.type === d.key && r.business === biz && isToday(r.time)), draft = readDraft(d);
       h += `<button class="satir ${bizClass(biz)}" data-a="start" data-k="${esc(d.key)}"><span class="ad"><b>${esc(d.title)}</b><span>${itemCount(d)} madde, ${d.sections.length} bölüm</span></span>${draft ? '<span class="etiket bekle">Devam et</span>' : sent ? '<span class="etiket tamam">Bugün gönderildi</span>' : ''}</button>`;
     });
   });
-  return h;
+  if (isAdmin()) h += `<button class="dugme ikincil tam" data-a="editor" style="margin-top:8px">Checklistleri düzenle</button>`;
+  return h + installCard();
+}
+function installCard() {
+  const standalone = navigator.standalone === true || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+  let hidden = false; try { hidden = localStorage.getItem('kontrol_anaekran') === '1'; } catch (e) { /* yok say */ }
+  if (standalone || hidden) return '';
+  const ios = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const steps = ios
+    ? ['Safari’de Paylaş’a bas (alttaki ••• menüsünün içinde olabilir).', 'Listeyi kaydır ve “Ana Ekrana Ekle”yi seç.', 'Sağ üstten “Ekle”ye bas.']
+    : ['Tarayıcının sağ üstündeki üç noktaya bas.', '“Ana ekrana ekle” ya da “Uygulamayı yükle”yi seç.', '“Ekle”ye bas.'];
+  return `<div class="kutu" style="margin-top:20px"><h3>Telefonuna uygulama gibi ekle</h3><p class="soluk" style="margin:4px 0 8px">Ana ekranda kendi simgesiyle, tam ekran açılır.</p><ol class="adim-listesi">${steps.map(x => `<li>${esc(x)}</li>`).join('')}</ol><div class="dugmeler"><button class="dugme ikincil kucuk" data-a="hide-install">Tamam, bir daha gösterme</button></div></div>`;
+}
+
+/* ---------- checklist düzenleme (yalnızca yönetici) ---------- */
+function editDef(key) {
+  const d = key ? S.allDefs.find(x => x.key === key) : null;
+  S.edit = d
+    ? { key: d.key, isNew: false, business: d.business, title: d.title, stock: !!d.stock, active: d.active !== false, sort: d.sort,
+        sections: d.sections.map(x => { const locked = x.items.some(it => typeof it !== 'string'); return { title: x.title, locked, items: x.items, text: locked ? '' : x.items.join('\n') }; }) }
+    : { key: 'ozel_' + Date.now().toString(36), isNew: true, business: BUSINESSES.includes(S.user.business) ? S.user.business : BUSINESSES[0], title: '', stock: false, active: true, sort: 1000 + S.allDefs.length,
+        sections: [{ title: '', locked: false, items: [], text: '' }] };
+  S.view = 'editor'; render(); window.scrollTo(0, 0);
+}
+const editLines = x => x.text.split('\n').map(v => v.trim()).filter(Boolean);
+function viewEditorList() {
+  const warn = S.templates === null ? `<div class="kutu uyari"><b>Düzenleme henüz açık değil.</b><p>Veritabanına bir tablo eklenmesi gerekiyor: CHECKLIST_DUZENLEME.sql dosyasını Supabase’de bir kez çalıştırın, sonra Yenile’ye basın.</p></div>` : '';
+  return `<button class="dugme ikincil kucuk" data-a="back">‹ Geri</button><div class="bolum-basligi"><h2>Checklistleri düzenle</h2></div>${warn}<p class="soluk" style="margin:0 2px 12px">Değişiklikler bundan sonra doldurulacak checklistlerde geçerli olur. Gönderilmiş eski kayıtlar değişmez.</p>` +
+    S.allDefs.map(d => `<button class="satir ${bizClass(d.business)}" data-a="edit-def" data-k="${esc(d.key)}"><span class="ad"><b>${esc(d.title)}</b><span>${esc(d.business)}, ${itemCount(d)} madde</span></span>${d.active ? '' : '<span class="etiket eksik">Gizli</span>'}${d.custom ? '<span class="etiket">Düzenlendi</span>' : ''}</button>`).join('') +
+    `<button class="dugme tam" data-a="edit-new" style="margin-top:8px">Yeni checklist ekle</button>`;
+}
+function viewEditor() {
+  const e = S.edit, opt = (v, cur, label) => `<option value="${esc(v)}"${String(cur) === String(v) ? ' selected' : ''}>${esc(label)}</option>`;
+  const secs = e.sections.map((x, i) => `<div class="kutu"><div class="ust-satir" style="align-items:center"><h3>${i + 1}. bölüm</h3><span class="etiket">${x.locked ? x.items.length : editLines(x).length} madde</span></div><label for="es-${i}">Bölüm adı</label><input id="es-${i}" data-i="e-sec-title" data-n="${i}" value="${esc(x.title)}" maxlength="120">` +
+    (x.locked ? `<p class="soluk" style="margin-top:10px">Bu bölümde miktar ve tarih alanları var. Maddeleri buradan değiştirilemez; değişiklik gerekirse bildirin.</p>`
+      : `<label for="ei-${i}">Maddeler (her satıra bir madde)</label><textarea id="ei-${i}" class="uzun" data-i="e-sec-items" data-n="${i}" placeholder="Örnek:&#10;Tezgâh temizlendi.&#10;Çöpler atıldı.">${esc(x.text)}</textarea>`) +
+    `<div class="dugmeler"><button class="dugme ikincil kucuk" data-a="e-up" data-n="${i}" ${i === 0 ? 'disabled' : ''}>Yukarı taşı</button><button class="dugme ikincil kucuk" data-a="e-down" data-n="${i}" ${i === e.sections.length - 1 ? 'disabled' : ''}>Aşağı taşı</button><button class="dugme ikincil kucuk" data-a="e-del" data-n="${i}">Bölümü sil</button></div></div>`).join('');
+  return `<button class="dugme ikincil kucuk" data-a="editor">‹ Vazgeç</button><div class="bolum-basligi"><h2>${e.isNew ? 'Yeni checklist' : 'Checklist düzenle'}</h2></div><div class="kutu"><label for="e-title" style="margin-top:0">Checklist adı</label><input id="e-title" data-i="e-title" value="${esc(e.title)}" maxlength="120" placeholder="Örnek: 16.00 Vardiya Devir"><label for="e-biz">İşletme</label><select id="e-biz" data-i="e-biz">${BUSINESSES.map(b => opt(b, e.business, b)).join('')}</select><label for="e-stock">Sonunda stok ve zayi sorulsun mu?</label><select id="e-stock" data-i="e-stock">${opt('0', e.stock ? '1' : '0', 'Hayır')}${opt('1', e.stock ? '1' : '0', 'Evet')}</select><label for="e-active">Personelin listesinde görünsün mü?</label><select id="e-active" data-i="e-active">${opt('1', e.active ? '1' : '0', 'Evet, görünsün')}${opt('0', e.active ? '1' : '0', 'Hayır, gizle')}</select></div>${secs}<button class="dugme ikincil tam" data-a="e-add">Bölüm ekle</button><div class="dugmeler" style="margin-top:16px"><button class="dugme yesil" data-a="e-save">Kaydet</button></div>`;
+}
+async function removeEditSection(i) {
+  const x = S.edit.sections[i]; if (!x) return;
+  if ((x.locked || editLines(x).length || x.title.trim()) && !await ask({ title: 'Bölüm silinsin mi?', text: (x.title || (i + 1) + '. bölüm') + ' ve içindeki maddeler listeden çıkar.', ok: 'Bölümü sil', danger: true })) return;
+  S.edit.sections.splice(i, 1); render();
+}
+function moveEditSection(i, d) { const a = S.edit.sections, j = i + d; if (j < 0 || j >= a.length) return; [a[i], a[j]] = [a[j], a[i]]; render(); }
+async function saveEdit() {
+  const e = S.edit, title = e.title.trim();
+  if (S.templates === null) return toast('Kaydedilemez: önce CHECKLIST_DUZENLEME.sql Supabase’de çalıştırılmalı.', true);
+  if (title.length < 3) return toast('Checklist adını yazın.', true);
+  if (!e.sections.length) return toast('En az bir bölüm gerekli.', true);
+  const sections = [];
+  for (let i = 0; i < e.sections.length; i++) {
+    const x = e.sections[i], st = x.title.trim(), items = x.locked ? x.items : editLines(x);
+    if (!st) return toast((i + 1) + '. bölümün adını yazın.', true);
+    if (!items.length) return toast('“' + st + '” bölümünde madde yok. Madde yazın ya da bölümü silin.', true);
+    sections.push({ title: st, items });
+  }
+  const row = { key: e.key, business: e.business, title, stock: e.stock, active: e.active, sort: e.sort, sections, updated_by: S.user.name, updated_at: new Date().toISOString() };
+  try { await api('/rest/v1/checklist_templates?on_conflict=key', { method: 'POST', headers: { Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify(row) }); }
+  catch (err) { return toast('Kaydedilemedi: ' + err.message, true); }
+  await loadTemplates(); S.edit = null; S.view = 'editor-list'; render(); window.scrollTo(0, 0); toast('Checklist kaydedildi.');
+}
+
+/* ---------- Excel’e aktarma ---------- */
+const XLSX_MIME = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+const CRC_TABLE = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function crc32(u8) { let c = 0xFFFFFFFF; for (let i = 0; i < u8.length; i++) c = CRC_TABLE[(c ^ u8[i]) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+function zipStore(files) {
+  const enc = new TextEncoder(), parts = [], central = []; let offset = 0;
+  files.forEach(f => {
+    const name = enc.encode(f.name), data = enc.encode(f.text), crc = crc32(data);
+    const h = new DataView(new ArrayBuffer(30));
+    h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true); h.setUint16(12, 0x21, true); h.setUint32(14, crc, true); h.setUint32(18, data.length, true); h.setUint32(22, data.length, true); h.setUint16(26, name.length, true);
+    const c = new DataView(new ArrayBuffer(46));
+    c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true); c.setUint16(8, 0x0800, true); c.setUint16(14, 0x21, true); c.setUint32(16, crc, true); c.setUint32(20, data.length, true); c.setUint32(24, data.length, true); c.setUint16(28, name.length, true); c.setUint32(42, offset, true);
+    parts.push(new Uint8Array(h.buffer), name, data); central.push(new Uint8Array(c.buffer), name); offset += 30 + name.length + data.length;
+  });
+  const csize = central.reduce((a, p) => a + p.length, 0), e = new DataView(new ArrayBuffer(22));
+  e.setUint32(0, 0x06054b50, true); e.setUint16(8, files.length, true); e.setUint16(10, files.length, true); e.setUint32(12, csize, true); e.setUint32(16, offset, true);
+  return new Blob([...parts, ...central, new Uint8Array(e.buffer)], { type: XLSX_MIME });
+}
+const xesc = v => String(v ?? '').slice(0, 32000).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+function colName(i) { let n = i + 1, out = ''; while (n) { out = String.fromCharCode(65 + (n - 1) % 26) + out; n = Math.floor((n - 1) / 26); } return out; }
+function sheetXml(rows, widths) {
+  const body = rows.map((r, ri) => `<row r="${ri + 1}">` + r.map((v, ci) => { const ref = colName(ci) + (ri + 1); return typeof v === 'number' ? `<c r="${ref}"><v>${v}</v></c>` : `<c r="${ref}" t="inlineStr"${ri === 0 ? ' s="1"' : ''}><is><t xml:space="preserve">${xesc(v)}</t></is></c>`; }).join('') + '</row>').join('');
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>${widths.map((w, i) => `<col min="${i + 1}" max="${i + 1}" width="${w}" customWidth="1"/>`).join('')}</cols><sheetData>${body}</sheetData></worksheet>`;
+}
+function buildXlsx(sheets) {
+  const X = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', M = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main', R = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships', P = 'http://schemas.openxmlformats.org/package/2006/relationships', CT = 'application/vnd.openxmlformats-officedocument.spreadsheetml.';
+  return zipStore([
+    { name: '[Content_Types].xml', text: `${X}<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="${CT}sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="${CT}styles+xml"/>${sheets.map((_, i) => `<Override PartName="/xl/worksheets/sheet${i + 1}.xml" ContentType="${CT}worksheet+xml"/>`).join('')}</Types>` },
+    { name: '_rels/.rels', text: `${X}<Relationships xmlns="${P}"><Relationship Id="rId1" Type="${R}/officeDocument" Target="xl/workbook.xml"/></Relationships>` },
+    { name: 'xl/workbook.xml', text: `${X}<workbook xmlns="${M}" xmlns:r="${R}"><sheets>${sheets.map((x, i) => `<sheet name="${xesc(x.name)}" sheetId="${i + 1}" r:id="rId${i + 1}"/>`).join('')}</sheets></workbook>` },
+    { name: 'xl/_rels/workbook.xml.rels', text: `${X}<Relationships xmlns="${P}">${sheets.map((_, i) => `<Relationship Id="rId${i + 1}" Type="${R}/worksheet" Target="worksheets/sheet${i + 1}.xml"/>`).join('')}<Relationship Id="rId${sheets.length + 1}" Type="${R}/styles" Target="styles.xml"/></Relationships>` },
+    { name: 'xl/styles.xml', text: `${X}<styleSheet xmlns="${M}"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>` },
+    ...sheets.map((x, i) => ({ name: `xl/worksheets/sheet${i + 1}.xml`, text: sheetXml(x.rows, x.widths) })),
+  ]);
+}
+function exportSheets(recs, tasks) {
+  const r1 = [['Tarih', 'İşletme', 'Checklist', 'Personel', 'Durum', 'Tamam', 'Eksik', 'Kontrol eden', 'Kontrol tarihi', 'Stok', 'Zayi']];
+  const r2 = [['Tarih', 'İşletme', 'Checklist', 'Personel', 'Madde', 'Durum', 'Miktar ve tarih', 'Açıklama']];
+  recs.forEach(r => {
+    const ans = Object.entries(r.answers || {}), miss = ans.filter(([, v]) => v && v.value === 'Eksik').length;
+    r1.push([fmt(r.created_at), r.business, r.title, r.person, r.status, ans.length - miss, miss, r.approver || '', fmt(r.approved_at), r.stock || '', r.waste || '']);
+    ans.forEach(([k, v]) => { if (v && (v.value === 'Eksik' || v.detail)) r2.push([fmt(r.created_at), r.business, r.title, r.person, (r.labels || {})[k] || k, v.value, v.detail || '', v.note || '']); });
+  });
+  const st = { open: 'Eksik', rejected: 'Olmadı, tekrar yapılacak', pending_approval: 'Müdür onayı bekliyor', approved: 'Onaylandı' };
+  const r3 = [['Bildirim tarihi', 'İşletme', 'Checklist', 'Madde', 'Bildiren', 'İlk açıklama', 'Durum', 'Tamamlayan', 'Tamamlama tarihi', 'Onaylayan', 'Onay tarihi', 'Müdür notu']];
+  tasks.forEach(t => r3.push([fmt(t.created_at), t.business || '', t.checklist_title || '', t.item_label || '', t.reporter_name || '', t.initial_note || '', st[t.status] || t.status || '', t.completed_by_name || '', fmt(t.completed_at), t.approved_by_name || '', fmt(t.approved_at), t.manager_note || '']));
+  return [
+    { name: 'Kayıtlar', rows: r1, widths: [17, 14, 32, 20, 16, 8, 8, 20, 17, 30, 30] },
+    { name: 'Eksikler ve ölçümler', rows: r2, widths: [17, 14, 32, 20, 50, 10, 44, 40] },
+    { name: 'Eksik işler', rows: r3, widths: [17, 14, 32, 50, 20, 40, 24, 20, 17, 20, 17, 40] },
+  ];
+}
+function saveBlob(blob, name) {
+  const url = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+async function exportExcel() {
+  toast('Excel dosyası hazırlanıyor…');
+  let recs, tasks;
+  try {
+    [recs, tasks] = await Promise.all([api('/rest/v1/checklist_records?select=*&order=created_at.desc&limit=1000'), api('/rest/v1/checklist_missing_tasks?select=*&order=created_at.desc&limit=2000')]);
+  } catch (e) { return toast('Veriler alınamadı: ' + e.message, true); }
+  const blob = buildXlsx(exportSheets(recs, tasks)), name = 'Kontrol_' + todayISO() + '.xlsx';
+  if (!await ask({ title: 'Excel dosyası hazır', text: `${recs.length} checklist kaydı ve ${tasks.length} eksik iş. Dosyayı kaydedebilir ya da paylaşabilirsin.`, ok: 'Dosyayı kaydet' })) return;
+  try {
+    const file = typeof File === 'function' ? new File([blob], name, { type: XLSX_MIME }) : null;
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: name }); return; }
+  } catch (e) { if (e && e.name === 'AbortError') return; }
+  saveBlob(blob, name);
 }
 
 function taskCard(t) {
@@ -539,7 +699,7 @@ function viewApprovals() {
 function viewRecords() {
   const all = myRecords(), hidden = all.filter(r => r.status === 'Onaylandı' && isOldApproved(r.approved_at)).length;
   const list = S.showOld ? all : all.filter(r => !(r.status === 'Onaylandı' && isOldApproved(r.approved_at)));
-  return `<div class="bolum-basligi"><h2>${isStaff() ? 'Gönderdiğim kayıtlar' : 'Gönderilen kayıtlar'}</h2></div>` +
+  return `<div class="bolum-basligi"><h2>${isStaff() ? 'Gönderdiğim kayıtlar' : 'Gönderilen kayıtlar'}</h2></div>${canReview() ? '<button class="dugme ikincil tam" data-a="export" style="margin-bottom:12px">Excel’e aktar</button>' : ''}` +
     (list.length ? list.map(r => recordRow(r, false)).join('') : '<p class="bos">Henüz kayıt yok. Listeler sekmesinden bir checklist doldurabilirsin.</p>') +
     (hidden ? `<button class="dugme ikincil tam" data-a="toggle-old">${S.showOld ? '48 saatten eski onaylıları gizle' : `48 saatten eski ${hidden} onaylı kaydı göster`}</button>` : '');
 }
@@ -611,7 +771,9 @@ function render() {
   if (canReview()) tabs.push(['approvals', 'Onaylar', pendingRecords().length + (S.staff ? S.staff.length : 0)]);
   tabs.push(['records', 'Kayıtlar', 0]);
   if (!tabs.some(t => t[0] === S.tab)) S.tab = 'lists';
-  const body = S.view === 'detail' ? viewDetail() : { lists: viewLists, tasks: viewTasks, approvals: viewApprovals, records: viewRecords }[S.tab]();
+  if ((S.view === 'editor' || S.view === 'editor-list') && !isAdmin()) S.view = 'tabs';
+  if (S.view === 'editor' && !S.edit) S.view = 'editor-list';
+  const body = S.view === 'detail' ? viewDetail() : S.view === 'editor-list' ? viewEditorList() : S.view === 'editor' ? viewEditor() : { lists: viewLists, tasks: viewTasks, approvals: viewApprovals, records: viewRecords }[S.tab]();
   app.innerHTML = `<div class="ust"><div class="kim"><b>${esc(S.user.name)}</b><span>${esc(S.user.business)}, ${esc(roleName(S.user.role))}</span></div><button data-a="refresh">Yenile</button><button data-a="logout">Çıkış</button></div><main>${body}</main><nav class="sekmeler">${tabs.map(([k, v, n]) => `<button class="${S.tab === k ? 'acik' : ''}" data-a="tab" data-t="${k}">${v}${n ? `<span class="rozet">${n}</span>` : ''}</button>`).join('')}</nav>`;
 }
 
@@ -626,14 +788,29 @@ const ACTIONS = {
   'task-done': d => completeTask(d.id), 'task-ok': d => reviewTask(d.id, true), 'task-no': d => reviewTask(d.id, false),
   'rec-ok': d => reviewRecord(d.id, 'Onaylandı'), 'rec-no': d => reviewRecord(d.id, 'Düzeltme istendi'),
   'staff-ok': d => approveStaff(d.id), detail: d => { S.detailId = d.id; S.view = 'detail'; render(); window.scrollTo(0, 0); },
-  back: () => { S.view = 'tabs'; render(); }, copy: d => copyReport(d.id), 'toggle-old': () => { S.showOld = !S.showOld; render(); },
+  back: () => { S.view = 'tabs'; render(); },
+  editor: () => { S.edit = null; S.view = 'editor-list'; render(); window.scrollTo(0, 0); },
+  'edit-def': d => editDef(d.k), 'edit-new': () => editDef(null), 'e-save': saveEdit,
+  'e-add': () => { S.edit.sections.push({ title: '', locked: false, items: [], text: '' }); render(); const el = $('es-' + (S.edit.sections.length - 1)); if (el) el.focus(); },
+  'e-del': d => removeEditSection(+d.n), 'e-up': d => moveEditSection(+d.n, -1), 'e-down': d => moveEditSection(+d.n, 1),
+  export: exportExcel,
+  'hide-install': () => { try { localStorage.setItem('kontrol_anaekran', '1'); } catch (e) { /* yok say */ } render(); }, copy: d => copyReport(d.id), 'toggle-old': () => { S.showOld = !S.showOld; render(); },
 };
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-a]'); if (!b || b.disabled) return;
   const fn = ACTIONS[b.dataset.a]; if (fn) fn(b.dataset);
 });
 document.addEventListener('input', e => {
-  const el = e.target, f = S.form; if (!f || !el.dataset || !el.dataset.i) return;
+  const el = e.target; if (!el.dataset || !el.dataset.i) return;
+  const ed = S.edit, kind = el.dataset.i;
+  if (ed && kind.startsWith('e-')) {
+    const x = ed.sections[+el.dataset.n];
+    if (kind === 'e-title') ed.title = el.value; else if (kind === 'e-biz') ed.business = el.value;
+    else if (kind === 'e-stock') ed.stock = el.value === '1'; else if (kind === 'e-active') ed.active = el.value === '1';
+    else if (kind === 'e-sec-title' && x) x.title = el.value; else if (kind === 'e-sec-items' && x) x.text = el.value;
+    return;
+  }
+  const f = S.form; if (!f) return;
   const k = el.dataset.k;
   if (el.dataset.i === 'note') (f.answers[k] || (f.answers[k] = {})).note = el.value;
   else if (el.dataset.i === 'field') { const a = f.answers[k] || (f.answers[k] = {}); (a.fields || (a.fields = {}))[el.dataset.f] = el.value; }
@@ -647,9 +824,22 @@ document.addEventListener('keydown', e => {
 // Uygulamaya geri dönüldüğünde veriler bir dakikadan eskiyse sessizce yenilenir.
 document.addEventListener('visibilitychange', () => { if (!document.hidden && S.user && S.view !== 'form' && Date.now() - S.lastLoad > 60000) refreshAll(true); });
 
+// Android'de “Uygulamayı yükle” için manifest; iPhone'da apple-touch-icon yeterlidir.
+function setupManifest() {
+  try {
+    const i192 = $('icon-192'), i512 = $('icon-512'); if (!i192 || !i512 || !window.URL || !URL.createObjectURL) return;
+    const base = location.origin + location.pathname;
+    const m = { name: 'Carlo & Bi Hatıra Kontrol', short_name: 'Kontrol', start_url: base, scope: base.replace(/[^/]*$/, ''), display: 'standalone', background_color: '#eceff1', theme_color: '#16202b',
+      icons: [{ src: i192.href, sizes: '192x192', type: 'image/png', purpose: 'any maskable' }, { src: i512.href, sizes: '512x512', type: 'image/png', purpose: 'any maskable' }] };
+    const link = document.createElement('link'); link.rel = 'manifest'; link.href = URL.createObjectURL(new Blob([JSON.stringify(m)], { type: 'application/manifest+json' })); document.head.appendChild(link);
+  } catch (e) { /* manifest yoksa uygulama yine çalışır */ }
+}
 async function init() {
   try {
-    S.defs = JSON.parse(document.getElementById('checklist-data').textContent);
+    const el = $('checklist-data');
+    if (el) S.builtin = JSON.parse(el.textContent);
+    else { const res = await fetch('checklists.json'); if (!res.ok) throw Error('Checklist listesi yüklenemedi.'); S.builtin = await res.json(); }
+    buildDefs(); setupManifest();
     let stored = null; try { stored = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch (e) { /* yok say */ }
     if (stored && stored.session) {
       S.session = stored.session; S.refresh = stored.refresh;

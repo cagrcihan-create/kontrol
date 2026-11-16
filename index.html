@@ -693,12 +693,116 @@ async function exportExcel() {
     [recs, tasks] = await Promise.all([api('/rest/v1/checklist_records?select=*&order=created_at.desc&limit=1000'), api('/rest/v1/checklist_missing_tasks?select=*&order=created_at.desc&limit=2000')]);
   } catch (e) { return toast('Veriler alınamadı: ' + e.message, true); }
   const blob = buildXlsx(exportSheets(recs, tasks)), name = 'Kontrol_' + todayISO() + '.xlsx';
-  if (!await ask({ title: 'Excel dosyası hazır', text: `${recs.length} checklist kaydı ve ${tasks.length} eksik iş. Dosyayı kaydedebilir ya da paylaşabilirsin.`, ok: 'Dosyayı kaydet' })) return;
+  await deliverFile(blob, name, XLSX_MIME, 'Excel dosyası hazır', `${recs.length} checklist kaydı ve ${tasks.length} eksik iş. Dosyayı kaydedebilir ya da paylaşabilirsin.`);
+}
+
+/* ---------- PDF (onaylanan checklistler) ---------- */
+const PDF_LIBS = ['https://cdn.jsdelivr.net/npm/pdfmake@0.2.23/build/pdfmake.min.js', 'https://cdn.jsdelivr.net/npm/pdfmake@0.2.23/build/vfs_fonts.js'];
+let pdfLoading = null, pdfReady = false;
+function loadScript(src) {
+  return new Promise((ok, fail) => { const el = document.createElement('script'); el.src = src; el.onload = ok; el.onerror = () => fail(Error('PDF aracı yüklenemedi. İnternet bağlantısını kontrol edin.')); document.head.appendChild(el); });
+}
+function loadPdfLib() {
+  if (pdfReady && window.pdfMake) return Promise.resolve(window.pdfMake);
+  if (!pdfLoading) pdfLoading = (async () => { for (const src of PDF_LIBS) await loadScript(src); if (!window.pdfMake || typeof window.pdfMake.createPdf !== 'function') throw Error('PDF aracı yüklenemedi.'); pdfReady = true; return window.pdfMake; })().catch(e => { pdfLoading = null; throw e; });
+  return pdfLoading;
+}
+const isApproved = r => r && r.status === 'Onaylandı';
+const fileSafe = t => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ı/g, 'i').replace(/İ/g, 'I').replace(/[^A-Za-z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 50);
+const fileStamp = t => { const d = new Date(t); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') + '_' + String(d.getHours()).padStart(2, '0') + String(d.getMinutes()).padStart(2, '0'); };
+const PDF_GREEN = '#1f7a45', PDF_RED = '#c62828', PDF_GREY = '#6b7280', PDF_LINE = '#d6dade';
+function pdfRecord(r, newPage) {
+  const def = S.allDefs.find(d => d.key === r.type);
+  const entries = Object.entries(r.answers || {}).sort(([a], [b]) => { const [a1, a2] = a.split('-').map(Number), [b1, b2] = b.split('-').map(Number); return a1 - b1 || a2 - b2; });
+  const miss = entries.filter(([, v]) => v && v.value === 'Eksik').length;
+  const info = [
+    ['Checklist', r.title], ['İşletme', r.business], ['Dolduran', r.person],
+    ['Gönderim tarihi ve saati', fmt(r.created_at)], ['Durum', r.status],
+    ['Onaylayan', r.approver || '—'], ['Onay tarihi ve saati', r.approved_at ? fmt(r.approved_at) : '—'],
+    ['Sonuç', `${entries.length - miss} tamam, ${miss} eksik (toplam ${entries.length} madde)`],
+  ];
+  const out = [
+    { text: r.business, color: PDF_GREY, fontSize: 10, ...(newPage ? { pageBreak: 'before' } : {}) },
+    { text: r.title, style: 'baslik' },
+    { table: { widths: [130, '*'], body: info.map(([k, v]) => [{ text: k, color: PDF_GREY }, { text: String(v ?? ''), bold: k === 'Onaylayan' || k === 'Dolduran' || k === 'Durum', color: k === 'Durum' ? PDF_GREEN : undefined }]) },
+      layout: { hLineWidth: () => 0.5, vLineWidth: () => 0, hLineColor: () => PDF_LINE, paddingTop: () => 4, paddingBottom: () => 4 }, margin: [0, 8, 0, 14] },
+  ];
+  // Maddeleri bölümlere ayır (bölüm adları güncel checklistten alınır)
+  const groups = new Map();
+  entries.forEach(([k, v]) => { const i = +k.split('-')[0]; if (!groups.has(i)) groups.set(i, []); groups.get(i).push([k, v]); });
+  groups.forEach((rows, i) => {
+    const title = (def && def.sections[i] && def.sections[i].title) || (groups.size > 1 ? (i + 1) + '. bölüm' : 'Maddeler');
+    const body = [[{ text: title, style: 'bolum', colSpan: 4, margin: [-4, 6, 0, 2] }, '', '', ''], [{ text: '#', style: 'th' }, { text: 'Madde', style: 'th' }, { text: 'Durum', style: 'th' }, { text: 'Açıklama', style: 'th' }]];
+    rows.forEach(([k, v], n) => {
+      const bad = v.value === 'Eksik';
+      body.push([{ text: String(n + 1), color: PDF_GREY }, { text: (r.labels || {})[k] || k }, { text: v.value || '', bold: true, color: bad ? PDF_RED : PDF_GREEN }, { text: [v.detail, v.note].filter(Boolean).join(' — '), color: bad ? PDF_RED : undefined }]);
+    });
+    // Bölüm adı tablonun tekrar eden başlığında: sayfa sonunda tek başına kalmaz, taşan sayfada da görünür
+    out.push({ table: { headerRows: 2, keepWithHeaderRows: 1, dontBreakRows: true, widths: [16, '*', 40, '32%'], body },
+      layout: { hLineWidth: (j, node) => (j <= 1 || j === node.table.body.length ? 0 : 0.5), vLineWidth: () => 0, hLineColor: () => PDF_LINE, fillColor: j => (j === 1 ? '#eef1f3' : null), paddingTop: () => 3, paddingBottom: () => 3 }, margin: [0, 0, 0, 8] });
+  });
+  if (r.stock || r.waste) out.push({ text: 'Stok ve zayi', style: 'bolum', margin: [0, 6, 0, 4] }, { text: [{ text: 'Stok: ', bold: true }, r.stock || 'Belirtilmedi'] }, { text: [{ text: 'Zayi: ', bold: true }, r.waste || 'Belirtilmedi'], margin: [0, 2, 0, 0] });
+  return out;
+}
+function pdfDoc(recs, title) {
+  const made = fmt(new Date());
+  return {
+    pageSize: 'A4', pageMargins: [36, 40, 36, 44], info: { title, author: S.user ? S.user.name : '' },
+    defaultStyle: { font: 'Roboto', fontSize: 9.5, lineHeight: 1.15 },
+    styles: { baslik: { fontSize: 17, bold: true, margin: [0, 1, 0, 0] }, bolum: { fontSize: 11.5, bold: true, color: '#111827', margin: [0, 6, 0, 4] }, th: { bold: true, fontSize: 9, color: '#374151' } },
+    footer: (cur, total) => ({ columns: [{ text: 'Carlo & Bi Hatıra Kontrol · PDF oluşturma: ' + made }, { text: 'Sayfa ' + cur + ' / ' + total, alignment: 'right' }], margin: [36, 14, 36, 0], fontSize: 8, color: PDF_GREY }),
+    content: recs.flatMap((r, i) => pdfRecord(r, i > 0)),
+  };
+}
+async function deliverFile(blob, name, mime, title, text) {
+  if (!await ask({ title, text, ok: 'Dosyayı kaydet' })) return;
   try {
-    const file = typeof File === 'function' ? new File([blob], name, { type: XLSX_MIME }) : null;
+    const file = typeof File === 'function' ? new File([blob], name, { type: mime }) : null;
     if (file && navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: name }); return; }
   } catch (e) { if (e && e.name === 'AbortError') return; }
   saveBlob(blob, name);
+}
+async function makePdf(recs, title, name, text) {
+  toast('PDF hazırlanıyor…');
+  let blob;
+  try { const pdfMake = await loadPdfLib(); blob = await new Promise((ok, fail) => { try { pdfMake.createPdf(pdfDoc(recs, title)).getBlob(ok); } catch (e) { fail(e); } }); }
+  catch (e) { return toast('PDF oluşturulamadı: ' + e.message, true); }
+  await deliverFile(blob, name, 'application/pdf', 'PDF hazır', text);
+}
+function recordPdf(id) {
+  const r = S.records.find(x => x.id === id); if (!isApproved(r)) return toast('Yalnızca onaylanan checklistler PDF olarak alınabilir.', true);
+  makePdf([r], r.title, `Checklist_${fileSafe(r.business)}_${fileSafe(r.title)}_${fileStamp(r.created_at)}.pdf`, `${r.title}, ${r.person}, ${fmt(r.created_at)}`);
+}
+// Tarih aralığındaki onaylı checklistleri tek PDF'te topla (müdür ve yönetici)
+function pdfRangeAsk() {
+  return new Promise(resolve => {
+    const sh = $('sheet'), d = new Date(), from = new Date(d.getTime() - 6 * 864e5);
+    const iso = x => x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0');
+    sh.innerHTML = `<div class="pencere" role="dialog" aria-modal="true"><h2>Onaylananları PDF al</h2><p class="soluk">Seçtiğin tarihler arasında gönderilip onaylanan checklistler tek PDF dosyasında, her biri ayrı sayfada olur.</p><label for="pdf-from">Başlangıç</label><input id="pdf-from" type="date" value="${iso(from)}"><label for="pdf-to">Bitiş</label><input id="pdf-to" type="date" value="${iso(d)}"><label for="pdf-biz">İşletme</label><select id="pdf-biz"><option value="all">İki işletme</option>${BUSINESSES.map(b => `<option>${esc(b)}</option>`).join('')}</select><div class="dugmeler"><button class="dugme ikincil" data-s="no">Vazgeç</button><button class="dugme" data-s="yes">PDF oluştur</button></div></div>`;
+    sh.hidden = false;
+    const done = v => { sh.hidden = true; sh.innerHTML = ''; sh.onclick = null; resolve(v); };
+    sh.onclick = e => {
+      if (e.target === sh) return done(null);
+      const b = e.target.closest('[data-s]'); if (!b) return;
+      if (b.dataset.s === 'no') return done(null);
+      const f = $('pdf-from').value, t = $('pdf-to').value, biz = $('pdf-biz').value;
+      if (!f || !t || f > t) return toast('Başlangıç tarihi bitişten sonra olamaz.', true);
+      done({ from: f, to: t, biz });
+    };
+  });
+}
+async function rangePdf() {
+  const o = await pdfRangeAsk(); if (!o) return;
+  const start = new Date(o.from + 'T00:00:00'), end = new Date(o.to + 'T00:00:00'); end.setDate(end.getDate() + 1);
+  let recs;
+  try {
+    recs = await api('/rest/v1/checklist_records?select=*&status=eq.' + encodeURIComponent('Onaylandı') + '&created_at=gte.' + encodeURIComponent(start.toISOString()) + '&created_at=lt.' + encodeURIComponent(end.toISOString()) +
+      (o.biz !== 'all' ? '&business=eq.' + encodeURIComponent(o.biz) : '') + '&order=created_at.asc&limit=301');
+  } catch (e) { return toast('Kayıtlar alınamadı: ' + e.message, true); }
+  if (!recs.length) return toast('Bu tarihlerde onaylanan checklist yok.', true);
+  if (recs.length > 300) return toast('Bu aralıkta 300’den fazla kayıt var. Daha kısa bir tarih aralığı seçin.', true);
+  const span = trDate(o.from) + (o.from === o.to ? '' : ' – ' + trDate(o.to));
+  makePdf(recs, 'Onaylanan checklistler ' + span, `Onaylanan_Checklistler_${o.biz === 'all' ? '' : fileSafe(o.biz) + '_'}${o.from}${o.from === o.to ? '' : '_' + o.to}.pdf`, `${recs.length} onaylı checklist, ${span}${o.biz === 'all' ? '' : ', ' + o.biz}.`);
 }
 
 function taskCard(t) {
@@ -722,7 +826,7 @@ function viewTasks() {
 
 function recordRow(r, withActions) {
   const missing = Object.values(r.answers).filter(v => v.value === 'Eksik').length;
-  return `<div class="is ${bizClass(r.business)}"><div class="ust-satir"><h3>${esc(r.title)}</h3>${statusTag(r.status)}</div><p class="soluk">${esc(r.person)}, ${esc(r.business)}, ${fmt(r.time)}</p><p class="soluk">${missing ? `<b style="color:var(--eksik)">${missing} eksik</b>` : 'Eksik yok'}</p><div class="dugmeler"><button class="dugme ikincil" data-a="detail" data-id="${esc(r.id)}">Detay</button>${withActions && canApproveRecord(r) ? `<button class="dugme yesil" data-a="rec-ok" data-id="${esc(r.id)}">Onayla</button><button class="dugme kirmizi" data-a="rec-no" data-id="${esc(r.id)}">Tekrar yap</button>` : ''}</div></div>`;
+  return `<div class="is ${bizClass(r.business)}"><div class="ust-satir"><h3>${esc(r.title)}</h3>${statusTag(r.status)}</div><p class="soluk">${esc(r.person)}, ${esc(r.business)}, ${fmt(r.time)}</p><p class="soluk">${missing ? `<b style="color:var(--eksik)">${missing} eksik</b>` : 'Eksik yok'}</p><div class="dugmeler"><button class="dugme ikincil" data-a="detail" data-id="${esc(r.id)}">Detay</button>${isApproved(r) ? `<button class="dugme ikincil" data-a="pdf" data-id="${esc(r.id)}">PDF</button>` : ''}${withActions && canApproveRecord(r) ? `<button class="dugme yesil" data-a="rec-ok" data-id="${esc(r.id)}">Onayla</button><button class="dugme kirmizi" data-a="rec-no" data-id="${esc(r.id)}">Tekrar yap</button>` : ''}</div></div>`;
 }
 function viewApprovals() {
   const pend = pendingRecords();
@@ -736,7 +840,7 @@ function viewApprovals() {
 function viewRecords() {
   const all = myRecords(), hidden = all.filter(r => r.status === 'Onaylandı' && isOldApproved(r.approved_at)).length;
   const list = S.showOld ? all : all.filter(r => !(r.status === 'Onaylandı' && isOldApproved(r.approved_at)));
-  return `<div class="bolum-basligi"><h2>${isStaff() ? 'Gönderdiğim kayıtlar' : 'Gönderilen kayıtlar'}</h2></div>${canReview() ? '<button class="dugme ikincil tam" data-a="export" style="margin-bottom:12px">Excel’e aktar</button>' : ''}` +
+  return `<div class="bolum-basligi"><h2>${isStaff() ? 'Gönderdiğim kayıtlar' : 'Gönderilen kayıtlar'}</h2></div>${canReview() ? '<div class="dugmeler" style="margin:0 0 12px"><button class="dugme ikincil" data-a="export">Excel’e aktar</button><button class="dugme ikincil" data-a="pdf-range">Toplu PDF</button></div>' : ''}` +
     (list.length ? list.map(r => recordRow(r, false)).join('') : '<p class="bos">Henüz kayıt yok. Listeler sekmesinden bir checklist doldurabilirsin.</p>') +
     (hidden ? `<button class="dugme ikincil tam" data-a="toggle-old">${S.showOld ? '48 saatten eski onaylıları gizle' : `48 saatten eski ${hidden} onaylı kaydı göster`}</button>` : '');
 }
@@ -748,7 +852,7 @@ function viewDetail() {
     `<div class="kutu"><h3>Eksikler</h3>${missing.length ? missing.map(line).join('') : '<p class="soluk" style="margin-top:6px">Eksik bildirilmedi.</p>'}</div>` +
     (measured.length ? `<div class="kutu"><h3>Hazırlık kayıtları</h3>${measured.map(line).join('')}</div>` : '') +
     (r.stock || r.waste ? `<div class="kutu"><h3>Stok ve zayi</h3><p style="margin-top:6px"><b>Stok:</b> ${esc(r.stock || 'Belirtilmedi')}</p><p><b>Zayi:</b> ${esc(r.waste || 'Belirtilmedi')}</p></div>` : '') +
-    `<div class="kutu"><details><summary>Tüm maddeler (${entries.length})</summary>${entries.map(([k, v]) => `<div class="madde"><span class="etiket ${v.value === 'Eksik' ? 'eksik' : 'tamam'}">${esc(v.value)}</span> ${esc(r.labels[k] || k)}</div>`).join('')}</details><div class="dugmeler"><button class="dugme ikincil" data-a="copy" data-id="${esc(r.id)}">Raporu kopyala</button></div></div>`;
+    `<div class="kutu"><details><summary>Tüm maddeler (${entries.length})</summary>${entries.map(([k, v]) => `<div class="madde"><span class="etiket ${v.value === 'Eksik' ? 'eksik' : 'tamam'}">${esc(v.value)}</span> ${esc(r.labels[k] || k)}</div>`).join('')}</details><div class="dugmeler">${isApproved(r) ? `<button class="dugme" data-a="pdf" data-id="${esc(r.id)}">PDF indir</button>` : ''}<button class="dugme ikincil" data-a="copy" data-id="${esc(r.id)}">Raporu kopyala</button></div></div>`;
 }
 
 /* --- form görünümü --- */
@@ -830,7 +934,7 @@ const ACTIONS = {
   'edit-def': d => editDef(d.k), 'edit-new': () => editDef(null), 'e-save': saveEdit,
   'e-add': () => { S.edit.sections.push({ title: '', locked: false, items: [], text: '' }); render(); const el = $('es-' + (S.edit.sections.length - 1)); if (el) el.focus(); },
   'e-del': d => removeEditSection(+d.n), 'e-up': d => moveEditSection(+d.n, -1), 'e-down': d => moveEditSection(+d.n, 1),
-  export: exportExcel,
+  export: exportExcel, pdf: d => recordPdf(d.id), 'pdf-range': rangePdf,
   'hide-install': () => { try { localStorage.setItem('kontrol_anaekran', '1'); } catch (e) { /* yok say */ } render(); }, copy: d => copyReport(d.id), 'toggle-old': () => { S.showOld = !S.showOld; render(); },
 };
 document.addEventListener('click', e => {

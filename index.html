@@ -805,6 +805,182 @@ async function rangePdf() {
   makePdf(recs, 'Onaylanan checklistler ' + span, `Onaylanan_Checklistler_${o.biz === 'all' ? '' : fileSafe(o.biz) + '_'}${o.from}${o.from === o.to ? '' : '_' + o.to}.pdf`, `${recs.length} onaylı checklist, ${span}${o.biz === 'all' ? '' : ', ' + o.biz}.`);
 }
 
+/* ---------- haftalık / aylık rapor (işletme sahibi, tek sayfa PDF) ---------- */
+const p2 = n => String(n).padStart(2, '0');
+const dayKey = d => d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate());
+const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+const bizDateKey = t => dayKey(new Date(new Date(t).getTime() - DAY_START_MIN * 60000)); // 02.00 kapanışı önceki güne
+const keyDate = k => new Date(+k.slice(0, 4), +k.slice(5, 7) - 1, +k.slice(8, 10));
+const keyStart = k => { const d = keyDate(k); d.setMinutes(DAY_START_MIN); return d; };
+const deadlineOn = (def, k) => (validHM(def.deadline) ? new Date(keyStart(k).getTime() + (((hmMin(def.deadline) - DAY_START_MIN) % 1440 + 1440) % 1440) * 60000) : null);
+const hm = t => { const d = new Date(t); return p2(d.getHours()) + ':' + p2(d.getMinutes()); };
+const trMonth = d => d.toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' });
+const trDay = d => d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' });
+const DOW = ['Pz', 'Pt', 'Sa', 'Ça', 'Pe', 'Cu', 'Ct']; // Pazar … Cumartesi
+function periodLabel(p) {
+  if (p.kind === 'month') return trMonth(p.start);
+  const sameMonth = p.start.getMonth() === p.end.getMonth();
+  return (sameMonth ? p.start.getDate() : trDay(p.start)) + ' – ' + trDay(p.end) + ' ' + p.end.getFullYear();
+}
+function reportPeriods() {
+  const bt = keyDate(bizDateKey(new Date())), out = [];
+  const mon = addDays(bt, -((bt.getDay() + 6) % 7));
+  for (let i = 0; i < 8; i++) { const st = addDays(mon, -7 * i); out.push({ kind: 'week', start: st, end: addDays(st, 6), current: i === 0 }); }
+  for (let i = 0; i < 6; i++) { const st = new Date(bt.getFullYear(), bt.getMonth() - i, 1); out.push({ kind: 'month', start: st, end: new Date(st.getFullYear(), st.getMonth() + 1, 0), current: i === 0 }); }
+  return out;
+}
+const prevPeriod = p => (p.kind === 'week' ? { kind: 'week', start: addDays(p.start, -7), end: addDays(p.end, -7) }
+  : { kind: 'month', start: new Date(p.start.getFullYear(), p.start.getMonth() - 1, 1), end: new Date(p.start.getFullYear(), p.start.getMonth(), 0) });
+const periodDays = p => { const a = []; for (let d = p.start; d <= p.end; d = addDays(d, 1)) a.push(dayKey(d)); return a; };
+const rangeOf = p => [keyStart(dayKey(p.start)), keyStart(dayKey(addDays(p.end, 1)))];
+
+function reportStats(p, recs, tasks, defs, biz, since) {
+  const days = periodDays(p), set = new Set(days), [from, to] = rangeOf(p), now = new Date();
+  const rs = recs.filter(r => set.has(bizDateKey(r.created_at)) && (!biz || r.business === biz));
+  const st = { sent: rs.length, approved: 0, pending: 0, redo: 0, items: 0, miss: 0, expected: 0, onTime: 0, late: 0, missed: 0 };
+  rs.forEach(r => {
+    if (r.status === 'Onaylandı') st.approved++; else if (r.status === 'Onay bekliyor') st.pending++; else st.redo++;
+    Object.values(r.answers || {}).forEach(v => { st.items++; if (v && v.value === 'Eksik') st.miss++; });
+  });
+  defs.filter(d => !biz || d.business === biz).forEach(d => days.forEach(k => {
+    const dl = deadlineOn(d, k); if (!dl || dl > now || (since && k < since)) return;
+    st.expected++;
+    const first = rs.filter(r => r.type === d.key && r.business === d.business && bizDateKey(r.created_at) === k).map(r => new Date(r.created_at)).sort((a, b) => a - b)[0];
+    if (!first) st.missed++; else if (first <= dl) st.onTime++; else st.late++;
+  }));
+  const T = tasks.filter(t => !biz || t.business === biz), inR = t => t && new Date(t) >= from && new Date(t) < to;
+  st.opened = T.filter(t => inR(t.created_at)).length;
+  const closed = T.filter(t => t.status === 'approved' && inR(t.approved_at));
+  st.closed = closed.length;
+  st.avgClose = closed.length ? closed.reduce((a, t) => a + (new Date(t.approved_at) - new Date(t.created_at)), 0) / closed.length : null;
+  st.openEnd = T.filter(t => new Date(t.created_at) < to && (t.status !== 'approved' || (t.approved_at && new Date(t.approved_at) >= to))).length;
+  st.rs = rs;
+  return st;
+}
+const pct = (a, b) => (b ? '%' + Math.round((a / b) * 100) : '—');
+const dur = ms => (ms == null ? '—' : ms < 36e5 ? Math.max(1, Math.round(ms / 6e4)) + ' dk' : ms < 864e5 ? Math.round(ms / 36e5) + ' sa' : (ms / 864e5).toFixed(1).replace('.', ',') + ' gün');
+
+function reportDoc(p, recs, tasks, since) {
+  const defs = S.defs, prev = prevPeriod(p), days = periodDays(p), now = new Date(), month = p.kind === 'month';
+  const tot = reportStats(p, recs, tasks, defs, null, since), old = reportStats(prev, recs, tasks, defs, null, since);
+  const by = Object.fromEntries(BUSINESSES.map(b => [b, reportStats(p, recs, tasks, defs, b, since)]));
+  const kind = month ? 'Aylık' : 'Haftalık', prevName = month ? 'önceki ay' : 'önceki hafta';
+
+  // En sık eksik çıkan maddeler ve personel özeti
+  const missMap = new Map(), staff = new Map();
+  tot.rs.forEach(r => {
+    const s = staff.get(r.person) || { name: r.person, biz: new Set(), sent: 0, miss: 0 }; s.biz.add(r.business); s.sent++;
+    Object.entries(r.answers || {}).forEach(([k, v]) => {
+      if (!v || v.value !== 'Eksik') return; s.miss++;
+      const label = (r.labels || {})[k] || k, key = r.business + '|' + r.title + '|' + label, m = missMap.get(key) || { label, title: r.title, biz: r.business, n: 0 }; m.n++; missMap.set(key, m);
+    });
+    staff.set(r.person, s);
+  });
+  const topMiss = [...missMap.values()].sort((a, b) => b.n - a.n).slice(0, 5);
+  const people = [...staff.values()].sort((a, b) => b.sent - a.sent).slice(0, 6);
+
+  // Özet cümlesi
+  const diff = tot.sent - old.sent;
+  let sum = `${periodLabel(p)} döneminde ${tot.sent} checklist gönderildi${old.sent || diff ? ` (${prevName}: ${old.sent})` : ''}.`;
+  if (tot.expected) sum += ` Saatli listelerde zamanında gönderim oranı ${pct(tot.onTime, tot.expected)}; ${tot.late} liste geç geldi, ${tot.missed} liste hiç gönderilmedi.`;
+  if (tot.items) sum += ` Eksik çıkan madde oranı ${pct(tot.miss, tot.items)}.`;
+  if (topMiss.length) sum += ` En sık eksik: “${topMiss[0].label.length > 70 ? topMiss[0].label.slice(0, 68) + '…' : topMiss[0].label}” (${topMiss[0].n} kez).`;
+  sum += ` Dönem sonunda ${tot.openEnd} eksik iş açık.`;
+  if (p.current) sum += ' Dönem henüz bitmedi; rapor bugüne kadarki durumu gösterir.';
+
+  const GREY = '#6b7280', LINE = '#d6dade', HEAD = '#eef1f3';
+  const thin = { hLineWidth: (i, n) => (i === 0 || i === n.table.body.length ? 0 : 0.5), vLineWidth: () => 0, hLineColor: () => LINE, fillColor: i => (i === 0 ? HEAD : null), paddingTop: () => 2.5, paddingBottom: () => 2.5, paddingLeft: () => 4, paddingRight: () => 4 };
+  const th = t => ({ text: t, bold: true, fontSize: 7.5, color: '#374151' });
+  const row = (label, f, fmtv = v => String(v)) => [{ text: label }, ...BUSINESSES.map(b => ({ text: fmtv(f(by[b])), alignment: 'right' })), { text: fmtv(f(tot)), alignment: 'right', bold: true }, { text: fmtv(f(old)), alignment: 'right', color: GREY }];
+  const kpi = {
+    table: { headerRows: 1, widths: ['*', 52, 52, 44, 50], body: [
+      [th('Gösterge'), ...BUSINESSES.map(b => ({ ...th(b), alignment: 'right' })), { ...th('Toplam'), alignment: 'right' }, { ...th(month ? 'Önceki ay' : 'Önceki hafta'), alignment: 'right' }],
+      row('Gönderilen checklist', x => x.sent),
+      row('Onaylanan / onay bekleyen', x => x.approved + ' / ' + x.pending),
+      row('Zamanında gönderim (saatli listeler)', x => pct(x.onTime, x.expected)),
+      row('Geç gönderilen', x => x.late),
+      row('Hiç gönderilmeyen', x => x.missed),
+      row('Eksik çıkan madde oranı', x => pct(x.miss, x.items)),
+      row('Açılan eksik iş', x => x.opened),
+      row('Kapatılan eksik iş', x => x.closed),
+      row('Ortalama kapanma süresi', x => dur(x.avgClose)),
+      row('Dönem sonunda açık eksik iş', x => x.openEnd),
+    ] }, layout: thin, fontSize: 8,
+  };
+  const missTable = { table: { headerRows: 1, widths: [14, '*', 22], body: [[th('#'), th('En sık eksik çıkan maddeler'), { ...th('Kez'), alignment: 'right' }],
+    ...(topMiss.length ? topMiss.map((m, i) => [{ text: String(i + 1), color: GREY }, { text: [{ text: m.label.length > 80 ? m.label.slice(0, 78) + '…' : m.label }, { text: '  ' + m.biz + ', ' + m.title, color: GREY, fontSize: 6.5 }] }, { text: String(m.n), alignment: 'right', bold: true, color: '#c62828' }])
+      : [[{ text: 'Bu dönemde eksik bildirilmedi.', colSpan: 3, color: GREY }, '', '']])] }, layout: thin, fontSize: 7.5 };
+  const staffTable = { table: { headerRows: 1, widths: ['*', 62, 62], body: [[th('Personel'), { ...th('Gönderdiği liste'), alignment: 'right' }, { ...th('Bildirdiği eksik'), alignment: 'right' }],
+    ...(people.length ? people.map(x => [{ text: [x.name, { text: '  ' + [...x.biz].join(', '), color: GREY, fontSize: 6.5 }] }, { text: String(x.sent), alignment: 'right' }, { text: String(x.miss), alignment: 'right' }])
+      : [[{ text: 'Bu dönemde gönderim yok.', colSpan: 3, color: GREY }, '', '']])] }, layout: thin, fontSize: 7.5, margin: [0, 8, 0, 0] };
+
+  // Gün gün tablo: her hücrede ilk gönderimin saati
+  const C = { ok: ['#d9f2e3', '#1f7a45'], late: ['#fde7c2', '#8a5a00'], miss: ['#fbd5d2', '#c62828'], future: ['#f6f7f8', GREY] };
+  const fs = month ? 5.8 : 8;
+  const gHead = [{ text: '', border: [false, false, false, false] }, ...days.map(k => { const d = keyDate(k), we = d.getDay() === 0 || d.getDay() === 6; return { text: month ? [{ text: DOW[d.getDay()] + '\n', fontSize: 5, color: GREY }, String(d.getDate())] : DOW[d.getDay()] + ' ' + d.getDate(), alignment: 'center', bold: true, fontSize: month ? 6.5 : 8, fillColor: we ? '#e4e8eb' : HEAD }; })];
+  const gBody = [gHead];
+  BUSINESSES.forEach(b => {
+    const ds = defs.filter(d => d.business === b); if (!ds.length) return;
+    gBody.push([{ text: b, bold: true, fontSize: 8, colSpan: days.length + 1, margin: [0, 2, 0, 0], color: b === 'Carlo Burger' ? '#b7791f' : '#2c7a7b' }, ...days.map(() => '')]);
+    ds.forEach(d => { const nm = d.title.length > (month ? 27 : 38) ? d.title.slice(0, month ? 25 : 36) + '…' : d.title; gBody.push([{ text: nm + (validHM(d.deadline) ? '  · ' + hmText(d.deadline) : ''), fontSize: 7, noWrap: true }, ...days.map(k => {
+      const first = by[b].rs.filter(r => r.type === d.key && bizDateKey(r.created_at) === k).map(r => r.created_at).sort()[0], dl = deadlineOn(d, k);
+      let c, t = '';
+      if (first) { c = dl && new Date(first) > dl ? C.late : C.ok; t = hm(first); }
+      else if (dl && dl <= now && !(since && k < since)) { c = C.miss; t = '—'; }
+      else if (keyStart(k) > now) c = C.future;
+      return c ? { text: t, fillColor: c[0], color: c[1], alignment: 'center', fontSize: fs, bold: true } : { text: '' };
+    })]); });
+  });
+  const grid = { table: { headerRows: 1, dontBreakRows: true, widths: [month ? 118 : 160, ...days.map(() => '*')], body: gBody },
+    layout: { hLineWidth: () => 0.6, vLineWidth: () => 0.6, hLineColor: () => '#ffffff', vLineColor: () => '#ffffff', paddingLeft: () => (month ? 0.5 : 3), paddingRight: () => (month ? 0.5 : 3), paddingTop: () => 2, paddingBottom: () => 2 } };
+  const dot = (c, t) => [{ canvas: [{ type: 'rect', x: 0, y: 1, w: 8, h: 7, color: c[0] }], width: 10 }, { text: t, width: 'auto', margin: [0, 0, 10, 0] }];
+  const legend = { columns: [...dot(C.ok, 'Zamanında (hücrede gönderim saati)'), ...dot(C.late, 'Son saatten sonra'), ...dot(C.miss, 'Hiç gönderilmedi'), ...dot(C.future, 'Henüz gelmedi'), { text: 'Boş: o gün gönderilmedi (son saati olmayan liste ya da uygulama kullanılmadan önceki gün). Gün sabah 05.00’te başlar.', color: GREY, width: '*' }], fontSize: 6.5, color: '#374151', margin: [0, 4, 0, 0] };
+
+  return {
+    pageSize: 'A4', pageOrientation: 'landscape', pageMargins: [28, 24, 28, 26], info: { title: kind + ' rapor ' + periodLabel(p) },
+    defaultStyle: { font: 'Roboto', fontSize: 8, lineHeight: 1.12 },
+    footer: () => ({ text: 'Carlo & Bi Hatıra Kontrol · ' + kind + ' rapor · oluşturma: ' + fmt(now), fontSize: 6.5, color: GREY, margin: [28, 8, 28, 0] }),
+    content: [
+      { columns: [{ stack: [{ text: kind.toUpperCase() + ' RAPOR', fontSize: 8, bold: true, color: GREY, characterSpacing: 1 }, { text: periodLabel(p), fontSize: 18, bold: true }], width: '*' },
+        { text: 'Carlo Burger · Bi Hatıra', alignment: 'right', color: GREY, fontSize: 9, width: 'auto', margin: [0, 12, 0, 0] }] },
+      { text: sum, fontSize: 9, margin: [0, 5, 0, 7], color: '#111827' },
+      { columns: [{ width: '52%', stack: [kpi] }, { width: '*', stack: [missTable, staffTable] }], columnGap: 14 },
+      { text: 'Gün gün checklistler', bold: true, fontSize: 9.5, margin: [0, 7, 0, 3] },
+      grid, legend,
+    ],
+  };
+}
+function reportAsk() {
+  return new Promise(resolve => {
+    const sh = $('sheet'), list = reportPeriods(), w = list.filter(x => x.kind === 'week'), m = list.filter(x => x.kind === 'month');
+    const opt = (x, i) => `<option value="${list.indexOf(x)}"${x.kind === 'week' && i === 1 ? ' selected' : ''}>${esc(periodLabel(x))}${x.current ? (x.kind === 'week' ? ' (bu hafta)' : ' (bu ay)') : ''}</option>`;
+    sh.innerHTML = `<div class="pencere" role="dialog" aria-modal="true"><h2>Haftalık / aylık rapor</h2><p class="soluk">İki işletmenin seçtiğin dönemi tek sayfada: gönderilen ve gönderilmeyen listeler, eksikler, eksik işler ve personel.</p><label for="rp-sel">Dönem</label><select id="rp-sel"><optgroup label="Haftalık">${w.map(opt).join('')}</optgroup><optgroup label="Aylık">${m.map(opt).join('')}</optgroup></select><div class="dugmeler"><button class="dugme ikincil" data-s="no">Vazgeç</button><button class="dugme" data-s="yes">Raporu oluştur</button></div></div>`;
+    sh.hidden = false;
+    const done = v => { sh.hidden = true; sh.innerHTML = ''; sh.onclick = null; resolve(v); };
+    sh.onclick = e => { if (e.target === sh) return done(null); const b = e.target.closest('[data-s]'); if (!b) return; done(b.dataset.s === 'no' ? null : list[+$('rp-sel').value]); };
+  });
+}
+async function ownerReport() {
+  const p = await reportAsk(); if (!p) return;
+  const [from] = rangeOf(prevPeriod(p)), [, to] = rangeOf(p), f = encodeURIComponent(from.toISOString()), t = encodeURIComponent(to.toISOString());
+  toast('Rapor hazırlanıyor…');
+  let recs, tasks;
+  try {
+    [recs, tasks] = await Promise.all([
+      api(`/rest/v1/checklist_records?select=id,person,person_id,business,type,title,answers,labels,status,created_at,approved_at&created_at=gte.${f}&created_at=lt.${t}&order=created_at.asc&limit=5000`),
+      api(`/rest/v1/checklist_missing_tasks?select=id,business,status,created_at,approved_at&created_at=lt.${t}&or=(created_at.gte.${f},approved_at.gte.${f},status.neq.approved)&limit=5000`),
+    ]);
+  } catch (e) { return toast('Veriler alınamadı: ' + e.message, true); }
+  // Uygulamanın kullanılmaya başlandığı günden önceki günler "gönderilmedi" sayılmasın
+  let since = null;
+  try { const f1 = await api('/rest/v1/checklist_records?select=created_at&order=created_at.asc&limit=1'); if (f1.length) since = bizDateKey(f1[0].created_at); } catch (e) { /* önemli değil */ }
+  let blob;
+  try { const pdfMake = await loadPdfLib(); blob = await new Promise((ok, fail) => { try { pdfMake.createPdf(reportDoc(p, recs, tasks, since)).getBlob(ok); } catch (e) { fail(e); } }); }
+  catch (e) { return toast('Rapor oluşturulamadı: ' + e.message, true); }
+  const name = (p.kind === 'month' ? 'Aylik_Rapor_' + p.start.getFullYear() + '-' + p2(p.start.getMonth() + 1) : 'Haftalik_Rapor_' + dayKey(p.start) + '_' + dayKey(p.end)) + '.pdf';
+  await deliverFile(blob, name, 'application/pdf', 'Rapor hazır', periodLabel(p) + ' raporu tek sayfa PDF olarak hazır.');
+}
+
 function taskCard(t) {
   const rejected = t.status === 'rejected';
   const label = { open: ['Eksik', 'eksik'], rejected: ['Olmadı, tekrar yapılacak', 'eksik'], pending_approval: ['Müdür onayı bekliyor', 'bekle'], approved: ['Onaylandı', 'tamam'] }[t.status] || [t.status, ''];
@@ -840,7 +1016,7 @@ function viewApprovals() {
 function viewRecords() {
   const all = myRecords(), hidden = all.filter(r => r.status === 'Onaylandı' && isOldApproved(r.approved_at)).length;
   const list = S.showOld ? all : all.filter(r => !(r.status === 'Onaylandı' && isOldApproved(r.approved_at)));
-  return `<div class="bolum-basligi"><h2>${isStaff() ? 'Gönderdiğim kayıtlar' : 'Gönderilen kayıtlar'}</h2></div>${canReview() ? '<div class="dugmeler" style="margin:0 0 12px"><button class="dugme ikincil" data-a="export">Excel’e aktar</button><button class="dugme ikincil" data-a="pdf-range">Toplu PDF</button></div>' : ''}` +
+  return `<div class="bolum-basligi"><h2>${isStaff() ? 'Gönderdiğim kayıtlar' : 'Gönderilen kayıtlar'}</h2></div>${canReview() ? '<div class="dugmeler" style="margin:0 0 12px"><button class="dugme ikincil" data-a="export">Excel’e aktar</button><button class="dugme ikincil" data-a="pdf-range">Toplu PDF</button></div>' : ''}${isAdmin() ? '<button class="dugme tam" data-a="owner-report" style="margin:-4px 0 12px">Haftalık / aylık rapor</button>' : ''}` +
     (list.length ? list.map(r => recordRow(r, false)).join('') : '<p class="bos">Henüz kayıt yok. Listeler sekmesinden bir checklist doldurabilirsin.</p>') +
     (hidden ? `<button class="dugme ikincil tam" data-a="toggle-old">${S.showOld ? '48 saatten eski onaylıları gizle' : `48 saatten eski ${hidden} onaylı kaydı göster`}</button>` : '');
 }
@@ -934,7 +1110,7 @@ const ACTIONS = {
   'edit-def': d => editDef(d.k), 'edit-new': () => editDef(null), 'e-save': saveEdit,
   'e-add': () => { S.edit.sections.push({ title: '', locked: false, items: [], text: '' }); render(); const el = $('es-' + (S.edit.sections.length - 1)); if (el) el.focus(); },
   'e-del': d => removeEditSection(+d.n), 'e-up': d => moveEditSection(+d.n, -1), 'e-down': d => moveEditSection(+d.n, 1),
-  export: exportExcel, pdf: d => recordPdf(d.id), 'pdf-range': rangePdf,
+  export: exportExcel, pdf: d => recordPdf(d.id), 'pdf-range': rangePdf, 'owner-report': ownerReport,
   'hide-install': () => { try { localStorage.setItem('kontrol_anaekran', '1'); } catch (e) { /* yok say */ } render(); }, copy: d => copyReport(d.id), 'toggle-old': () => { S.showOld = !S.showOld; render(); },
 };
 document.addEventListener('click', e => {

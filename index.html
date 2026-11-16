@@ -85,6 +85,48 @@ main.formda{padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))}
 .etiket{display:inline-block;padding:3px 9px;border-radius:6px;font-size:13px;font-weight:600;white-space:nowrap;background:var(--yuzey2);color:var(--soluk)}
 .etiket.tamam{background:var(--tamam-zemin);color:var(--tamam)}
 .etiket.eksik{background:var(--eksik-zemin);color:var(--eksik)}
+.rp-donem{display:flex;align-items:center;gap:8px;margin:0 0 12px}
+.rp-donem .dugme{width:46px;flex:none;padding:0;font-size:22px}
+.rp-donem .dugme:disabled{opacity:.35}
+.rp-donem b{flex:1;text-align:center;font-family:var(--baslik);font-size:22px;line-height:1.1}
+.rp-donem b span{display:block;font-family:var(--govde);font-size:12px;font-weight:500;color:var(--soluk)}
+.rp-ozet p{margin:0;font-size:15px;line-height:1.45}
+.rp-ozet{margin-top:0}
+.rp-kartlar{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+.rp-kart{background:var(--yuzey);border:1px solid var(--cizgi);border-radius:12px;padding:12px}
+.rp-kart b{display:block;font-family:var(--baslik);font-size:30px;line-height:1}
+.rp-kart span{display:block;font-size:13px;color:var(--soluk);margin-top:2px}
+.rp-kart small{display:block;font-size:12px;color:var(--soluk);margin-top:6px;border-top:1px solid var(--cizgi);padding-top:5px}
+.rp-kart.kotu b{color:var(--eksik)}
+.rp-kaydir{overflow-x:auto;margin:0 -14px 14px;padding:0 14px;-webkit-overflow-scrolling:touch}
+.rp-tablo{border-collapse:collapse;width:100%;background:var(--yuzey);border-radius:12px;font-size:14px}
+.rp-tablo th,.rp-tablo td{padding:8px 10px;border-bottom:1px solid var(--cizgi);text-align:right;white-space:nowrap}
+.rp-tablo th{font-size:12px;color:var(--soluk);font-weight:600}
+.rp-tablo td:first-child,.rp-tablo th:first-child{text-align:left;white-space:normal}
+.rp-tablo tr:last-child td{border-bottom:0}
+.rp-izgara{border-collapse:separate;border-spacing:2px;font-size:12px}
+.rp-izgara th{font-size:12px;font-weight:700;min-width:44px;padding:4px 2px;background:var(--yuzey);border-radius:6px}
+.rp-izgara th small{display:block;font-size:10px;font-weight:500;color:var(--soluk)}
+.rp-izgara th.hs{background:var(--cizgi)}
+.rp-izgara th:first-child{background:none}
+.rp-ad{position:sticky;left:0;z-index:1;background:var(--zemin);min-width:128px;max-width:150px;padding:4px 8px 4px 0;font-size:13px;line-height:1.2}
+.rp-ad small{display:block;color:var(--soluk);font-size:11px}
+.rp-biz{font-weight:700;padding:8px 0 2px;font-size:13px;text-align:left}
+.rp-biz.carlo{color:#b7791f}.rp-biz.hatira{color:var(--hatira)}
+.rp-h{text-align:center;font-weight:700;border-radius:6px;padding:7px 2px;font-variant-numeric:tabular-nums}
+.rp-h.ok{background:var(--tamam-zemin);color:var(--tamam)}
+.rp-h.late{background:var(--bekle-zemin);color:var(--bekle)}
+.rp-h.miss{background:var(--eksik-zemin);color:var(--eksik)}
+.rp-h.future{background:color-mix(in srgb,var(--cizgi) 40%,transparent)}
+.rp-lejant{font-size:13px;color:var(--soluk);margin:-6px 0 16px;line-height:2}
+.rp-lejant .rp-h{display:inline-block;padding:1px 6px;font-size:12px;margin-left:6px}
+.rp-liste{padding:4px 14px;margin-top:0}
+.rp-liste>div{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--cizgi)}
+.rp-liste>div:last-child{border-bottom:0}
+.rp-liste p{margin:0;flex:1;font-size:14px;line-height:1.3}
+.rp-liste p small{display:block;color:var(--soluk);font-size:12px;margin-top:2px}
+.rp-sayi{flex:none;min-width:30px;height:30px;border-radius:15px;background:var(--eksik-zemin);color:var(--eksik);font-weight:700;display:grid;place-items:center}
+.rp-kisi{flex:none;font-size:13px;color:var(--soluk);white-space:nowrap}
 .gecikme{border-color:var(--eksik);background:var(--eksik-zemin);color:var(--eksik);margin-bottom:10px}
 .gecikme ul{list-style:none;margin:6px 0 0;padding:0}
 .gecikme li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-top:1px solid color-mix(in srgb,var(--eksik) 25%,transparent)}
@@ -204,6 +246,7 @@ const S = {
   builtin: [], templates: null, templatesError: '', allDefs: [], defs: [], edit: null, records: [], tasks: [], tasksError: '', staff: null,
   authView: 'login', tab: 'lists', view: 'tabs', form: null, detailId: null,
   taskFilter: 'active', taskBiz: 'all', showOld: false, lastLoad: 0,
+  rep: { kind: 'week', idx: 0, models: {}, loading: null, err: '' },
 };
 
 /* ---------- yardımcılar ---------- */
@@ -338,7 +381,7 @@ async function loadTemplates() {
   } catch (e) { S.templates = null; S.templatesError = e.message; }
   buildDefs();
 }
-async function loadData() { await Promise.all([loadRecords(), loadTasks(), loadStaff(), loadTemplates()]); S.lastLoad = Date.now(); }
+async function loadData() { S.rep.models = {}; S.rep.err = ''; await Promise.all([loadRecords(), loadTasks(), loadStaff(), loadTemplates()]); S.lastLoad = Date.now(); }
 
 /* ---------- giriş / kayıt ---------- */
 async function login() {
@@ -860,7 +903,7 @@ function reportStats(p, recs, tasks, defs, biz, since) {
 const pct = (a, b) => (b ? '%' + Math.round((a / b) * 100) : '—');
 const dur = ms => (ms == null ? '—' : ms < 36e5 ? Math.max(1, Math.round(ms / 6e4)) + ' dk' : ms < 864e5 ? Math.round(ms / 36e5) + ' sa' : (ms / 864e5).toFixed(1).replace('.', ',') + ' gün');
 
-function reportDoc(p, recs, tasks, since) {
+function reportModel(p, recs, tasks, since) {
   const defs = S.defs, prev = prevPeriod(p), days = periodDays(p), now = new Date(), month = p.kind === 'month';
   const tot = reportStats(p, recs, tasks, defs, null, since), old = reportStats(prev, recs, tasks, defs, null, since);
   const by = Object.fromEntries(BUSINESSES.map(b => [b, reportStats(p, recs, tasks, defs, b, since)]));
@@ -888,6 +931,19 @@ function reportDoc(p, recs, tasks, since) {
   sum += ` Dönem sonunda ${tot.openEnd} eksik iş açık.`;
   if (p.current) sum += ' Dönem henüz bitmedi; rapor bugüne kadarki durumu gösterir.';
 
+
+  // Gün gün tablo: her hücrede o günkü ilk gönderimin saati
+  const grid = BUSINESSES.map(b => ({ biz: b, rows: defs.filter(d => d.business === b).map(d => ({ title: d.title, deadline: validHM(d.deadline) ? d.deadline : '', cells: days.map(k => {
+    const first = by[b].rs.filter(r => r.type === d.key && bizDateKey(r.created_at) === k).map(r => r.created_at).sort()[0], dl = deadlineOn(d, k);
+    if (first) return { c: dl && new Date(first) > dl ? 'late' : 'ok', t: hm(first) };
+    if (dl && dl <= now && !(since && k < since)) return { c: 'miss', t: '—' };
+    if (keyStart(k) > now) return { c: 'future', t: '' };
+    return { c: '', t: '' };
+  }) })) })).filter(g => g.rows.length);
+  return { p, month, kind, prevName, days, tot, old, by, topMiss, people, sum, grid, now };
+}
+function reportDoc(m) {
+  const { p, month, kind, days, tot, old, by, topMiss, people, sum, now } = m;
   const GREY = '#6b7280', LINE = '#d6dade', HEAD = '#eef1f3';
   const thin = { hLineWidth: (i, n) => (i === 0 || i === n.table.body.length ? 0 : 0.5), vLineWidth: () => 0, hLineColor: () => LINE, fillColor: i => (i === 0 ? HEAD : null), paddingTop: () => 2.5, paddingBottom: () => 2.5, paddingLeft: () => 4, paddingRight: () => 4 };
   const th = t => ({ text: t, bold: true, fontSize: 7.5, color: '#374151' });
@@ -919,19 +975,12 @@ function reportDoc(p, recs, tasks, since) {
   const fs = month ? 5.8 : 8;
   const gHead = [{ text: '', border: [false, false, false, false] }, ...days.map(k => { const d = keyDate(k), we = d.getDay() === 0 || d.getDay() === 6; return { text: month ? [{ text: DOW[d.getDay()] + '\n', fontSize: 5, color: GREY }, String(d.getDate())] : DOW[d.getDay()] + ' ' + d.getDate(), alignment: 'center', bold: true, fontSize: month ? 6.5 : 8, fillColor: we ? '#e4e8eb' : HEAD }; })];
   const gBody = [gHead];
-  BUSINESSES.forEach(b => {
-    const ds = defs.filter(d => d.business === b); if (!ds.length) return;
-    gBody.push([{ text: b, bold: true, fontSize: 8, colSpan: days.length + 1, margin: [0, 2, 0, 0], color: b === 'Carlo Burger' ? '#b7791f' : '#2c7a7b' }, ...days.map(() => '')]);
-    ds.forEach(d => { const nm = d.title.length > (month ? 27 : 38) ? d.title.slice(0, month ? 25 : 36) + '…' : d.title; gBody.push([{ text: nm + (validHM(d.deadline) ? '  · ' + hmText(d.deadline) : ''), fontSize: 7, noWrap: true }, ...days.map(k => {
-      const first = by[b].rs.filter(r => r.type === d.key && bizDateKey(r.created_at) === k).map(r => r.created_at).sort()[0], dl = deadlineOn(d, k);
-      let c, t = '';
-      if (first) { c = dl && new Date(first) > dl ? C.late : C.ok; t = hm(first); }
-      else if (dl && dl <= now && !(since && k < since)) { c = C.miss; t = '—'; }
-      else if (keyStart(k) > now) c = C.future;
-      return c ? { text: t, fillColor: c[0], color: c[1], alignment: 'center', fontSize: fs, bold: true } : { text: '' };
-    })]); });
+  m.grid.forEach(g => {
+    gBody.push([{ text: g.biz, bold: true, fontSize: 8, colSpan: days.length + 1, margin: [0, 2, 0, 0], color: g.biz === 'Carlo Burger' ? '#b7791f' : '#2c7a7b' }, ...days.map(() => '')]);
+    g.rows.forEach(r => { const nm = r.title.length > (month ? 27 : 38) ? r.title.slice(0, month ? 25 : 36) + '…' : r.title;
+      gBody.push([{ text: nm + (r.deadline ? '  · ' + hmText(r.deadline) : ''), fontSize: 7, noWrap: true }, ...r.cells.map(x => (C[x.c] ? { text: x.t, fillColor: C[x.c][0], color: C[x.c][1], alignment: 'center', fontSize: fs, bold: true } : { text: '' }))]); });
   });
-  const grid = { table: { headerRows: 1, dontBreakRows: true, widths: [month ? 118 : 160, ...days.map(() => '*')], body: gBody },
+  const gridT = { table: { headerRows: 1, dontBreakRows: true, widths: [month ? 118 : 160, ...days.map(() => '*')], body: gBody },
     layout: { hLineWidth: () => 0.6, vLineWidth: () => 0.6, hLineColor: () => '#ffffff', vLineColor: () => '#ffffff', paddingLeft: () => (month ? 0.5 : 3), paddingRight: () => (month ? 0.5 : 3), paddingTop: () => 2, paddingBottom: () => 2 } };
   const dot = (c, t) => [{ canvas: [{ type: 'rect', x: 0, y: 1, w: 8, h: 7, color: c[0] }], width: 10 }, { text: t, width: 'auto', margin: [0, 0, 10, 0] }];
   const legend = { columns: [...dot(C.ok, 'Zamanında (hücrede gönderim saati)'), ...dot(C.late, 'Son saatten sonra'), ...dot(C.miss, 'Hiç gönderilmedi'), ...dot(C.future, 'Henüz gelmedi'), { text: 'Boş: o gün gönderilmedi (son saati olmayan liste ya da uygulama kullanılmadan önceki gün). Gün sabah 05.00’te başlar.', color: GREY, width: '*' }], fontSize: 6.5, color: '#374151', margin: [0, 4, 0, 0] };
@@ -946,38 +995,59 @@ function reportDoc(p, recs, tasks, since) {
       { text: sum, fontSize: 9, margin: [0, 5, 0, 7], color: '#111827' },
       { columns: [{ width: '52%', stack: [kpi] }, { width: '*', stack: [missTable, staffTable] }], columnGap: 14 },
       { text: 'Gün gün checklistler', bold: true, fontSize: 9.5, margin: [0, 7, 0, 3] },
-      grid, legend,
+      gridT, legend,
     ],
   };
 }
-function reportAsk() {
-  return new Promise(resolve => {
-    const sh = $('sheet'), list = reportPeriods(), w = list.filter(x => x.kind === 'week'), m = list.filter(x => x.kind === 'month');
-    const opt = (x, i) => `<option value="${list.indexOf(x)}"${x.kind === 'week' && i === 1 ? ' selected' : ''}>${esc(periodLabel(x))}${x.current ? (x.kind === 'week' ? ' (bu hafta)' : ' (bu ay)') : ''}</option>`;
-    sh.innerHTML = `<div class="pencere" role="dialog" aria-modal="true"><h2>Haftalık / aylık rapor</h2><p class="soluk">İki işletmenin seçtiğin dönemi tek sayfada: gönderilen ve gönderilmeyen listeler, eksikler, eksik işler ve personel.</p><label for="rp-sel">Dönem</label><select id="rp-sel"><optgroup label="Haftalık">${w.map(opt).join('')}</optgroup><optgroup label="Aylık">${m.map(opt).join('')}</optgroup></select><div class="dugmeler"><button class="dugme ikincil" data-s="no">Vazgeç</button><button class="dugme" data-s="yes">Raporu oluştur</button></div></div>`;
-    sh.hidden = false;
-    const done = v => { sh.hidden = true; sh.innerHTML = ''; sh.onclick = null; resolve(v); };
-    sh.onclick = e => { if (e.target === sh) return done(null); const b = e.target.closest('[data-s]'); if (!b) return; done(b.dataset.s === 'no' ? null : list[+$('rp-sel').value]); };
-  });
-}
-async function ownerReport() {
-  const p = await reportAsk(); if (!p) return;
+async function fetchReport(p) {
   const [from] = rangeOf(prevPeriod(p)), [, to] = rangeOf(p), f = encodeURIComponent(from.toISOString()), t = encodeURIComponent(to.toISOString());
-  toast('Rapor hazırlanıyor…');
-  let recs, tasks;
-  try {
-    [recs, tasks] = await Promise.all([
-      api(`/rest/v1/checklist_records?select=id,person,person_id,business,type,title,answers,labels,status,created_at,approved_at&created_at=gte.${f}&created_at=lt.${t}&order=created_at.asc&limit=5000`),
-      api(`/rest/v1/checklist_missing_tasks?select=id,business,status,created_at,approved_at&created_at=lt.${t}&or=(created_at.gte.${f},approved_at.gte.${f},status.neq.approved)&limit=5000`),
-    ]);
-  } catch (e) { return toast('Veriler alınamadı: ' + e.message, true); }
+  const [recs, tasks, first] = await Promise.all([
+    api(`/rest/v1/checklist_records?select=id,person,person_id,business,type,title,answers,labels,status,created_at,approved_at&created_at=gte.${f}&created_at=lt.${t}&order=created_at.asc&limit=5000`),
+    api(`/rest/v1/checklist_missing_tasks?select=id,business,status,created_at,approved_at&created_at=lt.${t}&or=(created_at.gte.${f},approved_at.gte.${f},status.neq.approved)&limit=5000`),
+    api('/rest/v1/checklist_records?select=created_at&order=created_at.asc&limit=1').catch(() => []),
+  ]);
   // Uygulamanın kullanılmaya başlandığı günden önceki günler "gönderilmedi" sayılmasın
-  let since = null;
-  try { const f1 = await api('/rest/v1/checklist_records?select=created_at&order=created_at.asc&limit=1'); if (f1.length) since = bizDateKey(f1[0].created_at); } catch (e) { /* önemli değil */ }
+  return reportModel(p, recs, tasks, first.length ? bizDateKey(first[0].created_at) : null);
+}
+const repPeriod = () => reportPeriods().filter(x => x.kind === S.rep.kind)[S.rep.idx];
+async function ensureReport() {
+  const key = S.rep.kind + S.rep.idx;
+  if (S.rep.models[key] || S.rep.loading === key) return;
+  S.rep.loading = key; S.rep.err = '';
+  try { S.rep.models[key] = await fetchReport(repPeriod()); }
+  catch (e) { S.rep.err = e.message; }
+  S.rep.loading = null;
+  if (S.view === 'tabs' && S.tab === 'report') render();
+}
+const chip = (k, v, cur, a) => `<button class="${cur === k ? 'acik' : ''}" data-a="${a}" data-v="${esc(k)}">${esc(v)}</button>`;
+function viewReport() {
+  const list = reportPeriods().filter(x => x.kind === S.rep.kind), p = list[S.rep.idx], m = S.rep.models[S.rep.kind + S.rep.idx];
+  let h = `<h1>Rapor</h1><div class="cipler">${[['week', 'Haftalık'], ['month', 'Aylık']].map(([k, v]) => chip(k, v, S.rep.kind, 'rep-kind')).join('')}</div>`;
+  h += `<div class="rp-donem"><button class="dugme ikincil" data-a="rep-prev" ${S.rep.idx >= list.length - 1 ? 'disabled' : ''} aria-label="Önceki dönem">‹</button><b>${esc(periodLabel(p))}${p.current ? `<span>${S.rep.kind === 'week' ? 'bu hafta' : 'bu ay'}, devam ediyor</span>` : ''}</b><button class="dugme ikincil" data-a="rep-next" ${S.rep.idx <= 0 ? 'disabled' : ''} aria-label="Sonraki dönem">›</button></div>`;
+  if (!m) {
+    if (S.rep.err && S.rep.loading == null) return h + `<div class="kutu uyari"><b>Rapor alınamadı</b><p>${esc(S.rep.err)}</p><button class="dugme" data-a="rep-retry">Tekrar dene</button></div>`;
+    setTimeout(ensureReport, 0);
+    return h + '<p class="soluk">Rapor hazırlanıyor…</p>';
+  }
+  const { tot, old, by } = m, card = (v, label, prev, bad) => `<div class="rp-kart${bad ? ' kotu' : ''}"><b>${v}</b><span>${label}</span><small>${m.prevName}: ${prev}</small></div>`;
+  h += `<div class="kutu rp-ozet"><p>${esc(m.sum)}</p></div>`;
+  h += `<div class="rp-kartlar">${card(tot.sent, 'gönderilen checklist', old.sent)}${card(pct(tot.onTime, tot.expected), 'zamanında gönderim', pct(old.onTime, old.expected))}${card(tot.missed, 'hiç gönderilmeyen', old.missed, tot.missed > 0)}${card(pct(tot.miss, tot.items), 'eksik çıkan madde', pct(old.miss, old.items))}${card(tot.openEnd, 'açık eksik iş', old.openEnd, tot.openEnd > 0)}${card(dur(tot.avgClose), 'eksik kapanma süresi', dur(old.avgClose))}</div>`;
+  const rows = [['Gönderilen checklist', x => x.sent], ['Onay bekleyen', x => x.pending], ['Zamanında gönderim', x => pct(x.onTime, x.expected)], ['Geç gönderilen', x => x.late], ['Hiç gönderilmeyen', x => x.missed], ['Eksik çıkan madde oranı', x => pct(x.miss, x.items)], ['Açılan eksik iş', x => x.opened], ['Kapatılan eksik iş', x => x.closed], ['Ortalama kapanma', x => dur(x.avgClose)], ['Açık eksik iş', x => x.openEnd]];
+  h += `<h2>İşletmeler</h2><div class="rp-kaydir"><table class="rp-tablo"><thead><tr><th></th>${BUSINESSES.map(b => `<th>${esc(b)}</th>`).join('')}<th>Toplam</th></tr></thead><tbody>${rows.map(([l, f]) => `<tr><td>${l}</td>${BUSINESSES.map(b => `<td>${f(by[b])}</td>`).join('')}<td><b>${f(tot)}</b></td></tr>`).join('')}</tbody></table></div>`;
+  h += `<h2>Gün gün checklistler</h2><div class="rp-kaydir"><table class="rp-izgara"><thead><tr><th></th>${m.days.map(k => { const d = keyDate(k), we = d.getDay() === 0 || d.getDay() === 6; return `<th class="${we ? 'hs' : ''}"><small>${DOW[d.getDay()]}</small>${d.getDate()}</th>`; }).join('')}</tr></thead><tbody>${m.grid.map(g => `<tr><td class="rp-biz ${bizClass(g.biz)}" colspan="${m.days.length + 1}">${esc(g.biz)}</td></tr>${g.rows.map(r => `<tr><td class="rp-ad">${esc(r.title)}${r.deadline ? `<small>son ${hmText(r.deadline)}</small>` : ''}</td>${r.cells.map(x => `<td class="rp-h ${x.c}">${x.t}</td>`).join('')}</tr>`).join('')}`).join('')}</tbody></table></div>`;
+  h += `<p class="rp-lejant"><span class="rp-h ok">09:00</span> zamanında <span class="rp-h late">09:40</span> geç <span class="rp-h miss">—</span> gönderilmedi. Saat yazıyorsa o gün gönderildiği saattir; gün sabah 05.00'te başlar.</p>`;
+  h += `<h2>En sık eksik çıkan maddeler</h2>` + (m.topMiss.length ? `<div class="kutu rp-liste">${m.topMiss.map(x => `<div><span class="rp-sayi">${x.n}</span><p>${esc(x.label)}<small>${esc(x.biz)}, ${esc(x.title)}</small></p></div>`).join('')}</div>` : '<p class="soluk">Bu dönemde eksik bildirilmedi.</p>');
+  h += `<h2>Personel</h2>` + (m.people.length ? `<div class="kutu rp-liste">${m.people.map(x => `<div><p>${esc(x.name)}<small>${esc([...x.biz].join(', '))}</small></p><span class="rp-kisi">${x.sent} liste · ${x.miss} eksik</span></div>`).join('')}</div>` : '<p class="soluk">Bu dönemde gönderim yok.</p>');
+  h += `<button class="dugme tam" data-a="rep-pdf" style="margin-top:8px">Bu raporu PDF indir</button>`;
+  return h;
+}
+async function reportPdf() {
+  const m = S.rep.models[S.rep.kind + S.rep.idx]; if (!m) return;
+  toast('PDF hazırlanıyor…');
   let blob;
-  try { const pdfMake = await loadPdfLib(); blob = await new Promise((ok, fail) => { try { pdfMake.createPdf(reportDoc(p, recs, tasks, since)).getBlob(ok); } catch (e) { fail(e); } }); }
+  try { const pdfMake = await loadPdfLib(); blob = await new Promise((ok, fail) => { try { pdfMake.createPdf(reportDoc(m)).getBlob(ok); } catch (e) { fail(e); } }); }
   catch (e) { return toast('Rapor oluşturulamadı: ' + e.message, true); }
-  const name = (p.kind === 'month' ? 'Aylik_Rapor_' + p.start.getFullYear() + '-' + p2(p.start.getMonth() + 1) : 'Haftalik_Rapor_' + dayKey(p.start) + '_' + dayKey(p.end)) + '.pdf';
+  const p = m.p, name = (p.kind === 'month' ? 'Aylik_Rapor_' + p.start.getFullYear() + '-' + p2(p.start.getMonth() + 1) : 'Haftalik_Rapor_' + dayKey(p.start) + '_' + dayKey(p.end)) + '.pdf';
   await deliverFile(blob, name, 'application/pdf', 'Rapor hazır', periodLabel(p) + ' raporu tek sayfa PDF olarak hazır.');
 }
 
@@ -995,7 +1065,6 @@ function viewTasks() {
   const list = base.filter(t => (S.taskFilter === 'active' ? t.status !== 'approved' : t.status === S.taskFilter));
   const order = { rejected: 0, open: 1, pending_approval: 2, approved: 3 };
   list.sort((a, b) => (order[a.status] ?? 9) - (order[b.status] ?? 9));
-  const chip = (k, v, cur, a) => `<button class="${cur === k ? 'acik' : ''}" data-a="${a}" data-v="${esc(k)}">${esc(v)}</button>`;
   return `<div class="cipler">${[['active', 'Yapılacaklar'], ['pending_approval', 'Onay bekleyen'], ['approved', 'Onaylanan']].map(([k, v]) => chip(k, v, S.taskFilter, 'task-filter')).join('')}</div><div class="cipler">${[['all', 'İki işletme'], ...BUSINESSES.map(b => [b, b])].map(([k, v]) => chip(k, v, S.taskBiz, 'task-biz')).join('')}</div>` +
     (list.length ? list.map(taskCard).join('') : `<p class="bos">${S.taskFilter === 'active' ? 'Yapılacak eksik iş yok.' : 'Bu filtrede iş yok.'}</p>`);
 }
@@ -1016,7 +1085,7 @@ function viewApprovals() {
 function viewRecords() {
   const all = myRecords(), hidden = all.filter(r => r.status === 'Onaylandı' && isOldApproved(r.approved_at)).length;
   const list = S.showOld ? all : all.filter(r => !(r.status === 'Onaylandı' && isOldApproved(r.approved_at)));
-  return `<div class="bolum-basligi"><h2>${isStaff() ? 'Gönderdiğim kayıtlar' : 'Gönderilen kayıtlar'}</h2></div>${canReview() ? '<div class="dugmeler" style="margin:0 0 12px"><button class="dugme ikincil" data-a="export">Excel’e aktar</button><button class="dugme ikincil" data-a="pdf-range">Toplu PDF</button></div>' : ''}${isAdmin() ? '<button class="dugme tam" data-a="owner-report" style="margin:-4px 0 12px">Haftalık / aylık rapor</button>' : ''}` +
+  return `<div class="bolum-basligi"><h2>${isStaff() ? 'Gönderdiğim kayıtlar' : 'Gönderilen kayıtlar'}</h2></div>${canReview() ? '<div class="dugmeler" style="margin:0 0 12px"><button class="dugme ikincil" data-a="export">Excel’e aktar</button><button class="dugme ikincil" data-a="pdf-range">Toplu PDF</button></div>' : ''}` +
     (list.length ? list.map(r => recordRow(r, false)).join('') : '<p class="bos">Henüz kayıt yok. Listeler sekmesinden bir checklist doldurabilirsin.</p>') +
     (hidden ? `<button class="dugme ikincil tam" data-a="toggle-old">${S.showOld ? '48 saatten eski onaylıları gizle' : `48 saatten eski ${hidden} onaylı kaydı göster`}</button>` : '');
 }
@@ -1087,10 +1156,11 @@ function render() {
   const tabs = [['lists', 'Listeler', 0], ['tasks', 'Eksik işler', taskBadge()]];
   if (canReview()) tabs.push(['approvals', 'Onaylar', pendingRecords().length + (S.staff ? S.staff.length : 0)]);
   tabs.push(['records', 'Kayıtlar', 0]);
+  if (isAdmin()) tabs.push(['report', 'Rapor', 0]);
   if (!tabs.some(t => t[0] === S.tab)) S.tab = 'lists';
   if ((S.view === 'editor' || S.view === 'editor-list') && !isAdmin()) S.view = 'tabs';
   if (S.view === 'editor' && !S.edit) S.view = 'editor-list';
-  const body = S.view === 'detail' ? viewDetail() : S.view === 'editor-list' ? viewEditorList() : S.view === 'editor' ? viewEditor() : { lists: viewLists, tasks: viewTasks, approvals: viewApprovals, records: viewRecords }[S.tab]();
+  const body = S.view === 'detail' ? viewDetail() : S.view === 'editor-list' ? viewEditorList() : S.view === 'editor' ? viewEditor() : { lists: viewLists, tasks: viewTasks, approvals: viewApprovals, records: viewRecords, report: viewReport }[S.tab]();
   app.innerHTML = `<div class="ust"><div class="kim"><b>${esc(S.user.name)}</b><span>${esc(S.user.business)}, ${esc(roleName(S.user.role))}</span></div><button data-a="refresh">Yenile</button><button data-a="logout">Çıkış</button></div><main>${body}</main><nav class="sekmeler">${tabs.map(([k, v, n]) => `<button class="${S.tab === k ? 'acik' : ''}" data-a="tab" data-t="${k}">${v}${n ? `<span class="rozet">${n}</span>` : ''}</button>`).join('')}</nav>`;
 }
 
@@ -1110,7 +1180,9 @@ const ACTIONS = {
   'edit-def': d => editDef(d.k), 'edit-new': () => editDef(null), 'e-save': saveEdit,
   'e-add': () => { S.edit.sections.push({ title: '', locked: false, items: [], text: '' }); render(); const el = $('es-' + (S.edit.sections.length - 1)); if (el) el.focus(); },
   'e-del': d => removeEditSection(+d.n), 'e-up': d => moveEditSection(+d.n, -1), 'e-down': d => moveEditSection(+d.n, 1),
-  export: exportExcel, pdf: d => recordPdf(d.id), 'pdf-range': rangePdf, 'owner-report': ownerReport,
+  export: exportExcel, pdf: d => recordPdf(d.id), 'pdf-range': rangePdf, 'rep-pdf': reportPdf,
+  'rep-kind': d => { S.rep.kind = d.v; S.rep.idx = 0; render(); }, 'rep-retry': () => { S.rep.err = ''; render(); },
+  'rep-prev': () => { S.rep.idx++; render(); }, 'rep-next': () => { S.rep.idx = Math.max(0, S.rep.idx - 1); render(); },
   'hide-install': () => { try { localStorage.setItem('kontrol_anaekran', '1'); } catch (e) { /* yok say */ } render(); }, copy: d => copyReport(d.id), 'toggle-old': () => { S.showOld = !S.showOld; render(); },
 };
 document.addEventListener('click', e => {

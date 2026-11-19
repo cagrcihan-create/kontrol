@@ -127,6 +127,17 @@ main.formda{padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))}
 .rp-liste p small{display:block;color:var(--soluk);font-size:12px;margin-top:2px}
 .rp-sayi{flex:none;min-width:30px;height:30px;border-radius:15px;background:var(--eksik-zemin);color:var(--eksik);font-weight:700;display:grid;place-items:center}
 .rp-kisi{flex:none;font-size:13px;color:var(--soluk);white-space:nowrap}
+.pdf-ekran{position:fixed;inset:0;z-index:60;background:#4b5563;display:flex;flex-direction:column}
+.pdf-ust{display:flex;align-items:center;gap:8px;padding:calc(8px + env(safe-area-inset-top)) 10px 8px;background:var(--koyu,#16202b);color:#fff}
+.pdf-ust b{flex:1;font-size:14px;line-height:1.2;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.pdf-ust .dugme{width:auto;flex:none;padding:0 12px;min-height:40px;font-size:14px}
+.pdf-ust .pv-z{width:40px;padding:0;font-size:20px}
+.pdf-ust .pv-kaydet{background:#fff;color:#16202b;border-color:#fff}
+.pdf-sayfalar{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:10px 8px calc(16px + env(safe-area-inset-bottom))}
+.pdf-sayfa{background:#fff;margin:0 auto 10px;max-width:900px;width:100%;flex:none;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.pdf-sayfa canvas{display:block;width:100%;height:auto}
+.pdf-bilgi{color:#fff;text-align:center;margin-top:40px}
+body.pdf-acik{overflow:hidden}
 .gecikme{border-color:var(--eksik);background:var(--eksik-zemin);color:var(--eksik);margin-bottom:10px}
 .gecikme ul{list-style:none;margin:6px 0 0;padding:0}
 .gecikme li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-top:1px solid color-mix(in srgb,var(--eksik) 25%,transparent)}
@@ -836,12 +847,84 @@ async function deliverFile(blob, name, mime, title, text) {
   } catch (e) { if (e && e.name === 'AbortError') return; }
   saveBlob(blob, name);
 }
+
+/* ---------- uygulama içi PDF görüntüleyici (kaydetmeden açar) ---------- */
+const PDFJS_BASE = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/legacy/build/';
+let pdfjsLoading = null;
+function loadPdfJs() {
+  if (!pdfjsLoading) pdfjsLoading = (async () => {
+    const lib = await import(PDFJS_BASE + 'pdf.min.mjs');
+    // Çalışan dosyası başka adresten gelince tarayıcı engeller; içeriği alıp aynı adresten çalıştırıyoruz.
+    try { const code = await (await fetch(PDFJS_BASE + 'pdf.worker.min.mjs')).text(); lib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(new Blob([code], { type: 'text/javascript' })); }
+    catch (e) { lib.GlobalWorkerOptions.workerSrc = PDFJS_BASE + 'pdf.worker.min.mjs'; }
+    return lib;
+  })().catch(e => { pdfjsLoading = null; throw e; });
+  return pdfjsLoading;
+}
+async function saveOrShare(blob, name, mime) {
+  try {
+    const file = typeof File === 'function' ? new File([blob], name, { type: mime }) : null;
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: name }); return; }
+  } catch (e) { if (e && e.name === 'AbortError') return; }
+  saveBlob(blob, name);
+}
+let pdfView = null;
+function closePdfView() {
+  if (!pdfView) return;
+  try { pdfView.io && pdfView.io.disconnect(); pdfView.doc && pdfView.doc.destroy(); } catch (e) { /* yok say */ }
+  pdfView.el.remove(); document.body.classList.remove('pdf-acik'); pdfView = null;
+}
+async function viewPdf(blob, name, title, fallbackText) {
+  closePdfView();
+  const el = document.createElement('div');
+  el.className = 'pdf-ekran'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true');
+  el.innerHTML = `<div class="pdf-ust"><button class="dugme ikincil" data-pv="close">Kapat</button><b>${esc(title)}</b><button class="dugme ikincil pv-z" data-pv="out" aria-label="Uzaklaştır">−</button><button class="dugme ikincil pv-z" data-pv="in" aria-label="Yakınlaştır">+</button><button class="dugme pv-kaydet" data-pv="save">Kaydet</button></div><div class="pdf-sayfalar"><p class="pdf-bilgi">PDF açılıyor…</p></div>`;
+  document.body.appendChild(el); document.body.classList.add('pdf-acik');
+  pdfView = { el, blob, name, zoom: 1 };
+  el.addEventListener('click', e => { const b = e.target.closest('[data-pv]'); if (!b) return; if (b.dataset.pv === 'close') closePdfView(); else if (b.dataset.pv === 'save') saveOrShare(blob, name, 'application/pdf'); else if (view.rezoom) view.rezoom(b.dataset.pv === 'in' ? 1 : -1); });
+  const view = pdfView;
+  try {
+    const lib = await loadPdfJs();
+    const doc = await lib.getDocument({ data: new Uint8Array(await blob.arrayBuffer()) }).promise;
+    if (pdfView !== view) { doc.destroy(); return; }
+    view.doc = doc;
+    const box = el.querySelector('.pdf-sayfalar'); box.innerHTML = '';
+    const first = await doc.getPage(1), base = first.getViewport({ scale: 1 }), ratio = base.height / base.width;
+    const slots = [];
+    for (let n = 1; n <= doc.numPages; n++) { const d = document.createElement('div'); d.className = 'pdf-sayfa'; d.style.aspectRatio = '1 / ' + ratio; d.dataset.n = n; box.appendChild(d); slots.push(d); }
+    const draw = async d => {
+      if (d.dataset.done) return; d.dataset.done = '1'; const z = view.zoom;
+      const page = await doc.getPage(+d.dataset.n), w = d.clientWidth || box.clientWidth, dpr = Math.min(window.devicePixelRatio || 1, view.zoom > 1 ? 1.5 : 2);
+      const vp = page.getViewport({ scale: (w / page.getViewport({ scale: 1 }).width) * dpr });
+      const c = document.createElement('canvas'); c.width = Math.floor(vp.width); c.height = Math.floor(vp.height);
+      await page.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise;
+      if (view.zoom !== z || pdfView !== view) return; // bu arada yakınlaştırma değiştiyse eski çizimi atma
+      d.querySelectorAll('canvas').forEach(x => x.remove()); d.appendChild(c);
+    };
+    // Sayfalar ekrana yaklaştıkça çizilir; uzun toplu PDF'lerde telefon yorulmaz.
+    // Yakınlaştırma: sayfaları genişletip yeniden, net çizer
+    const ZOOMS = [1, 1.5, 2, 2.5, 3];
+    view.rezoom = dir => {
+      const i = Math.max(0, Math.min(ZOOMS.length - 1, ZOOMS.indexOf(view.zoom) + dir)); if (ZOOMS[i] === view.zoom) return;
+      const old = view.zoom, keepY = box.scrollTop / Math.max(1, box.scrollHeight); view.zoom = ZOOMS[i];
+      slots.forEach(d => { d.style.width = (view.zoom * 100) + '%'; d.style.maxWidth = view.zoom > 1 ? 'none' : ''; d.querySelectorAll('canvas').forEach(c => c.remove()); delete d.dataset.done; if (view.io) { view.io.unobserve(d); view.io.observe(d); } });
+      box.scrollTop = keepY * box.scrollHeight; box.scrollLeft = box.scrollLeft * (view.zoom / old);
+      if (!view.io) slots.forEach(d => draw(d).catch(() => {}));
+    };
+    if ('IntersectionObserver' in window) { view.io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) draw(x.target).catch(() => {}); }), { root: box, rootMargin: '600px 0px' }); slots.forEach(d => view.io.observe(d)); }
+    else for (const d of slots) await draw(d);
+  } catch (e) {
+    // Görüntüleyici açılamazsa eski yöntem: kaydet / paylaş
+    if (pdfView === view) closePdfView();
+    await deliverFile(blob, name, 'application/pdf', 'PDF hazır', fallbackText || 'PDF burada açılamadı; dosyayı kaydedip açabilirsin.');
+  }
+}
 async function makePdf(recs, title, name, text) {
   toast('PDF hazırlanıyor…');
   let blob;
   try { const pdfMake = await loadPdfLib(); blob = await new Promise((ok, fail) => { try { pdfMake.createPdf(pdfDoc(recs, title)).getBlob(ok); } catch (e) { fail(e); } }); }
   catch (e) { return toast('PDF oluşturulamadı: ' + e.message, true); }
-  await deliverFile(blob, name, 'application/pdf', 'PDF hazır', text);
+  await viewPdf(blob, name, title, text);
 }
 function recordPdf(id) {
   const r = S.records.find(x => x.id === id); if (!canPdf(r)) return toast('Yalnızca onaylanan checklistler PDF olarak alınabilir.', true);
@@ -1079,7 +1162,7 @@ async function reportPdf() {
   try { const pdfMake = await loadPdfLib(); blob = await new Promise((ok, fail) => { try { pdfMake.createPdf(reportDoc(m)).getBlob(ok); } catch (e) { fail(e); } }); }
   catch (e) { return toast('Rapor oluşturulamadı: ' + e.message, true); }
   const p = m.p, name = (p.kind === 'month' ? 'Aylik_Rapor_' + p.start.getFullYear() + '-' + p2(p.start.getMonth() + 1) : 'Haftalik_Rapor_' + dayKey(p.start) + '_' + dayKey(p.end)) + '.pdf';
-  await deliverFile(blob, name, 'application/pdf', 'Rapor hazır', periodLabel(p) + ' raporu tek sayfa PDF olarak hazır.');
+  await viewPdf(blob, name, (p.kind === 'month' ? 'Aylık rapor · ' : 'Haftalık rapor · ') + periodLabel(p), periodLabel(p) + ' raporu tek sayfa PDF olarak hazır.');
 }
 
 function taskCard(t) {
@@ -1244,6 +1327,7 @@ document.addEventListener('input', e => {
   saveDraft();
 });
 document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && pdfView) return closePdfView();
   if (e.key === 'Enter' && !S.user && e.target.tagName === 'INPUT') { e.preventDefault(); (S.authView === 'signup' ? signup : login)(); }
 });
 // Uygulamaya geri dönüldüğünde veriler bir dakikadan eskiyse sessizce yenilenir.

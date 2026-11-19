@@ -138,6 +138,15 @@ main.formda{padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))}
 .pdf-sayfa canvas{display:block;width:100%;height:auto}
 .pdf-bilgi{color:#fff;text-align:center;margin-top:40px}
 body.pdf-acik{overflow:hidden}
+.redo-bolum{margin:16px 2px 6px;font-size:16px}
+.redo-liste{padding:2px 12px;margin-top:0}
+.redo-madde{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--cizgi);font-weight:400;margin:0;cursor:pointer}
+.redo-madde:last-child{border-bottom:0}
+.redo-madde input{width:24px;height:24px;flex:none;margin:1px 0 0;accent-color:var(--eksik)}
+.redo-madde span{flex:1;line-height:1.35;font-size:15px}
+.redo-madde small{display:block;color:var(--soluk);font-size:13px;margin-top:3px}
+.redo-madde .etiket{font-size:11px;padding:1px 6px;margin-right:2px;vertical-align:1px}
+.redo-alt{position:sticky;bottom:calc(70px + env(safe-area-inset-bottom));padding:8px 0;z-index:5}
 .gecikme{border-color:var(--eksik);background:var(--eksik-zemin);color:var(--eksik);margin-bottom:10px}
 .gecikme ul{list-style:none;margin:6px 0 0;padding:0}
 .gecikme li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-top:1px solid color-mix(in srgb,var(--eksik) 25%,transparent)}
@@ -1165,6 +1174,47 @@ async function reportPdf() {
   await viewPdf(blob, name, (p.kind === 'month' ? 'Aylık rapor · ' : 'Haftalık rapor · ') + periodLabel(p), periodLabel(p) + ' raporu tek sayfa PDF olarak hazır.');
 }
 
+/* ---------- müdür: seçilen maddeleri tekrar yaptır ---------- */
+function openRedo(id) {
+  const r = S.records.find(x => x.id === id); if (!r) return;
+  // Personelin Eksik dediği maddeler hazır seçili gelir
+  S.redo = { id, sel: new Set(Object.entries(r.answers || {}).filter(([, v]) => v && v.value === 'Eksik').map(([k]) => k)), note: '' };
+  S.view = 'redo'; render(); window.scrollTo(0, 0);
+}
+const redoBtnText = () => `Seçilenleri tekrar yaptır (${S.redo.sel.size})`;
+function viewRedo() {
+  const r = S.records.find(x => x.id === (S.redo && S.redo.id)); if (!r) { S.view = 'tabs'; return viewApprovals(); }
+  const def = S.allDefs.find(d => d.key === r.type), groups = new Map();
+  Object.entries(r.answers || {}).sort(([a], [b]) => { const [a1, a2] = a.split('-').map(Number), [b1, b2] = b.split('-').map(Number); return a1 - b1 || a2 - b2; })
+    .forEach(([k, v]) => { const i = +k.split('-')[0]; if (!groups.has(i)) groups.set(i, []); groups.get(i).push([k, v]); });
+  let h = `<button class="dugme ikincil kucuk" data-a="redo-cancel">‹ Vazgeç</button><div class="kutu ${bizClass(r.business)}" style="margin-top:12px"><h2>Tekrar yaptır</h2><p style="margin-top:4px"><b>${esc(r.title)}</b></p><p class="soluk">${esc(r.person)}, ${fmt(r.time)}</p><p style="margin-top:8px">Tekrar yapılmasını istediğin maddeleri işaretle. Seçilen maddeler personelin <b>Eksik işler</b> listesine “tekrar yapılacak” olarak düşer.</p></div>`;
+  groups.forEach((rows, i) => {
+    h += `<h3 class="redo-bolum">${esc((def && def.sections[i] && def.sections[i].title) || (i + 1) + '. bölüm')}</h3><div class="kutu redo-liste">`;
+    rows.forEach(([k, v]) => {
+      const bad = v.value === 'Eksik', extra = [v.detail, v.note].filter(Boolean).join(' — ');
+      h += `<label class="redo-madde${bad ? ' eksik' : ''}"><input type="checkbox" data-i="redo" data-k="${esc(k)}"${S.redo.sel.has(k) ? ' checked' : ''}><span><span class="etiket ${bad ? 'eksik' : 'tamam'}">${esc(v.value || '')}</span> ${esc((r.labels || {})[k] || k)}${extra ? `<small>${esc(extra)}</small>` : ''}</span></label>`;
+    });
+    h += '</div>';
+  });
+  h += `<div class="kutu"><label for="redo-note">Personele not (zorunlu)</label><textarea id="redo-note" data-i="redo-note" placeholder="Ör: Tezgâh hâlâ kirli, tekrar silinsin.">${esc(S.redo.note)}</textarea></div>`;
+  h += `<div class="redo-alt"><button class="dugme kirmizi tam" id="redo-send" data-a="redo-send">${redoBtnText()}</button></div>`;
+  return h;
+}
+async function sendRedo() {
+  const R = S.redo, r = R && S.records.find(x => x.id === R.id); if (!r) return;
+  if (!R.sel.size) return toast('Tekrar yapılacak en az bir madde seç.', true);
+  if (!R.note.trim()) { const t = $('redo-note'); if (t) t.focus(); return toast('Personelin göreceği bir not yaz.', true); }
+  const btn = $('redo-send'); if (btn) { btn.disabled = true; btn.textContent = 'Gönderiliyor…'; }
+  try {
+    const n = await api('/rest/v1/rpc/send_back_items', { method: 'POST', body: JSON.stringify({ rec_id: R.id, item_keys: [...R.sel], note: R.note.trim() }) });
+    S.redo = null; S.view = 'tabs'; await Promise.all([loadRecords(), loadTasks()]); render(); window.scrollTo(0, 0);
+    toast(`${n || ''} madde personele tekrar yaptırılmak üzere gönderildi.`.trim());
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = redoBtnText(); }
+    toast(/send_back_items|function|404/i.test(e.message) ? 'Gönderilemedi: önce TEKRAR_YAP.sql Supabase’de çalıştırılmalı.' : 'Gönderilemedi: ' + e.message, true);
+  }
+}
+
 function taskCard(t) {
   const rejected = t.status === 'rejected';
   const label = { open: ['Eksik', 'eksik'], rejected: ['Olmadı, tekrar yapılacak', 'eksik'], pending_approval: ['Müdür onayı bekliyor', 'bekle'], approved: ['Onaylandı', 'tamam'] }[t.status] || [t.status, ''];
@@ -1275,7 +1325,7 @@ function render() {
   if (!tabs.some(t => t[0] === S.tab)) S.tab = 'lists';
   if ((S.view === 'editor' || S.view === 'editor-list') && !isAdmin()) S.view = 'tabs';
   if (S.view === 'editor' && !S.edit) S.view = 'editor-list';
-  const body = S.view === 'detail' ? viewDetail() : S.view === 'editor-list' ? viewEditorList() : S.view === 'editor' ? viewEditor() : { lists: viewLists, tasks: viewTasks, approvals: viewApprovals, records: viewRecords, report: viewReport }[S.tab]();
+  const body = S.view === 'redo' ? viewRedo() : S.view === 'detail' ? viewDetail() : S.view === 'editor-list' ? viewEditorList() : S.view === 'editor' ? viewEditor() : { lists: viewLists, tasks: viewTasks, approvals: viewApprovals, records: viewRecords, report: viewReport }[S.tab]();
   app.innerHTML = `<div class="ust">${S.user.business === 'Bi Hatıra' ? LOGO_IMG : ''}<div class="kim"><b>${esc(S.user.name)}</b><span>${esc(S.user.business)}, ${esc(roleName(S.user.role))}</span></div><button data-a="refresh">Yenile</button><button data-a="logout">Çıkış</button></div><main>${body}</main><nav class="sekmeler">${tabs.map(([k, v, n]) => `<button class="${S.tab === k ? 'acik' : ''}" data-a="tab" data-t="${k}">${v}${n ? `<span class="rozet">${n}</span>` : ''}</button>`).join('')}</nav>`;
 }
 
@@ -1288,7 +1338,7 @@ const ACTIONS = {
   'form-next': formNext, 'form-back': formBack, 'approve-section': approveSection, leave: leaveForm, submit: submitForm,
   'task-filter': d => { S.taskFilter = d.v; render(); }, 'task-biz': d => { S.taskBiz = d.v; render(); },
   'task-done': d => completeTask(d.id), 'task-ok': d => reviewTask(d.id, true), 'task-no': d => reviewTask(d.id, false),
-  'rec-ok': d => reviewRecord(d.id, 'Onaylandı'), 'rec-no': d => reviewRecord(d.id, 'Düzeltme istendi'),
+  'rec-ok': d => reviewRecord(d.id, 'Onaylandı'), 'rec-no': d => openRedo(d.id), 'redo-send': sendRedo, 'redo-cancel': () => { S.redo = null; S.view = 'tabs'; render(); },
   'staff-ok': d => approveStaff(d.id), detail: d => { S.detailId = d.id; S.view = 'detail'; render(); window.scrollTo(0, 0); },
   back: () => { S.view = 'tabs'; render(); },
   editor: () => { S.edit = null; S.view = 'editor-list'; render(); window.scrollTo(0, 0); },
@@ -1307,6 +1357,11 @@ document.addEventListener('click', e => {
 document.addEventListener('input', e => {
   const el = e.target; if (!el.dataset || !el.dataset.i) return;
   const ed = S.edit, kind = el.dataset.i;
+  if (S.redo && (kind === 'redo' || kind === 'redo-note')) {
+    if (kind === 'redo-note') S.redo.note = el.value;
+    else { el.checked ? S.redo.sel.add(el.dataset.k) : S.redo.sel.delete(el.dataset.k); el.closest('.redo-madde').classList.toggle('secili', el.checked); const b = $('redo-send'); if (b) b.textContent = redoBtnText(); }
+    return;
+  }
   if (ed && kind.startsWith('e-')) {
     const x = ed.sections[+el.dataset.n];
     if (kind === 'e-title') ed.title = el.value; else if (kind === 'e-biz') ed.business = el.value;

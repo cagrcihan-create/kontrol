@@ -779,6 +779,8 @@ function loadPdfLib() {
   return pdfLoading;
 }
 const isApproved = r => r && r.status === 'Onaylandı';
+// Müdür ve yönetici onaydan önce de PDF alabilir; personel yalnızca onaylananları
+const canPdf = r => !!r && (isApproved(r) || canReview());
 const fileSafe = t => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ı/g, 'i').replace(/İ/g, 'I').replace(/[^A-Za-z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 50);
 const fileStamp = t => { const d = new Date(t); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') + '_' + String(d.getHours()).padStart(2, '0') + String(d.getMinutes()).padStart(2, '0'); };
 const PDF_GREEN = '#1f7a45', PDF_RED = '#c62828', PDF_GREY = '#6b7280', PDF_LINE = '#d6dade';
@@ -795,7 +797,8 @@ function pdfRecord(r, newPage) {
   const out = [
     { text: r.business, color: PDF_GREY, fontSize: 10, ...(newPage ? { pageBreak: 'before' } : {}) },
     { text: r.title, style: 'baslik' },
-    { table: { widths: [130, '*'], body: info.map(([k, v]) => [{ text: k, color: PDF_GREY }, { text: String(v ?? ''), bold: k === 'Onaylayan' || k === 'Dolduran' || k === 'Durum', color: k === 'Durum' ? PDF_GREEN : undefined }]) },
+    ...(isApproved(r) ? [] : [{ table: { widths: ['*'], body: [[{ text: r.status === 'Onay bekliyor' ? 'ONAY BEKLİYOR: Bu checklist henüz müdür tarafından onaylanmadı.' : 'DURUM: ' + String(r.status || '').toLocaleUpperCase('tr-TR') + '. Bu checklist onaylı değil.', bold: true, color: '#8a5a00', fillColor: '#fde7c2', margin: [6, 4, 6, 4] }]] }, layout: 'noBorders', margin: [0, 6, 0, 0] }]),
+    { table: { widths: [130, '*'], body: info.map(([k, v]) => [{ text: k, color: PDF_GREY }, { text: String(v ?? ''), bold: k === 'Onaylayan' || k === 'Dolduran' || k === 'Durum', color: k === 'Durum' ? (isApproved(r) ? PDF_GREEN : '#8a5a00') : undefined }]) },
       layout: { hLineWidth: () => 0.5, vLineWidth: () => 0, hLineColor: () => PDF_LINE, paddingTop: () => 4, paddingBottom: () => 4 }, margin: [0, 8, 0, 14] },
   ];
   // Maddeleri bölümlere ayır (bölüm adları güncel checklistten alınır)
@@ -841,7 +844,7 @@ async function makePdf(recs, title, name, text) {
   await deliverFile(blob, name, 'application/pdf', 'PDF hazır', text);
 }
 function recordPdf(id) {
-  const r = S.records.find(x => x.id === id); if (!isApproved(r)) return toast('Yalnızca onaylanan checklistler PDF olarak alınabilir.', true);
+  const r = S.records.find(x => x.id === id); if (!canPdf(r)) return toast('Yalnızca onaylanan checklistler PDF olarak alınabilir.', true);
   makePdf([r], r.title, `Checklist_${fileSafe(r.business)}_${fileSafe(r.title)}_${fileStamp(r.created_at)}.pdf`, `${r.title}, ${r.person}, ${fmt(r.created_at)}`);
 }
 // Tarih aralığındaki onaylı checklistleri tek PDF'te topla (müdür ve yönetici)
@@ -1099,7 +1102,7 @@ function viewTasks() {
 
 function recordRow(r, withActions) {
   const missing = Object.values(r.answers).filter(v => v.value === 'Eksik').length;
-  return `<div class="is ${bizClass(r.business)}"><div class="ust-satir"><h3>${esc(r.title)}</h3>${statusTag(r.status)}</div><p class="soluk">${esc(r.person)}, ${esc(r.business)}, ${fmt(r.time)}</p><p class="soluk">${missing ? `<b style="color:var(--eksik)">${missing} eksik</b>` : 'Eksik yok'}</p><div class="dugmeler"><button class="dugme ikincil" data-a="detail" data-id="${esc(r.id)}">Detay</button>${isApproved(r) ? `<button class="dugme ikincil" data-a="pdf" data-id="${esc(r.id)}">PDF</button>` : ''}${withActions && canApproveRecord(r) ? `<button class="dugme yesil" data-a="rec-ok" data-id="${esc(r.id)}">Onayla</button><button class="dugme kirmizi" data-a="rec-no" data-id="${esc(r.id)}">Tekrar yap</button>` : ''}</div></div>`;
+  return `<div class="is ${bizClass(r.business)}"><div class="ust-satir"><h3>${esc(r.title)}</h3>${statusTag(r.status)}</div><p class="soluk">${esc(r.person)}, ${esc(r.business)}, ${fmt(r.time)}</p><p class="soluk">${missing ? `<b style="color:var(--eksik)">${missing} eksik</b>` : 'Eksik yok'}</p><div class="dugmeler"><button class="dugme ikincil" data-a="detail" data-id="${esc(r.id)}">Detay</button>${canPdf(r) ? `<button class="dugme ikincil" data-a="pdf" data-id="${esc(r.id)}">PDF</button>` : ''}${withActions && canApproveRecord(r) ? `<button class="dugme yesil" data-a="rec-ok" data-id="${esc(r.id)}">Onayla</button><button class="dugme kirmizi" data-a="rec-no" data-id="${esc(r.id)}">Tekrar yap</button>` : ''}</div></div>`;
 }
 function viewApprovals() {
   const pend = pendingRecords();
@@ -1125,7 +1128,7 @@ function viewDetail() {
     `<div class="kutu"><h3>Eksikler</h3>${missing.length ? missing.map(line).join('') : '<p class="soluk" style="margin-top:6px">Eksik bildirilmedi.</p>'}</div>` +
     (measured.length ? `<div class="kutu"><h3>Hazırlık kayıtları</h3>${measured.map(line).join('')}</div>` : '') +
     (r.stock || r.waste ? `<div class="kutu"><h3>Stok ve zayi</h3><p style="margin-top:6px"><b>Stok:</b> ${esc(r.stock || 'Belirtilmedi')}</p><p><b>Zayi:</b> ${esc(r.waste || 'Belirtilmedi')}</p></div>` : '') +
-    `<div class="kutu"><details><summary>Tüm maddeler (${entries.length})</summary>${entries.map(([k, v]) => `<div class="madde"><span class="etiket ${v.value === 'Eksik' ? 'eksik' : 'tamam'}">${esc(v.value)}</span> ${esc(r.labels[k] || k)}</div>`).join('')}</details><div class="dugmeler">${isApproved(r) ? `<button class="dugme" data-a="pdf" data-id="${esc(r.id)}">PDF indir</button>` : ''}<button class="dugme ikincil" data-a="copy" data-id="${esc(r.id)}">Raporu kopyala</button></div></div>`;
+    `<div class="kutu"><details><summary>Tüm maddeler (${entries.length})</summary>${entries.map(([k, v]) => `<div class="madde"><span class="etiket ${v.value === 'Eksik' ? 'eksik' : 'tamam'}">${esc(v.value)}</span> ${esc(r.labels[k] || k)}</div>`).join('')}</details><div class="dugmeler">${canPdf(r) ? `<button class="dugme" data-a="pdf" data-id="${esc(r.id)}">PDF indir</button>` : ''}<button class="dugme ikincil" data-a="copy" data-id="${esc(r.id)}">Raporu kopyala</button></div></div>`;
 }
 
 /* --- form görünümü --- */

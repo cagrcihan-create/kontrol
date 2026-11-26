@@ -547,7 +547,16 @@ function formBack() { const f = S.form; if (f.step === 0) return leaveForm(); f.
 function formGo(i) { const f = S.form; if (i > f.max) return; f.step = i; render(); window.scrollTo(0, 0); }
 function approveSection() {
   const f = S.form, i = f.step;
-  f.def.sections[i].items.forEach((it, j) => { const item = itemOf(it), k = i + '-' + j, a = f.answers[k] || (f.answers[k] = {}); if (!a.value && (!item.fields || fieldsFilled(item, a))) a.value = 'Tamam'; });
+  f.def.sections[i].items.forEach((it, j) => {
+    const item = itemOf(it), k = i + '-' + j, a = f.answers[k] || (f.answers[k] = {});
+    if (item.fields) {
+      // Boş tarih alanlarını bugünle doldur (elle girilmiş tarihe dokunma; "varsa" alanları boş kalır)
+      a.fields = a.fields || {};
+      item.fields.forEach(fd => { if (fd.type === 'date' && !fd.optional && !String(a.fields[fd.key] ?? '').trim()) a.fields[fd.key] = todayISO(); });
+      syncRepeat(item, a);
+    }
+    if (!a.value && (!item.fields || fieldsFilled(item, a))) a.value = 'Tamam';
+  });
   saveDraft(); render();
 }
 function leaveForm() { saveDraft(); S.form = null; S.view = 'tabs'; S.tab = 'lists'; render(); }

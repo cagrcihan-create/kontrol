@@ -561,6 +561,13 @@ function approveSection() {
   });
   saveDraft(); render();
 }
+// Stok ve zayi: boş kutulara "Yok" yaz (yazılmış bilgiye dokunma)
+function stockNone() {
+  const f = S.form; if (!f) return;
+  if (!f.stock.trim()) f.stock = 'Yok';
+  if (!f.waste.trim()) f.waste = 'Yok';
+  saveDraft(); render();
+}
 function leaveForm() { saveDraft(); S.form = null; S.view = 'tabs'; S.tab = 'lists'; render(); }
 
 async function submitForm() {
@@ -1329,7 +1336,7 @@ function viewForm() {
     const sec = def.sections[f.step];
     body = `<div class="ust-satir" style="margin:16px 2px 10px;align-items:center"><h2>${esc(sec.title)}</h2><button class="dugme ikincil kucuk" data-a="approve-section">Tümü tamam</button></div><p class="soluk" style="margin:0 2px 12px">Yalnızca eksikleri işaretlemen yeterli. İleri dediğinde boş kalan maddeler Tamam sayılır.</p>${sec.items.map((_, j) => itemHtml(f.step, j)).join('')}`;
   } else if (def.stock && f.step === n) {
-    body = `<div class="kutu" style="margin-top:14px"><h2>Stok ve zayi</h2><label for="stock">Eksik stoklar (ürün, mevcut, eksik miktar)</label><textarea id="stock" data-i="stock" placeholder="Eksik yoksa Yok yazın">${esc(f.stock)}</textarea><label for="waste">Zayi ürünler (ürün, miktar, neden)</label><textarea id="waste" data-i="waste" placeholder="Zayi yoksa Yok yazın">${esc(f.waste)}</textarea></div>`;
+    body = `<div class="kutu" style="margin-top:14px"><div class="ust-satir" style="align-items:center"><h2>Stok ve zayi</h2><button class="dugme ikincil kucuk" data-a="stock-none">Tümü tamam</button></div><p class="soluk" style="margin:4px 0 0">Eksik stok ya da zayi yoksa “Tümü tamam”a bas; boş kutulara “Yok” yazılır.</p><label for="stock">Eksik stoklar (ürün, mevcut, eksik miktar)</label><textarea id="stock" data-i="stock" placeholder="Eksik yoksa Yok yazın">${esc(f.stock)}</textarea><label for="waste">Zayi ürünler (ürün, miktar, neden)</label><textarea id="waste" data-i="waste" placeholder="Zayi yoksa Yok yazın">${esc(f.waste)}</textarea></div>`;
     next = 'Özete geç';
   } else {
     const total = itemCount(def), miss = [], meas = [];
@@ -1364,7 +1371,7 @@ const ACTIONS = {
   'auth-login': () => { S.authView = 'login'; render(); }, 'auth-signup': () => { S.authView = 'signup'; render(); },
   tab: d => { S.tab = d.t; S.view = 'tabs'; render(); window.scrollTo(0, 0); },
   start: d => startForm(d.k), ans: d => setAnswer(d.k, d.v), go: d => formGo(+d.n),
-  'form-next': formNext, 'form-back': formBack, 'approve-section': approveSection, leave: leaveForm, submit: submitForm,
+  'form-next': formNext, 'form-back': formBack, 'approve-section': approveSection, 'stock-none': stockNone, leave: leaveForm, submit: submitForm,
   'task-filter': d => { S.taskFilter = d.v; render(); }, 'task-biz': d => { S.taskBiz = d.v; render(); },
   'task-done': d => completeTask(d.id), 'task-ok': d => reviewTask(d.id, true), 'task-no': d => reviewTask(d.id, false),
   'rec-ok': d => reviewRecord(d.id, 'Onaylandı'), 'rec-no': d => openRedo(d.id), 'redo-send': sendRedo, 'redo-cancel': () => { S.redo = null; S.view = 'tabs'; render(); },

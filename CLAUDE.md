@@ -29,6 +29,8 @@ checklist doldurur, eksikler "eksik iş" olur, müdür onaylar; yönetici rapor 
 | `TEKRAR_YAP.sql` | `send_back_items` RPC'si (Supabase'e uygulandı) |
 | `SON_SAAT.sql` | `checklist_templates.deadline` sütunu — **henüz uygulanmadı** (aşağıya bak) |
 
+E-posta bildirimi kapalı (26.11.2026): checklist gönderilince mail gitmez, `send-checklist-email` fonksiyonu çağrılmaz. Benim isteğimle kapattık; geri açma.
+
 Başka build adımı, paket, framework yok. Kütüphaneler ilk kullanımda jsDelivr'den yüklenir:
 pdfmake 0.2.23 (PDF üretimi), pdfjs-dist 4.10.38 legacy (uygulama içi PDF görüntüleyici), Excel için SheetJS.
 

@@ -266,7 +266,7 @@ textarea.uzun{min-height:190px}
    Aynı Supabase projesini ve aynı tabloları kullanır:
    profiles, checklist_records, checklist_missing_tasks
    RPC: complete_missing_task, review_missing_task, review_record
-   Fonksiyon: send-checklist-email */
+   (send-checklist-email fonksiyonu artık çağrılmıyor) */
 
 const SUPABASE_URL = 'https://sxgwvubmdbworuyknipa.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_MCTKfLa2yoNJYgXwz_hsEg_UoHwz5Vv';
@@ -574,18 +574,8 @@ async function submitForm() {
   dropDraft(def.key); S.form = null; S.view = 'tabs'; S.tab = 'records';
   try { await loadData(); } catch (e) { /* liste sonra yenilenir */ }
   render();
-  let mail = 'E-posta bildirimi gönderildi.';
-  try {
-    const saved = S.records.find(x => x.person_id === rec.person_id && x.title === rec.title);
-    const result = await api('/functions/v1/send-checklist-email', { method: 'POST', body: JSON.stringify({
-      personnel_name: rec.person, business_name: rec.business, checklist_name: rec.title,
-      submitted_at: new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' }),
-      answers: Object.entries(answers).map(([k, v]) => ({ madde: labels[k] || k, durum: v.value, aciklama: [v.detail, v.note].filter(Boolean).join(' — ') })),
-      record_id: saved ? saved.id : null,
-    }) });
-    if (!result || !result.id) throw Error('e-posta işlem numarası dönmedi');
-  } catch (e) { mail = 'E-posta bildirimi gönderilemedi (' + e.message + '). Kayıt veritabanında duruyor.'; }
-  toast('Kontrol kaydedildi, müdür onayı bekliyor.\n' + mail);
+  // E-posta bildirimi kapatıldı (26.11.2026): müdür ve yönetici gönderimleri uygulamada görüyor.
+  toast('Kontrol kaydedildi, müdür onayı bekliyor.');
 }
 
 /* ---------- onay işlemleri ---------- */

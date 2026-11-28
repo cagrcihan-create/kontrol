@@ -27,6 +27,7 @@ checklist doldurur, eksikler "eksik iş" olur, müdür onaylar; yönetici rapor 
 |---|---|
 | `index.html` | **Uygulamanın tamamı** (~1400 satır): HTML + CSS + JS + gömülü checklist verisi tek dosyada |
 | `TEKRAR_YAP.sql` | `send_back_items` RPC'si (Supabase'e uygulandı) |
+| `TOPLU_ONAY.sql` | `review_missing_task` yöneticiye açıldı + `approve_missing_tasks` toplu onay (uygulandı) |
 | `SON_SAAT.sql` | `checklist_templates.deadline` sütunu — **henüz uygulanmadı** (aşağıya bak) |
 
 E-posta bildirimi kapalı (26.11.2026): checklist gönderilince mail gitmez, `send-checklist-email` fonksiyonu çağrılmaz. Benim isteğimle kapattık; geri açma.
@@ -61,7 +62,8 @@ pdfmake 0.2.23 (PDF üretimi), pdfjs-dist 4.10.38 legacy (uygulama içi PDF gör
   - `checklist_templates` (düzenleme ekranından kaydedilen listeler)
 - Tetikleyici: kayıt eklenince `Eksik` maddeler için eksik iş açılır (`create_missing_tasks_for_record`).
 - RPC'ler: `review_record`, `send_back_items` (müdür seçili maddeleri tekrar yaptırır), `complete_missing_task`
-  (yalnızca personel), `review_missing_task` (yalnızca `mudur` — admin onaylayamaz).
+  (yalnızca personel), `review_missing_task` (müdür ve yönetici), `approve_missing_tasks` (toplu onay; yalnızca `pending_approval` işler).
+- Eksik işler uygulamada gizlenir, **silinmez**: onaylananlar 48 saat sonra; onaylanmamış bir işte 2 gündür hareket yoksa (açılma/tamamlanma/geri gönderme) o da. Veritabanında ve raporlarda durur.
 - RLS: personel yalnızca **kendi** kayıtlarını görür. Bu yüzden "gecikti" uyarıları ve raporlar yalnızca müdür/yönetici içindir.
 
 ### Önemli tuzak: şablon kopyaları

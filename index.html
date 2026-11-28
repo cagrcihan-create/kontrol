@@ -635,10 +635,14 @@ function copyReport(id) {
 }
 
 /* ---------- görünümler ---------- */
-const visibleTasks = () => S.tasks.filter(t => !(t.status === 'approved' && isOldApproved(t.approved_at)));
+// Onaylananlar 48 saat sonra gizlenir. Bekleyen (onaylanmamış) bir işte 2 gündür hareket yoksa o da gizlenir.
+// Silinmez: veritabanında ve raporlarda durur.
+const taskLastMove = t => Math.max(...[t.created_at, t.completed_at, t.reviewed_at].filter(Boolean).map(x => new Date(x).getTime()));
+const isStaleTask = t => t.status !== 'approved' && Date.now() - taskLastMove(t) >= HIDE_AFTER_MS;
+const visibleTasks = () => S.tasks.filter(t => !(t.status === 'approved' && isOldApproved(t.approved_at)) && !isStaleTask(t));
 const myRecords = () => S.records.filter(r => !isStaff() || r.person_id === S.user.id);
 const pendingRecords = () => S.records.filter(r => r.status === 'Onay bekliyor');
-function taskBadge() { const v = visibleTasks(); return isManager() ? v.filter(t => t.status === 'pending_approval').length : v.filter(t => ['open', 'rejected'].includes(t.status)).length; }
+function taskBadge() { const v = visibleTasks(); return canReview() ? v.filter(t => t.status === 'pending_approval').length : v.filter(t => ['open', 'rejected'].includes(t.status)).length; }
 function statusTag(status) {
   const cls = status === 'Onaylandı' ? 'tamam' : status === 'Onay bekliyor' ? 'bekle' : 'eksik';
   return `<span class="etiket ${cls}">${esc(status)}</span>`;
@@ -1239,8 +1243,23 @@ function taskCard(t) {
   const label = { open: ['Eksik', 'eksik'], rejected: ['Olmadı, tekrar yapılacak', 'eksik'], pending_approval: ['Müdür onayı bekliyor', 'bekle'], approved: ['Onaylandı', 'tamam'] }[t.status] || [t.status, ''];
   let b = '';
   if (isStaff() && ['open', 'rejected'].includes(t.status)) b += `<button class="dugme yesil" data-a="task-done" data-id="${esc(t.id)}">Tamamladım</button>`;
-  if (isManager() && t.status === 'pending_approval') b += `<button class="dugme yesil" data-a="task-ok" data-id="${esc(t.id)}">Onayla</button><button class="dugme kirmizi" data-a="task-no" data-id="${esc(t.id)}">Tekrar yap</button>`;
+  if (canReview() && t.status === 'pending_approval') b += `<button class="dugme yesil" data-a="task-ok" data-id="${esc(t.id)}">Onayla</button><button class="dugme kirmizi" data-a="task-no" data-id="${esc(t.id)}">Tekrar yap</button>`;
   return `<div class="is ${bizClass(t.business)} ${rejected ? 'olmadi' : ''}"><div class="ust-satir"><h3>${esc(t.item_label)}</h3><span class="etiket ${label[1]}">${esc(label[0])}</span></div><p class="soluk">${esc(t.business || '')}${t.checklist_title ? ', ' + esc(t.checklist_title) : ''}${t.reporter_name ? '. Bildiren: ' + esc(t.reporter_name) : ''}</p>${t.initial_note ? `<p class="not">${esc(t.initial_note)}</p>` : ''}${t.manager_note ? `<p class="not"><b>Müdür notu:</b> ${esc(t.manager_note)}</p>` : ''}${t.completed_at ? `<p class="soluk">Tamamlayan: ${esc(t.completed_by_name || '')}, ${fmt(t.completed_at)}</p>` : ''}${t.approved_at ? `<p class="soluk">Onaylayan: ${esc(t.approved_by_name || '')}, ${fmt(t.approved_at)}</p>` : ''}${t.reviewed_at && !t.approved_at ? `<p class="soluk">Son müdür kontrolü: ${fmt(t.reviewed_at)}</p>` : ''}${b ? `<div class="dugmeler">${b}</div>` : ''}</div>`;
+}
+function bulkHtml(list) {
+  if (!canReview()) return '';
+  const n = list.filter(t => t.status === 'pending_approval').length;
+  return n ? `<button class="dugme yesil tam" data-a="task-bulk" style="margin-bottom:12px">Tamamlananları toplu onayla (${n})</button>` : '';
+}
+async function bulkApprove() {
+  const base = visibleTasks().filter(t => S.taskBiz === 'all' || t.business === S.taskBiz);
+  const ids = base.filter(t => t.status === 'pending_approval').map(t => t.id);
+  if (!ids.length) return toast('Onay bekleyen iş yok.');
+  if (!await ask({ title: ids.length + ' iş onaylansın mı?', text: 'Personelin “Tamamladım” dediği ' + (S.taskBiz === 'all' ? '' : S.taskBiz + ' ') + 'işlerin hepsi onaylanacak.', ok: 'Hepsini onayla' })) return;
+  try {
+    const n = await api('/rest/v1/rpc/approve_missing_tasks', { method: 'POST', body: JSON.stringify({ task_ids: ids }) });
+    await loadTasks(); render(); toast((n ?? ids.length) + ' iş onaylandı.');
+  } catch (e) { toast(/approve_missing_tasks|404/i.test(e.message) ? 'Onaylanamadı: önce TOPLU_ONAY.sql Supabase’de çalıştırılmalı.' : 'Onaylanamadı: ' + e.message, true); }
 }
 function viewTasks() {
   if (S.tasksError) return `<div class="kutu"><p>Eksik işler yüklenemedi: ${esc(S.tasksError)}</p><div class="dugmeler"><button class="dugme" data-a="refresh">Tekrar dene</button></div></div>`;
@@ -1249,7 +1268,7 @@ function viewTasks() {
   const order = { rejected: 0, open: 1, pending_approval: 2, approved: 3 };
   list.sort((a, b) => (order[a.status] ?? 9) - (order[b.status] ?? 9));
   return `<div class="cipler">${[['active', 'Yapılacaklar'], ['pending_approval', 'Onay bekleyen'], ['approved', 'Onaylanan']].map(([k, v]) => chip(k, v, S.taskFilter, 'task-filter')).join('')}</div><div class="cipler">${[['all', 'İki işletme'], ...BUSINESSES.map(b => [b, b])].map(([k, v]) => chip(k, v, S.taskBiz, 'task-biz')).join('')}</div>` +
-    (list.length ? list.map(taskCard).join('') : `<p class="bos">${S.taskFilter === 'active' ? 'Yapılacak eksik iş yok.' : 'Bu filtrede iş yok.'}</p>`);
+    bulkHtml(list) + (list.length ? list.map(taskCard).join('') : `<p class="bos">${S.taskFilter === 'active' ? 'Yapılacak eksik iş yok.' : 'Bu filtrede iş yok.'}</p>`);
 }
 
 function recordRow(r, withActions) {
@@ -1373,7 +1392,7 @@ const ACTIONS = {
   start: d => startForm(d.k), ans: d => setAnswer(d.k, d.v), go: d => formGo(+d.n),
   'form-next': formNext, 'form-back': formBack, 'approve-section': approveSection, 'stock-none': stockNone, leave: leaveForm, submit: submitForm,
   'task-filter': d => { S.taskFilter = d.v; render(); }, 'task-biz': d => { S.taskBiz = d.v; render(); },
-  'task-done': d => completeTask(d.id), 'task-ok': d => reviewTask(d.id, true), 'task-no': d => reviewTask(d.id, false),
+  'task-done': d => completeTask(d.id), 'task-ok': d => reviewTask(d.id, true), 'task-bulk': bulkApprove, 'task-no': d => reviewTask(d.id, false),
   'rec-ok': d => reviewRecord(d.id, 'Onaylandı'), 'rec-no': d => openRedo(d.id), 'redo-send': sendRedo, 'redo-cancel': () => { S.redo = null; S.view = 'tabs'; render(); },
   'staff-ok': d => approveStaff(d.id), detail: d => { S.detailId = d.id; S.view = 'detail'; render(); window.scrollTo(0, 0); },
   back: () => { S.view = 'tabs'; render(); },
